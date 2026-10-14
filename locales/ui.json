@@ -1,0 +1,686 @@
+{
+  "截图": {
+    "zh-TW": "截圖",
+    "en": "Screenshot"
+  },
+  "滚动截图": {
+    "zh-TW": "捲動截圖",
+    "en": "Scrolling Capture"
+  },
+  "录屏": {
+    "zh-TW": "錄影",
+    "en": "Recording"
+  },
+  "提取文字": {
+    "zh-TW": "擷取文字",
+    "en": "Extract Text"
+  },
+  "Esc 退出 / Enter 复制": {
+    "zh-TW": "Esc 離開 / Enter 複製",
+    "en": "Esc to exit / Enter to copy"
+  },
+  "flytoSnap - 固定图片": {
+    "zh-TW": "flytoSnap - 固定圖片",
+    "en": "flytoSnap - Pinned image"
+  },
+  "flytoSnap - 图片标注": {
+    "zh-TW": "flytoSnap - 圖片標註",
+    "en": "flytoSnap - Image editor"
+  },
+  "flytoSnap 设置": {
+    "zh-TW": "flytoSnap 設定",
+    "en": "flytoSnap Settings"
+  },
+  "中等线条": {
+    "zh-TW": "中等線條",
+    "en": "Medium stroke"
+  },
+  "产品设计": {
+    "zh-TW": "產品設計",
+    "en": "Product design"
+  },
+  "例如 Command+Shift+A, 或 Control+Option+S": {
+    "zh-TW": "例如 Command+Shift+A, 或 Control+Option+S",
+    "en": "For example, Command+Shift+A or Control+Option+S"
+  },
+  "保存 (⌘S)": {
+    "zh-TW": "儲存 (⌘S)",
+    "en": "Save (⌘S)"
+  },
+  "保存到剪贴板 (Enter)": {
+    "zh-TW": "儲存至剪貼簿 (Enter)",
+    "en": "Copy to clipboard (Enter)"
+  },
+  "保存图片...": {
+    "zh-TW": "儲存圖片...",
+    "en": "Save image..."
+  },
+  "保存失败: {}": {
+    "zh-TW": "儲存失敗: {}",
+    "en": "Could not save: {}"
+  },
+  "保存目录": {
+    "zh-TW": "儲存資料夾",
+    "en": "Save folder"
+  },
+  "保存设置": {
+    "zh-TW": "儲存設定",
+    "en": "Save settings"
+  },
+  "停止自动滚动": {
+    "zh-TW": "停止自動捲動",
+    "en": "Stop auto scroll"
+  },
+  "关闭贴图": {
+    "zh-TW": "關閉貼圖",
+    "en": "Close pinned image"
+  },
+  "取消": {
+    "zh-TW": "取消",
+    "en": "Cancel"
+  },
+  "取消 (Esc)": {
+    "zh-TW": "取消 (Esc)",
+    "en": "Cancel (Esc)"
+  },
+  "固定到屏幕": {
+    "zh-TW": "固定至螢幕",
+    "en": "Pin to screen"
+  },
+  "图片超过 8000 万像素, 请先缩小图片": {
+    "zh-TW": "圖片超過 8000 萬像素, 請先縮小圖片",
+    "en": "The image exceeds 80 million pixels. Resize it first."
+  },
+  "在周报里同步一下本周专项进展吧": {
+    "zh-TW": "在週報裡同步一下本週專案進度吧",
+    "en": "Share this week's progress in the weekly report."
+  },
+  "复制图片": {
+    "zh-TW": "複製圖片",
+    "en": "Copy image"
+  },
+  "复制失败, 请重试": {
+    "zh-TW": "複製失敗, 請重試",
+    "en": "Could not copy. Please try again."
+  },
+  "字体大小": {
+    "zh-TW": "字體大小",
+    "en": "Font size"
+  },
+  "完成并编辑": {
+    "zh-TW": "完成並編輯",
+    "en": "Finish and edit"
+  },
+  "屏幕录制权限": {
+    "zh-TW": "螢幕錄製權限",
+    "en": "Screen Recording permission"
+  },
+  "屏幕录制权限已就绪": {
+    "zh-TW": "螢幕錄製權限已就緒",
+    "en": "Screen Recording permission is ready"
+  },
+  "屏幕捕获超时, 自动滚动已停止": {
+    "zh-TW": "螢幕擷取逾時, 自動捲動已停止",
+    "en": "Capture timed out. Auto scroll has stopped."
+  },
+  "已保存 {}": {
+    "zh-TW": "已儲存 {}",
+    "en": "Saved {}"
+  },
+  "已取消保存, 图片仍可继续编辑": {
+    "zh-TW": "已取消儲存, 圖片仍可繼續編輯",
+    "en": "Saving cancelled. You can keep editing."
+  },
+  "已取消截图": {
+    "zh-TW": "已取消截圖",
+    "en": "Screenshot cancelled"
+  },
+  "已取消滚动截图": {
+    "zh-TW": "已取消捲動截圖",
+    "en": "Scrolling capture cancelled"
+  },
+  "已固定到屏幕. 右键查看操作.": {
+    "zh-TW": "已固定至螢幕. 按右鍵查看操作.",
+    "en": "Pinned to screen. Right-click for actions."
+  },
+  "已复制图片": {
+    "zh-TW": "已複製圖片",
+    "en": "Image copied"
+  },
+  "已恢复贴图大小和透明度": {
+    "zh-TW": "已還原貼圖大小與透明度",
+    "en": "Pinned image size and opacity restored"
+  },
+  "已拼接 {} × {} 像素": {
+    "zh-TW": "已拼接 {} × {} 像素",
+    "en": "Stitched {} × {} pixels"
+  },
+  "已显示全部贴图": {
+    "zh-TW": "已顯示全部貼圖",
+    "en": "All pinned images shown"
+  },
+  "已达到长度上限, 请完成当前截图": {
+    "zh-TW": "已達長度上限, 請完成目前截圖",
+    "en": "Length limit reached. Finish this capture."
+  },
+  "已退出截图": {
+    "zh-TW": "已離開截圖",
+    "en": "Screenshot closed"
+  },
+  "已锁定": {
+    "zh-TW": "已鎖定",
+    "en": "Locked"
+  },
+  "已隐藏全部贴图": {
+    "zh-TW": "已隱藏全部貼圖",
+    "en": "All pinned images hidden"
+  },
+  "开始截图": {
+    "zh-TW": "開始截圖",
+    "en": "Start screenshot"
+  },
+  "开始截图   ⌘⇧A": {
+    "zh-TW": "開始截圖   ⌘⇧A",
+    "en": "Start screenshot   ⌘⇧A"
+  },
+  "快捷键冲突时可以在这里更换": {
+    "zh-TW": "快捷鍵衝突時可在這裡更換",
+    "en": "Change the shortcut here if it conflicts."
+  },
+  "快捷键无法使用: {}": {
+    "zh-TW": "快捷鍵無法使用: {}",
+    "en": "Shortcut unavailable: {}"
+  },
+  "快捷键格式不正确: {}": {
+    "zh-TW": "快捷鍵格式不正確: {}",
+    "en": "Invalid shortcut: {}"
+  },
+  "快捷键注册失败: {}. 请在设置中更换.": {
+    "zh-TW": "快捷鍵註冊失敗: {}. 請在設定中更換.",
+    "en": "Could not register the shortcut: {}. Change it in Settings."
+  },
+  "恢复大小和透明度": {
+    "zh-TW": "還原大小與透明度",
+    "en": "Reset size and opacity"
+  },
+  "截图, 标注, 固定在屏幕上": {
+    "zh-TW": "截圖, 標註, 固定至螢幕",
+    "en": "Capture, annotate, and pin to screen"
+  },
+  "截图后可以画箭头, 标注文字, 添加标签和马赛克.": {
+    "zh-TW": "截圖後可畫箭頭, 標註文字, 新增標籤與馬賽克.",
+    "en": "Add arrows, text, callouts, and mosaic to screenshots."
+  },
+  "截图失败: {}": {
+    "zh-TW": "截圖失敗: {}",
+    "en": "Screenshot failed: {}"
+  },
+  "截图快捷键": {
+    "zh-TW": "截圖快捷鍵",
+    "en": "Capture shortcut"
+  },
+  "截图超时, 请检查屏幕录制权限后重试": {
+    "zh-TW": "截圖逾時, 請檢查螢幕錄製權限後重試",
+    "en": "Capture timed out. Check Screen Recording permission and try again."
+  },
+  "打开图片...": {
+    "zh-TW": "開啟圖片...",
+    "en": "Open image..."
+  },
+  "打开图片进行标注...": {
+    "zh-TW": "開啟圖片進行標註...",
+    "en": "Open an image to annotate..."
+  },
+  "打开最近保存的位置": {
+    "zh-TW": "開啟最近儲存的位置",
+    "en": "Reveal last saved file"
+  },
+  "打开系统设置": {
+    "zh-TW": "開啟系統設定",
+    "en": "Open System Settings"
+  },
+  "拖动选择截图区域   Esc 取消": {
+    "zh-TW": "拖曳選擇截圖區域   Esc 取消",
+    "en": "Drag to select a region   Esc to cancel"
+  },
+  "撤销 (⌘Z)": {
+    "zh-TW": "復原 (⌘Z)",
+    "en": "Undo (⌘Z)"
+  },
+  "文字 (T)": {
+    "zh-TW": "文字 (T)",
+    "en": "Text (T)"
+  },
+  "无法保存设置: {}": {
+    "zh-TW": "無法儲存設定: {}",
+    "en": "Could not save settings: {}"
+  },
+  "无法打开图片: {}": {
+    "zh-TW": "無法開啟圖片: {}",
+    "en": "Could not open image: {}"
+  },
+  "无法打开贴图": {
+    "zh-TW": "無法開啟貼圖",
+    "en": "Could not open pinned image"
+  },
+  "显示主窗口": {
+    "zh-TW": "顯示主視窗",
+    "en": "Show main window"
+  },
+  "显示器尺寸发生变化, 请重新截图": {
+    "zh-TW": "顯示器尺寸已變更, 請重新截圖",
+    "en": "Display size changed. Start a new capture."
+  },
+  "未找到重叠内容, 请向回滚动一点": {
+    "zh-TW": "未找到重疊內容, 請稍微往回捲動",
+    "en": "No overlap found. Scroll back slightly."
+  },
+  "标签 (G)": {
+    "zh-TW": "標籤 (G)",
+    "en": "Callout (G)"
+  },
+  "框选马赛克": {
+    "zh-TW": "框選馬賽克",
+    "en": "Rectangle mosaic"
+  },
+  "椭圆 (O)": {
+    "zh-TW": "橢圓 (O)",
+    "en": "Ellipse (O)"
+  },
+  "正在截取屏幕...": {
+    "zh-TW": "正在擷取螢幕...",
+    "en": "Capturing screen..."
+  },
+  "正在自动滚动...": {
+    "zh-TW": "正在自動捲動...",
+    "en": "Auto scrolling..."
+  },
+  "水印 (W)": {
+    "zh-TW": "浮水印 (W)",
+    "en": "Watermark (W)"
+  },
+  "水印透明度": {
+    "zh-TW": "浮水印透明度",
+    "en": "Watermark opacity"
+  },
+  "没有可用的显示器": {
+    "zh-TW": "沒有可用的顯示器",
+    "en": "No displays available"
+  },
+  "消息": {
+    "zh-TW": "訊息",
+    "en": "Messages"
+  },
+  "滚动区域太小, 请扩大选区": {
+    "zh-TW": "捲動區域太小, 請擴大選取區域",
+    "en": "Scrolling region is too small. Select a larger area."
+  },
+  "滚动截图失败: {}": {
+    "zh-TW": "捲動截圖失敗: {}",
+    "en": "Scrolling capture failed: {}"
+  },
+  "滚动截图需要先选择屏幕上的区域": {
+    "zh-TW": "捲動截圖需先選擇螢幕上的區域",
+    "en": "Select a screen region for scrolling capture."
+  },
+  "灰色": {
+    "zh-TW": "灰色",
+    "en": "Gray"
+  },
+  "画笔 (P)": {
+    "zh-TW": "畫筆 (P)",
+    "en": "Pen (P)"
+  },
+  "画笔马赛克": {
+    "zh-TW": "畫筆馬賽克",
+    "en": "Brush mosaic"
+  },
+  "画面已停止变化, 可完成当前截图": {
+    "zh-TW": "畫面已停止變化, 可完成目前截圖",
+    "en": "The page has stopped changing. Finish this capture."
+  },
+  "画面未变化, 等待滚动": {
+    "zh-TW": "畫面未變化, 等待捲動",
+    "en": "Waiting for the page to scroll"
+  },
+  "白色": {
+    "zh-TW": "白色",
+    "en": "White"
+  },
+  "矩形 (R)": {
+    "zh-TW": "矩形 (R)",
+    "en": "Rectangle (R)"
+  },
+  "稍后": {
+    "zh-TW": "稍後",
+    "en": "Later"
+  },
+  "箭头 (A)": {
+    "zh-TW": "箭頭 (A)",
+    "en": "Arrow (A)"
+  },
+  "粗线": {
+    "zh-TW": "粗線",
+    "en": "Thick stroke"
+  },
+  "红色": {
+    "zh-TW": "紅色",
+    "en": "Red"
+  },
+  "细线": {
+    "zh-TW": "細線",
+    "en": "Thin stroke"
+  },
+  "绿色": {
+    "zh-TW": "綠色",
+    "en": "Green"
+  },
+  "缓慢滚动页面, 右侧预览会实时更新": {
+    "zh-TW": "緩慢捲動頁面, 預覽會即時更新",
+    "en": "Scroll slowly. The preview updates as you scroll."
+  },
+  "自动滚动": {
+    "zh-TW": "自動捲動",
+    "en": "Auto scroll"
+  },
+  "自动滚动已停止, 可继续手动滚动": {
+    "zh-TW": "自動捲動已停止, 可繼續手動捲動",
+    "en": "Auto scroll stopped. You can scroll manually."
+  },
+  "自动滚动需要辅助功能权限": {
+    "zh-TW": "自動捲動需要輔助使用權限",
+    "en": "Auto scroll needs Accessibility permission"
+  },
+  "蓝色": {
+    "zh-TW": "藍色",
+    "en": "Blue"
+  },
+  "解锁": {
+    "zh-TW": "解除鎖定",
+    "en": "Unlock"
+  },
+  "设置...": {
+    "zh-TW": "設定...",
+    "en": "Settings..."
+  },
+  "设置已保存": {
+    "zh-TW": "設定已儲存",
+    "en": "Settings saved"
+  },
+  "请先选择滚动区域": {
+    "zh-TW": "請先選擇捲動區域",
+    "en": "Select a scrolling region first."
+  },
+  "请在系统设置中允许 flytoSnap 录制屏幕, 然后重新打开应用.": {
+    "zh-TW": "請在系統設定中允許 flytoSnap 錄製螢幕, 然後重新開啟應用程式.",
+    "en": "Allow flytoSnap in Screen Recording in System Settings, then reopen the app."
+  },
+  "请在系统设置的辅助功能中允许 flytoSnap 控制滚动. 手动滚动无需此权限.": {
+    "zh-TW": "請在系統設定的輔助使用中允許 flytoSnap 控制捲動. 手動捲動不需此權限.",
+    "en": "Allow flytoSnap in Accessibility in System Settings for auto scroll. Manual scrolling does not need it."
+  },
+  "贴图已关闭": {
+    "zh-TW": "貼圖已關閉",
+    "en": "Pinned image closed"
+  },
+  "贴图已解锁": {
+    "zh-TW": "貼圖已解除鎖定",
+    "en": "Pinned image unlocked"
+  },
+  "贴图已锁定": {
+    "zh-TW": "貼圖已鎖定",
+    "en": "Pinned image locked"
+  },
+  "输入文字, 点击选区其他位置完成": {
+    "zh-TW": "輸入文字, 點選選取區域其他位置完成",
+    "en": "Enter text, then click elsewhere to finish."
+  },
+  "还没有保存过图片": {
+    "zh-TW": "尚未儲存圖片",
+    "en": "No image has been saved yet."
+  },
+  "还没有固定的图片": {
+    "zh-TW": "尚未固定圖片",
+    "en": "No pinned images yet."
+  },
+  "退出": {
+    "zh-TW": "結束",
+    "en": "Quit"
+  },
+  "退出 flytoSnap": {
+    "zh-TW": "結束 flytoSnap",
+    "en": "Quit flytoSnap"
+  },
+  "选区下方是编辑工具栏": {
+    "zh-TW": "選取區域下方為編輯工具列",
+    "en": "The annotation toolbar sits below the selection."
+  },
+  "选区后可直接标注. Enter 复制, Esc 取消.": {
+    "zh-TW": "選取後可直接標註. Enter 複製, Esc 取消.",
+    "en": "Annotate after selecting. Enter to copy, Esc to cancel."
+  },
+  "选择并调整标注 (V)": {
+    "zh-TW": "選擇並調整標註 (V)",
+    "en": "Select and adjust annotations (V)"
+  },
+  "透明度 {}%": {
+    "zh-TW": "透明度 {}%",
+    "en": "Opacity {}%"
+  },
+  "重做 (⌘⇧Z)": {
+    "zh-TW": "重做 (⌘⇧Z)",
+    "en": "Redo (⌘⇧Z)"
+  },
+  "锁定": {
+    "zh-TW": "鎖定",
+    "en": "Lock"
+  },
+  "长截图已完成, 可以继续标注": {
+    "zh-TW": "長截圖已完成, 可繼續標註",
+    "en": "Long capture finished. You can annotate it now."
+  },
+  "隐藏 / 显示全部贴图": {
+    "zh-TW": "隱藏 / 顯示全部貼圖",
+    "en": "Hide / show all pinned images"
+  },
+  "项目进度": {
+    "zh-TW": "專案進度",
+    "en": "Project progress"
+  },
+  "首次截图时, 请允许屏幕录制权限": {
+    "zh-TW": "首次截圖時, 請允許螢幕錄製權限",
+    "en": "Allow Screen Recording when you capture for the first time."
+  },
+  "马赛克 (M)": {
+    "zh-TW": "馬賽克 (M)",
+    "en": "Mosaic (M)"
+  },
+  "高亮 (H)": {
+    "zh-TW": "螢光標記 (H)",
+    "en": "Highlight (H)"
+  },
+  "黄色": {
+    "zh-TW": "黃色",
+    "en": "Yellow"
+  },
+  "黑色": {
+    "zh-TW": "黑色",
+    "en": "Black"
+  },
+  "请先选择截图区域": {
+    "zh-TW": "請先選擇截圖區域",
+    "en": "Select a region first."
+  },
+  "无法创建截图画布": {
+    "zh-TW": "無法建立截圖畫布",
+    "en": "Could not create the image canvas."
+  },
+  "无法创建绘图上下文": {
+    "zh-TW": "無法建立繪圖環境",
+    "en": "Could not create the drawing context."
+  },
+  "无法导出截图": {
+    "zh-TW": "無法匯出截圖",
+    "en": "Could not export the screenshot."
+  },
+  "选区超过 8000 万像素, 请缩小选区": {
+    "zh-TW": "選取區域超過 8000 萬像素, 請縮小選取區域",
+    "en": "The selection exceeds 80 million pixels. Select a smaller region."
+  },
+  "界面语言": {
+    "zh-TW": "介面語言",
+    "en": "Interface language"
+  },
+  "自动 (跟随系统)": {
+    "zh-TW": "自動 (跟隨系統)",
+    "en": "Automatic (system language)"
+  },
+  "简体中文": {
+    "zh-TW": "简体中文",
+    "en": "简体中文"
+  },
+  "繁體中文": {
+    "zh-TW": "繁體中文",
+    "en": "繁體中文"
+  },
+  "语言已切换": {
+    "zh-TW": "語言已切換",
+    "en": "Language changed"
+  },
+  "正在识别文字...": {
+    "zh-TW": "正在辨識文字...",
+    "en": "Recognizing text..."
+  },
+  "未发现文字, 请重选区域": {
+    "zh-TW": "未找到文字, 請重新選取區域",
+    "en": "No text found. Select another region."
+  },
+  "文字识别失败: {}": {
+    "zh-TW": "文字辨識失敗: {}",
+    "en": "Text recognition failed: {}"
+  },
+  "已复制文字": {
+    "zh-TW": "已複製文字",
+    "en": "Text copied"
+  },
+  "复制文字": {
+    "zh-TW": "複製文字",
+    "en": "Copy text"
+  },
+  "重新选择": {
+    "zh-TW": "重新選擇",
+    "en": "Select again"
+  },
+  "识别结果可直接编辑": {
+    "zh-TW": "辨識結果可直接編輯",
+    "en": "You can edit the recognized text."
+  },
+  "录屏设置": {
+    "zh-TW": "錄影設定",
+    "en": "Recording settings"
+  },
+  "格式": {
+    "zh-TW": "格式",
+    "en": "Format"
+  },
+  "显示鼠标": {
+    "zh-TW": "顯示游標",
+    "en": "Show cursor"
+  },
+  "开始录制": {
+    "zh-TW": "開始錄製",
+    "en": "Start recording"
+  },
+  "停止录制": {
+    "zh-TW": "停止錄製",
+    "en": "Stop recording"
+  },
+  "正在开始录屏...": {
+    "zh-TW": "正在開始錄影...",
+    "en": "Starting recording..."
+  },
+  "正在录制 {}": {
+    "zh-TW": "正在錄製 {}",
+    "en": "Recording {}"
+  },
+  "正在完成录屏...": {
+    "zh-TW": "正在完成錄影...",
+    "en": "Finishing recording..."
+  },
+  "录屏完成": {
+    "zh-TW": "錄影完成",
+    "en": "Recording finished"
+  },
+  "录屏失败: {}": {
+    "zh-TW": "錄影失敗: {}",
+    "en": "Recording failed: {}"
+  },
+  "录屏已取消": {
+    "zh-TW": "錄影已取消",
+    "en": "Recording cancelled"
+  },
+  "保存录屏...": {
+    "zh-TW": "儲存錄影...",
+    "en": "Save recording..."
+  },
+  "复制录屏": {
+    "zh-TW": "複製錄影",
+    "en": "Copy recording"
+  },
+  "已复制录屏, 可粘贴到支持文件的应用": {
+    "zh-TW": "已複製錄影, 可貼到支援檔案的應用程式",
+    "en": "Recording copied. Paste it into an app that accepts files."
+  },
+  "播放预览": {
+    "zh-TW": "播放預覽",
+    "en": "Play preview"
+  },
+  "请先选择录屏区域": {
+    "zh-TW": "請先選擇錄影區域",
+    "en": "Select a recording region first."
+  },
+  "区域过小, 请扩大选区": {
+    "zh-TW": "區域太小, 請擴大選取區域",
+    "en": "The region is too small. Select a larger area."
+  },
+  "正在录屏, 请先停止当前录制": {
+    "zh-TW": "正在錄影, 請先停止目前錄製",
+    "en": "Stop the current recording before starting another capture."
+  },
+  "录屏完成后可退出应用": {
+    "zh-TW": "錄影完成後可結束應用程式",
+    "en": "Finish recording before quitting the app."
+  },
+  "仅录制屏幕画面": {
+    "zh-TW": "僅錄製螢幕畫面",
+    "en": "Records the screen only"
+  },
+  "录屏文件已保存在本机": {
+    "zh-TW": "錄影檔案已儲存在本機",
+    "en": "The recording is saved on this Mac."
+  },
+  "调整选区": {
+    "zh-TW": "調整選取區域",
+    "en": "Resize selection"
+  },
+  "移动选区": {
+    "zh-TW": "移動選取區域",
+    "en": "Move selection"
+  },
+  "移动工具栏": {
+    "zh-TW": "移動工具列",
+    "en": "Move toolbar"
+  },
+  "模式切换": {
+    "zh-TW": "模式切換",
+    "en": "Change capture mode"
+  },
+  "无法打开录屏预览": {
+    "zh-TW": "無法開啟錄影預覽",
+    "en": "Could not open the recording preview."
+  },
+  "已取消保存录屏": {
+    "zh-TW": "已取消儲存錄影",
+    "en": "Saving recording cancelled."
+  }
+}

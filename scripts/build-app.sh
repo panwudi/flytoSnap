@@ -14,6 +14,17 @@ bundle_dir="$project_dir/dist/flytoSnap.app"
 mkdir -p "$bundle_dir/Contents/MacOS" "$bundle_dir/Contents/Resources"
 cp "target/$build_profile/flytosnap" "$bundle_dir/Contents/MacOS/flytosnap"
 cp assets/Info.plist "$bundle_dir/Contents/Info.plist"
+icon_dir="$project_dir/target/flytoSnap.iconset"
+mkdir -p "$icon_dir"
+"target/$build_profile/flytosnap" --export-icon "$project_dir/target/app-icon.png"
+cp "$project_dir/target/app-icon.png" "$bundle_dir/Contents/Resources/AppIcon.png"
+cp "$project_dir/target/menu-icon.png" "$bundle_dir/Contents/Resources/MenuIcon.png"
+for size in 16 32 128 256 512; do
+    double_size=$((size * 2))
+    sips -z "$size" "$size" "$project_dir/target/app-icon.png" --out "$icon_dir/icon_${size}x${size}.png" >/dev/null
+    sips -z "$double_size" "$double_size" "$project_dir/target/app-icon.png" --out "$icon_dir/icon_${size}x${size}@2x.png" >/dev/null
+done
+iconutil -c icns "$icon_dir" -o "$bundle_dir/Contents/Resources/AppIcon.icns"
 codesign --force --sign - --identifier com.flyto.snap "$bundle_dir"
 codesign --verify --deep --strict "$bundle_dir"
 machine_arch="$(uname -m)"

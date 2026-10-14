@@ -19,6 +19,27 @@ pub fn rounded(r: Rect, radius: f64, c: Color, alpha: f64) {
     color(c, alpha).setFill();
     NSBezierPath::bezierPathWithRoundedRect_xRadius_yRadius(nr(r), radius, radius).fill();
 }
+
+pub fn selection_mask(bounds: Rect, selection: Rect, alpha: f64) {
+    let Some(gc) = NSGraphicsContext::currentContext() else {
+        return;
+    };
+    let cg = gc.CGContext();
+    let ctx = Some(&*cg);
+    CGContext::save_g_state(ctx);
+    CGContext::set_blend_mode(ctx, objc2_core_graphics::CGBlendMode::Normal);
+    CGContext::set_alpha(ctx, 1.0);
+    CGContext::set_rgb_fill_color(ctx, 0.0, 0.0, 0.0, alpha);
+    for rect in crate::interaction::outside_regions(bounds, selection) {
+        if rect.w > 0.0 && rect.h > 0.0 {
+            CGContext::fill_rect(ctx, nr(rect));
+        }
+    }
+    CGContext::restore_g_state(ctx);
+}
+pub fn ui_text(s: &str, p: Point, size: f64, c: Color) {
+    text(&crate::i18n::tr(s), p, size, c);
+}
 pub fn stroke(r: Rect, c: Color, width: f64) {
     color(c, 1.0).setStroke();
     let path = NSBezierPath::bezierPathWithRect(nr(r));

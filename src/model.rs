@@ -263,6 +263,20 @@ pub struct Editor {
 }
 
 impl Editor {
+    pub fn drag_resize_handle(&self) -> Option<usize> {
+        match self.gesture {
+            Some(Gesture::ResizeSelection(h, _)) | Some(Gesture::ResizeAnnotation(_, h, _)) => {
+                Some(h)
+            }
+            _ => None,
+        }
+    }
+    pub fn drag_moves_item(&self) -> bool {
+        matches!(
+            self.gesture,
+            Some(Gesture::MoveSelection(..) | Gesture::MoveAnnotation(..))
+        )
+    }
     pub fn new(w: f64, h: f64) -> Self {
         Self {
             bounds: Rect::new(0.0, 0.0, w, h),
@@ -490,6 +504,7 @@ impl Editor {
 pub struct Settings {
     pub shortcut: String,
     pub save_directory: String,
+    pub language: String,
 }
 impl Default for Settings {
     fn default() -> Self {
@@ -498,6 +513,7 @@ impl Default for Settings {
             save_directory: std::env::var("HOME")
                 .map(|h| format!("{h}/Pictures/flytoSnap"))
                 .unwrap_or_else(|_| ".".into()),
+            language: "auto".into(),
         }
     }
 }

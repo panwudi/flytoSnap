@@ -1,0 +1,67 @@
+<img src="assets/app-icon.svg" width="96" alt="flytoSnap" />
+
+# flytoSnap
+
+[简体中文](README.md) | [繁體中文](README.zh-TW.md) | English
+
+A native macOS screenshot and recording tool written in Rust. One shortcut opens a mode selector for screenshots, scrolling capture, recording, and text extraction.
+
+Requires macOS 14+. The interface supports Simplified Chinese, Traditional Chinese, and English, following the system language by default. The app starts in the menu bar without opening a main window.
+
+![Screenshot selection, mask, toolbar, and hover labels](docs/images/screenshot-en.png)
+
+## Features
+
+- Capture: Window detection, freeform region selection, magnifier, and eight resize handles. The area outside the selection dims; the cursor changes over buttons, edges, corners, and text.
+- Annotate: Rectangles, ellipses, arrows, pen, highlight, brush and rectangle mosaic, text, callouts, and watermark. Undo, redo, and edit existing objects.
+- Pin: Floating images with drag, zoom, opacity, lock, copy, and save.
+- Scrolling capture: Manual or automatic scrolling, bidirectional stitching, deduplication when scrolling back, preview, and annotation.
+- Record: Select a region, choose MP4 or GIF, and optionally include the cursor. Preview, save, or copy the finished recording to apps that accept files.
+- Extract text: On-device Apple Vision with editable results and copy. No separately downloaded model.
+
+![MP4 and GIF recording settings](docs/images/recording-en.png)
+
+These are offscreen captures of the application's native controls, using built-in example data.
+
+## Build and use
+
+Requires a Rust toolchain and the macOS SDK.
+
+```sh
+bash scripts/build-app.sh
+open dist/flytoSnap.app
+```
+
+The build script produces a locally signed `.app`, app icons, and a ZIP test package. Grant Screen Recording permission for the first capture or recording; you may need to reopen the app after granting permission. Auto scroll additionally needs Accessibility permission.
+
+The default shortcut is `Command+Shift+A`. Select one of the four modes at the top of the capture overlay. Every tool has a hover label. Change the shortcut, save folder, and interface language in menu bar Settings.
+
+| Action | Shortcut |
+| --- | --- |
+| Open capture and mode selection | `Command+Shift+A` |
+| Copy screenshot | `Enter` or `Command+C` |
+| Save screenshot | `Command+S` |
+| Undo / redo | `Command+Z` / `Command+Shift+Z` |
+| Exit capture | `Escape` |
+| Quit the app | `Command+Q` |
+
+Scroll over pinned images to zoom, Option+scroll to adjust opacity, and right-click for actions. Recording copy uses the macOS file clipboard; GIF also provides animated image data. Paste behavior depends on the receiving app's supported formats. Recording files remain in the local cache so copied files remain available for pasting.
+
+## Validation
+
+```sh
+cargo test
+cargo clippy --all-targets -- -D warnings
+cargo run -- --self-check target/self-check
+cargo run -- --ui-snapshot target/ui-check --lang en
+```
+
+The last two checks do not show application windows. Checks cover editing geometry, cursor regions, selection masking, translations, native controls, Retina cropping, system OCR, animated GIF, and finalized H.264 MP4.
+
+Recording currently captures screen video only, without audio or webcam. Scrolling capture works best on static pages; avoid fixed headers, scrollbars, animation, and video. Long captures are limited to 80 million pixels and 32,000 pixels in height. Local test packages are not Developer ID notarized; distribution requires separate signing and notarization.
+
+## References and license
+
+Interaction follows the [Feishu screenshot](https://www.feishu.cn/hc/zh-CN/articles/319286513754) and [scrolling capture](https://www.feishu.cn/hc/zh-CN/articles/145659580677) workflows. Native framework access uses [objc2](https://github.com/madsmtm/objc2).
+
+MIT. See [LICENSE](LICENSE). The icon uses FLYTO's slate blue, orange, and opposing frame mark, with a camera element.
