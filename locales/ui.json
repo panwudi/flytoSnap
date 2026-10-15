@@ -730,5 +730,41 @@
   "权限仍未生效, 请移除旧条目并重新添加, 然后退出再打开": {
     "zh-TW": "權限仍未生效, 請移除舊項目並重新加入, 然後結束再開啟",
     "en": "Access is still unavailable. Remove and re-add this app, then quit and reopen."
+  },
+  "开始滚动截图": {
+    "zh-TW": "開始捲動截圖",
+    "en": "Start Scrolling Capture"
+  },
+  "取消当前截图": {
+    "zh-TW": "取消目前截圖",
+    "en": "Cancel Current Capture"
+  },
+  "Esc 退出 / Enter 开始": {
+    "zh-TW": "Esc 離開 / Enter 開始",
+    "en": "Esc Cancel / Enter Start"
+  },
+  "长截图预览": {
+    "zh-TW": "長截圖預覽",
+    "en": "Scrolling Capture Preview"
+  },
+  "保存长截图": {
+    "zh-TW": "儲存長截圖",
+    "en": "Save Scrolling Capture"
+  },
+  "复制长截图": {
+    "zh-TW": "複製長截圖",
+    "en": "Copy Scrolling Capture"
+  },
+  "flytoSnap 已就绪, 按 ⌘⇧A 开始截图": {
+    "zh-TW": "flytoSnap 已就緒, 按 ⌘⇧A 開始截圖",
+    "en": "flytoSnap is ready. Press ⌘⇧A to capture."
+  },
+  "flytoSnap - 截图与录屏": {
+    "zh-TW": "flytoSnap - 截圖與錄影",
+    "en": "flytoSnap - Capture and Record"
+  },
+  "Esc 快捷键不可用, 可从菜单栏取消当前截图": {
+    "zh-TW": "Esc 快捷鍵無法使用, 可從選單列取消目前截圖",
+    "en": "Esc is unavailable. Cancel the capture from the menu bar."
   }
 }

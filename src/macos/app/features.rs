@@ -25,6 +25,7 @@ fn panel(title: &str, width: f64, height: f64) -> Retained<NSPanel> {
     panel.setTitle(&ns_ui(title));
     panel.setLevel(26);
     panel.setFloatingPanel(true);
+    panel.setHidesOnDeactivate(false);
     panel.setCollectionBehavior(
         NSWindowCollectionBehavior::CanJoinAllSpaces
             | NSWindowCollectionBehavior::FullScreenAuxiliary,
@@ -46,6 +47,39 @@ fn present(panel: &NSPanel) {
         panel.makeKeyAndOrderFront(None);
         #[allow(deprecated)]
         NSApplication::sharedApplication(mtm()).activateIgnoringOtherApps(true);
+    }
+}
+pub(super) fn floating_panel(width: f64, height: f64) -> Retained<NSPanel> {
+    let panel = NSPanel::initWithContentRect_styleMask_backing_defer(
+        NSPanel::alloc(mtm()),
+        NSRect::new(NSPoint::ZERO, NSSize::new(width, height)),
+        NSWindowStyleMask::Borderless | NSWindowStyleMask::NonactivatingPanel,
+        NSBackingStoreType::Buffered,
+        false,
+    );
+    unsafe {
+        panel.setReleasedWhenClosed(false);
+    }
+    panel.setLevel(26);
+    panel.setFloatingPanel(true);
+    panel.setHidesOnDeactivate(false);
+    panel.setOpaque(false);
+    panel.setHasShadow(true);
+    panel.setBackgroundColor(Some(NSColor::clearColor().as_ref()));
+    panel.setCollectionBehavior(
+        NSWindowCollectionBehavior::CanJoinAllSpaces
+            | NSWindowCollectionBehavior::FullScreenAuxiliary,
+    );
+    panel.setAppearance(NSAppearance::appearanceNamed(unsafe { NSAppearanceNameAqua }).as_deref());
+    let root: Retained<PanelContent> = unsafe {
+        msg_send![PanelContent::alloc(mtm()),initWithFrame:NSRect::new(NSPoint::ZERO,NSSize::new(width,height))]
+    };
+    panel.setContentView(Some(&root));
+    panel
+}
+pub(super) fn present_floating(panel: &NSPanel) {
+    if !state(|a| a.headless) {
+        panel.orderFrontRegardless();
     }
 }
 fn control(root: &NSView, title: &str, tag: isize, frame: NSRect) -> Retained<NSButton> {
@@ -206,7 +240,7 @@ pub(super) fn switch_mode(mode: CaptureMode) {
     }
     if state(|a| a.sessions[index].editor.selection.is_some()) {
         match mode {
-            CaptureMode::Scroll => start_scroll(index),
+            CaptureMode::Scroll => {}
             CaptureMode::Record => show_record_setup(index),
             CaptureMode::Text => begin_ocr(index),
             _ => {}

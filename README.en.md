@@ -15,11 +15,17 @@ Requires macOS 14+. The interface supports Simplified Chinese, Traditional Chine
 - Capture: Window detection, freeform region selection, magnifier, and eight resize handles. The area outside the selection dims; the cursor changes over buttons, edges, corners, and text.
 - Annotate: Rectangles, ellipses, arrows, pen, highlight, brush and rectangle mosaic, text, callouts, and watermark. Undo, redo, and edit existing objects.
 - Pin: Floating images with drag, zoom, opacity, lock, copy, and save.
-- Scrolling capture: Manual or automatic scrolling, bidirectional stitching, deduplication when scrolling back, preview, and annotation.
+- Scrolling capture: Select a region, click Start Scrolling Capture, then scroll manually or automatically. Compact controls and a side preview stay visible. Supports bidirectional stitching, deduplication, edit, save, and copy.
 - Record: Select a region, choose MP4 or GIF, and optionally include the cursor. Preview, save, or copy the finished recording to apps that accept files.
 - Extract text: On-device Apple Vision with editable results and copy. No separately downloaded model.
 
 ![MP4 and GIF recording settings](docs/images/recording-en.png)
+
+Confirm the region before starting, then choose automatic scrolling:
+
+![Scroll capture confirmation](docs/images/scroll-ready-en.png)
+
+![Compact scrolling controls](docs/images/scroll-controls-en.png)
 
 These are offscreen captures of the application's native controls, using built-in example data.
 
@@ -33,6 +39,8 @@ open dist/flytoSnap.app
 ```
 
 The build script produces a locally signed `.app`, app icons, and a ZIP test package. Grant Screen Recording permission for the first capture or recording; you may need to reopen the app after granting permission. Auto scroll additionally needs Accessibility permission.
+
+At startup, the app checks and requests Screen Recording access if it has not been granted. Existing grants do not prompt again. Cancel from the menu bar, Escape, or the capture shortcut. Normal capture dismisses when switching apps; scrolling controls stay visible over the source app. Reopening the running app shows its action menu without opening a main window.
 
 The default shortcut is `Command+Shift+A`. Select one of the four modes at the top of the capture overlay. Every tool has a hover label. Change the shortcut, save folder, and interface language in menu bar Settings.
 
@@ -68,6 +76,12 @@ cargo run -- --ui-snapshot target/ui-check --lang en
 ```
 
 The last two checks do not show application windows. Checks cover editing geometry, cursor regions, selection masking, translations, native controls, Retina cropping, system OCR, animated GIF, and finalized H.264 MP4.
+
+This optional check briefly shows the actual menu bar icon for about one second, without opening a main window or requesting permissions:
+
+```sh
+dist/flytoSnap.app/Contents/MacOS/flytosnap --menubar-check
+```
 
 Recording currently captures screen video only, without audio or webcam. Scrolling capture works best on static pages; avoid fixed headers, scrollbars, animation, and video. Long captures are limited to 80 million pixels and 32,000 pixels in height. Local test packages are not Developer ID notarized; distribution requires separate signing and notarization.
 

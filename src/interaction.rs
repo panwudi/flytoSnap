@@ -100,9 +100,81 @@ pub fn outside_regions(bounds: Rect, selection: Rect) -> [Rect; 4] {
     ]
 }
 
+pub fn scroll_start_rect(bounds: Rect, selection: Rect) -> Rect {
+    let width = 258.0_f64.min(bounds.w - 16.0);
+    Rect::new(
+        (selection.x + (selection.w - width) / 2.0)
+            .clamp(bounds.x + 8.0, bounds.x + bounds.w - width - 8.0),
+        (selection.y + selection.h - 54.0).clamp(bounds.y + 8.0, bounds.y + bounds.h - 50.0),
+        width,
+        42.0,
+    )
+}
+
+pub fn scroll_panel_rects(bounds: Rect, selection: Rect) -> (Rect, Rect) {
+    let margin = 10.0;
+    let toolbar_width = 350.0_f64.min(bounds.w - 2.0 * margin);
+    let toolbar_height = 78.0;
+    let toolbar_y = if selection.y + selection.h + toolbar_height + margin <= bounds.y + bounds.h {
+        selection.y + selection.h + margin
+    } else if selection.y - toolbar_height - margin >= bounds.y {
+        selection.y - toolbar_height - margin
+    } else {
+        selection.y + selection.h - toolbar_height - margin
+    };
+    let toolbar = Rect::new(
+        (selection.x + selection.w - toolbar_width).clamp(
+            bounds.x + margin,
+            bounds.x + bounds.w - toolbar_width - margin,
+        ),
+        toolbar_y.clamp(
+            bounds.y + 32.0,
+            bounds.y + bounds.h - toolbar_height - margin,
+        ),
+        toolbar_width,
+        toolbar_height,
+    );
+    let preview_width = 196.0;
+    let preview_height =
+        (selection.h * preview_width / selection.w).clamp(150.0, (bounds.h * 0.55).max(150.0));
+    let preview_x = if selection.x + selection.w + preview_width + margin <= bounds.x + bounds.w {
+        selection.x + selection.w + margin
+    } else if selection.x - preview_width - margin >= bounds.x {
+        selection.x - preview_width - margin
+    } else {
+        bounds.x + bounds.w - preview_width - margin
+    };
+    let preview = Rect::new(
+        preview_x,
+        selection.y.clamp(
+            bounds.y + 32.0,
+            bounds.y + bounds.h - preview_height - margin,
+        ),
+        preview_width,
+        preview_height,
+    );
+    (toolbar, preview)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn scroll_controls_stay_on_screen_for_edge_and_fullscreen_regions() {
+        let screen = Rect::new(0.0, 0.0, 1440.0, 900.0);
+        for region in [
+            screen,
+            Rect::new(1.0, 1.0, 80.0, 80.0),
+            Rect::new(1200.0, 700.0, 240.0, 200.0),
+            Rect::new(320.0, 130.0, 800.0, 540.0),
+        ] {
+            let (toolbar, preview) = scroll_panel_rects(screen, region);
+            for rect in [toolbar, preview, scroll_start_rect(screen, region)] {
+                assert!(rect.x >= 0.0 && rect.y >= 0.0);
+                assert!(rect.x + rect.w <= screen.w && rect.y + rect.h <= screen.h);
+            }
+        }
+    }
     #[test]
     fn controls_override_crosshair_and_all_eight_edges_have_resize_cursors() {
         let mut e = Editor::new(800.0, 600.0);

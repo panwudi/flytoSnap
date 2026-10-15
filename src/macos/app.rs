@@ -4,7 +4,9 @@ use super::{
 };
 use crate::{
     i18n::{self, tr},
-    interaction::{CaptureMode, CursorIntent, cursor_at, resize_cursor},
+    interaction::{
+        CaptureMode, CursorIntent, cursor_at, resize_cursor, scroll_panel_rects, scroll_start_rect,
+    },
 };
 use crate::{
     model::{Color, Editor, PALETTE, Point, Rect, Settings, Tool},
@@ -63,6 +65,7 @@ struct Session {
     hover: Option<Rect>,
     pressed_hover: Option<Rect>,
     mode_buttons: Vec<Retained<NSButton>>,
+    scroll_actions: Vec<Retained<NSButton>>,
     hovered: Option<(isize, Instant)>,
 }
 struct ScrollSession {
@@ -70,6 +73,7 @@ struct ScrollSession {
     region: Rect,
     screen_index: usize,
     panel: Retained<NSPanel>,
+    preview_panel: Retained<NSPanel>,
     preview: Retained<NSImageView>,
     status: Retained<NSTextField>,
     auto_button: Retained<NSButton>,
@@ -152,6 +156,8 @@ struct App {
     media_result: Option<MediaResult>,
     permission_help: Option<PermissionHelp>,
     screen_access_requested: bool,
+    escape_hotkey: HotKey,
+    escape_registered: bool,
 }
 
 define_class!(
@@ -165,11 +171,20 @@ define_class!(
             if state(|a|a.recording.is_some()){stop_recording(false);toast("录屏完成后可退出应用");NSApplicationTerminateReply::TerminateCancel}else{NSApplicationTerminateReply::TerminateNow}
         }
         #[unsafe(method(applicationDidFinishLaunching:))]
-        fn launched(&self,_notification:&NSNotification) { initialize(self); }
+        fn launched(&self,_notification:&NSNotification) {
+            initialize(self);
+            if !std::env::args().any(|a|a=="--menubar-check") {startup_feedback();}
+        }
+        #[unsafe(method(applicationDidResignActive:))]
+        fn deactivated(&self,_notification:&NSNotification) {
+            if state(|a|!a.sessions.is_empty()&&a.scroll.is_none()&&a.recording.is_none()) {cancel_capture();}
+        }
         #[unsafe(method(applicationShouldHandleReopen:hasVisibleWindows:))]
         fn reopened(&self,_app:&NSApplication,_visible:bool)->bool {
             let window=state(|a|a.sessions.get(a.active).map(|s|s.window.clone()));
-            if let Some(window)=window {window.makeKeyAndOrderFront(None);}
+            state(|a|a._status_item.setVisible(true));
+            if let Some(window)=window {if !window.ignoresMouseEvents(){window.makeKeyAndOrderFront(None);}else{show_status_menu();}}
+            else{show_status_menu();}
             false
         }
     }
@@ -194,6 +209,13 @@ define_class!(
         fn menu_action(&self,sender:&NSMenuItem) { handle_action(sender.tag(),None); }
         #[unsafe(method(tick:))]
         fn tick(&self,_timer:&NSTimer) {tick();}
+        #[unsafe(method(checkStatusItem:))]
+        fn check_status(&self,_timer:&NSTimer) {
+            match verify_live_status_item() {
+                Ok(())=>NSApplication::sharedApplication(mtm()).terminate(None),
+                Err(error)=>{eprintln!("Menu bar check failed: {error}");std::process::exit(1);}
+            }
+        }
     }
 );
 
@@ -215,7 +237,7 @@ define_class!(
     struct TextInput;
     impl TextInput {
         #[unsafe(method(cancelOperation:))]
-        fn cancel(&self,_sender:Option<&AnyObject>) {let _keep_alive=self.retain();close_sessions();toast("已退出截图");}
+        fn cancel(&self,_sender:Option<&AnyObject>) {let _keep_alive=self.retain();cancel_capture();}
     }
 );
 
@@ -405,6 +427,7 @@ fn controls(s: &Session) -> Vec<(isize, Rect, String)> {
         .iter()
         .chain(s.params.iter())
         .chain(s.mode_buttons.iter())
+        .chain(s.scroll_actions.iter())
         .filter(|b| !b.isHidden())
         .map(|b| {
             let r = b.frame();
@@ -645,6 +668,7 @@ fn initialize(delegate: &Delegate) {
         }
     }
     let headless = std::env::args().any(|s| s == "--ui-snapshot");
+    let menubar_check = std::env::args().any(|s| s == "--menubar-check");
     application.setActivationPolicy(if headless {
         NSApplicationActivationPolicy::Prohibited
     } else {
@@ -688,7 +712,7 @@ fn initialize(delegate: &Delegate) {
     let manager = GlobalHotKeyManager::new().expect("could not initialize global hotkey manager");
     let hotkey = HotKey::from_str(&settings.shortcut)
         .unwrap_or_else(|_| HotKey::from_str("Super+Shift+KeyA").unwrap());
-    let registration = if headless {
+    let registration = if headless || menubar_check {
         Ok(())
     } else {
         manager.register(hotkey)
@@ -700,6 +724,7 @@ fn initialize(delegate: &Delegate) {
         ("滚动截图", 3),
         ("录屏", 8),
         ("停止录制", 605),
+        ("取消当前截图", 11),
         ("提取文字", 10),
         ("隐藏 / 显示全部贴图", 4),
         ("设置...", 5),
@@ -725,13 +750,22 @@ fn initialize(delegate: &Delegate) {
     if let Some(stop) = menu.itemWithTag(605) {
         stop.setEnabled(false);
     }
+    if let Some(cancel) = menu.itemWithTag(11) {
+        cancel.setEnabled(false);
+    }
     let status_item =
         NSStatusBar::systemStatusBar().statusItemWithLength(if headless { 0.0 } else { 28.0 });
     if headless {
         status_item.setVisible(false);
+    } else {
+        status_item.setAutosaveName(Some(ns_string!("flytoSnap.MenuBar")));
+        status_item.setBehavior(NSStatusItemBehavior::empty());
+        status_item.setVisible(true);
     }
     status_item.setMenu(Some(&menu));
     if let Some(b) = status_item.button(mtm()) {
+        b.setToolTip(Some(&ns_ui("flytoSnap - 截图与录屏")));
+        b.setImagePosition(NSCellImagePosition::ImageOnly);
         let brand = NSBundle::mainBundle()
             .pathForResource_ofType(Some(ns_string!("MenuIcon")), Some(ns_string!("png")))
             .and_then(|path| NSImage::initWithContentsOfFile(NSImage::alloc(), &path));
@@ -747,6 +781,10 @@ fn initialize(delegate: &Delegate) {
                 image.setTemplate(true);
                 b.setImage(Some(&image));
             }
+        }
+        if b.image().is_none() {
+            b.setTitle(ns_string!("F"));
+            b.setImagePosition(NSCellImagePosition::NoImage);
         }
     }
     let home = unsafe {
@@ -853,16 +891,30 @@ fn initialize(delegate: &Delegate) {
             media_result: None,
             permission_help: None,
             screen_access_requested: false,
+            escape_hotkey: HotKey::from_str("Escape").expect("valid Escape hotkey"),
+            escape_registered: false,
         })
     });
-    if !headless {
+    if !headless && !menubar_check {
         unsafe {
-            NSTimer::scheduledTimerWithTimeInterval_target_selector_userInfo_repeats(
+            let timer = NSTimer::scheduledTimerWithTimeInterval_target_selector_userInfo_repeats(
                 0.08,
                 &delegate,
                 sel!(tick:),
                 None,
                 true,
+            );
+            NSRunLoop::mainRunLoop().addTimer_forMode(&timer, NSRunLoopCommonModes);
+        }
+    }
+    if menubar_check {
+        unsafe {
+            NSTimer::scheduledTimerWithTimeInterval_target_selector_userInfo_repeats(
+                1.0,
+                &delegate,
+                sel!(checkStatusItem:),
+                None,
+                false,
             );
         }
     }
@@ -898,6 +950,69 @@ fn screens() -> Vec<Screen> {
         })
         .collect()
 }
+fn show_status_menu() {
+    let menu = state(|a| a._status_item.menu(mtm()));
+    if let Some(menu) = menu {
+        menu.popUpMenuPositioningItem_atLocation_inView(None, NSEvent::mouseLocation(), None);
+    }
+}
+fn startup_feedback() {
+    if !screen_access_ready() {
+        show_permission_help();
+    } else {
+        toast("flytoSnap 已就绪, 按 ⌘⇧A 开始截图");
+    }
+}
+fn screen_access_ready() -> bool {
+    if unsafe { capture::CGPreflightScreenCaptureAccess() } {
+        return true;
+    }
+    let should_request = state(|a| {
+        let first = !a.screen_access_requested;
+        a.screen_access_requested = true;
+        first
+    });
+    if should_request {
+        unsafe {
+            capture::CGRequestScreenCaptureAccess();
+        }
+    }
+    unsafe { capture::CGPreflightScreenCaptureAccess() }
+}
+fn set_capture_active(active: bool) {
+    let error = state(|a| {
+        if let Some(menu) = a._status_item.menu(mtm()) {
+            if let Some(cancel) = menu.itemWithTag(11) {
+                cancel.setEnabled(active);
+            }
+        }
+        if a.headless || a.escape_registered == active {
+            return None;
+        }
+        if active {
+            match a.manager.register(a.escape_hotkey) {
+                Ok(()) => a.escape_registered = true,
+                Err(error) => return Some(error.to_string()),
+            }
+        } else {
+            let _ = a.manager.unregister(a.escape_hotkey);
+            a.escape_registered = false;
+        }
+        None
+    });
+    if error.is_some() {
+        toast("Esc 快捷键不可用, 可从菜单栏取消当前截图");
+    }
+}
+fn cancel_capture() {
+    if state(|a| a.recording.is_some()) {
+        stop_recording(true);
+    } else {
+        close_sessions();
+        dismiss_permission_help();
+        toast("已取消截图");
+    }
+}
 fn start_capture(prefer_scroll: bool) {
     if state(|a| a.recording.is_some()) {
         toast("正在录屏, 请先停止当前录制");
@@ -911,21 +1026,9 @@ fn start_capture(prefer_scroll: bool) {
             CaptureMode::Screenshot
         }
     });
-    if !unsafe { capture::CGPreflightScreenCaptureAccess() } {
-        let should_request = state(|a| {
-            let first = !a.screen_access_requested;
-            a.screen_access_requested = true;
-            first
-        });
-        if should_request {
-            unsafe {
-                capture::CGRequestScreenCaptureAccess();
-            }
-        }
-        if !unsafe { capture::CGPreflightScreenCaptureAccess() } {
-            show_permission_help();
-            return;
-        }
+    if !screen_access_ready() {
+        show_permission_help();
+        return;
     }
     dismiss_permission_help();
     let requests = screens()
@@ -949,6 +1052,7 @@ fn start_capture(prefer_scroll: bool) {
         a.home_status.setStringValue(&ns_ui("正在截取屏幕..."));
         (a.generation, a.tx.clone())
     });
+    set_capture_active(true);
     capture::capture(requests, generation, tx);
 }
 
@@ -1026,6 +1130,17 @@ fn create_session(screen: Screen, pixels: RgbaImage, demo: bool, windows: Vec<Re
         view.addSubview(&b);
         mode_buttons.push(b);
     }
+    let mut scroll_actions = vec![];
+    for (title, symbol, tag) in [("开始滚动截图", None, 304), ("取消", Some("xmark"), 115)]
+    {
+        let b = button(title, symbol, tag, &delegate);
+        if symbol.is_none() {
+            set_caption(&b, title, Color(0.16, 0.18, 0.22), 14.0);
+        }
+        b.setHidden(true);
+        view.addSubview(&b);
+        scroll_actions.push(b);
+    }
     let tracking = unsafe {
         NSTrackingArea::initWithRect_options_owner_userInfo(
             NSTrackingArea::alloc(),
@@ -1101,11 +1216,13 @@ fn create_session(screen: Screen, pixels: RgbaImage, demo: bool, windows: Vec<Re
             hover: None,
             pressed_hover: None,
             mode_buttons,
+            scroll_actions,
             hovered: None,
         });
         a.active = index;
     });
     refresh(index);
+    set_capture_active(true);
     if !state(|a| a.headless) {
         window.makeKeyAndOrderFront(None);
         window.makeFirstResponder(Some(&view));
@@ -1115,32 +1232,37 @@ fn create_session(screen: Screen, pixels: RgbaImage, demo: bool, windows: Vec<Re
 }
 
 fn close_sessions() {
-    let windows = state(|a| {
+    let (sessions, scroll, record_setup, ocr_panel) = state(|a| {
         a.generation += 1;
         a.feature_job += 1;
         a.pending = 0;
         a.prefer_scroll = false;
-        let windows = a
-            .sessions
-            .iter()
-            .map(|s| s.window.clone())
-            .collect::<Vec<_>>();
-        if let Some(scroll) = a.scroll.take() {
-            scroll.panel.orderOut(None);
-        }
-        a.sessions.clear();
-        if let Some(panel) = a.record_setup.take() {
-            panel.window.orderOut(None);
-        }
-        if let Some(panel) = a.ocr_panel.take() {
-            panel.window.orderOut(None);
-        }
         a.active = 0;
-        windows
+        (
+            std::mem::take(&mut a.sessions),
+            a.scroll.take(),
+            a.record_setup.take(),
+            a.ocr_panel.take(),
+        )
     });
-    for w in windows {
-        w.orderOut(None);
+    set_capture_active(false);
+    if let Some(scroll) = scroll {
+        scroll.panel.orderOut(None);
+        scroll.preview_panel.orderOut(None);
     }
+    if let Some(setup) = record_setup {
+        setup.window.orderOut(None);
+    }
+    if let Some(panel) = ocr_panel {
+        panel.window.orderOut(None);
+    }
+    for session in sessions {
+        session.window.setDelegate(None);
+        session.window.setIgnoresMouseEvents(false);
+        session.window.orderOut(None);
+        session.window.close();
+    }
+    NSCursor::arrowCursor().set();
 }
 fn bar(s: &Session) -> Rect {
     let Some(r) = s.editor.selection else {
@@ -1216,6 +1338,25 @@ fn refresh(index: usize) {
             );
         }
         let param_tool = style_tool(s);
+        let start = s
+            .editor
+            .selection
+            .map(|r| scroll_start_rect(s.editor.bounds, r));
+        for (i, button) in s.scroll_actions.iter().enumerate() {
+            button.setHidden(
+                start.is_none()
+                    || a.mode != CaptureMode::Scroll
+                    || a.scroll.is_some()
+                    || a.recording.is_some(),
+            );
+            if let Some(rect) = start {
+                button.setFrame(nr(if i == 0 {
+                    Rect::new(rect.x + 8.0, rect.y + 3.0, rect.w - 52.0, rect.h - 6.0)
+                } else {
+                    Rect::new(rect.x + rect.w - 42.0, rect.y + 3.0, 36.0, rect.h - 6.0)
+                }));
+            }
+        }
         for (i, button) in s.buttons.iter().enumerate() {
             button.setHidden(!show);
             button.setFrame(nr(Rect::new(
@@ -1337,7 +1478,7 @@ fn draw_canvas(index: usize) {
         let param_tool = style_tool(s);
         let scrolling = a.scroll.is_some();
         let recording = a.recording.is_some();
-        if recording {
+        if recording || scrolling {
             if let Some(gc) = NSGraphicsContext::currentContext() {
                 objc2_core_graphics::CGContext::clear_rect(Some(&gc.CGContext()), nr(bounds));
             }
@@ -1369,15 +1510,26 @@ fn draw_canvas(index: usize) {
                 );
                 render::rounded(hint, 5.0, Color(0.12, 0.14, 0.18), 0.88);
                 render::ui_text(
-                    "Esc 退出 / Enter 复制",
+                    if a.mode == CaptureMode::Scroll {
+                        "Esc 退出 / Enter 开始"
+                    } else {
+                        "Esc 退出 / Enter 复制"
+                    },
                     Point::new(hint.x + 9.0, hint.y + 7.0),
                     11.0,
                     Color(1.0, 1.0, 1.0),
                 );
             }
             render::stroke(r, BLUE, 1.0);
-            for p in r.handles() {
-                render::rounded(Rect::new(p.x - 3.0, p.y - 3.0, 6.0, 6.0), 3.0, BLUE, 1.0);
+            if !scrolling && !recording {
+                for p in r.handles() {
+                    render::rounded(Rect::new(p.x - 3.0, p.y - 3.0, 6.0, 6.0), 3.0, BLUE, 1.0);
+                }
+            }
+            if a.mode == CaptureMode::Scroll && !scrolling && !recording {
+                let start = scroll_start_rect(bounds, r);
+                render::rounded(start, 7.0, Color(0.73, 0.75, 0.78), 1.0);
+                render::rounded(start.inset(0.8), 6.2, Color(1.0, 1.0, 1.0), 0.98);
             }
             let text = format!(
                 "{} × {}",
@@ -1631,6 +1783,9 @@ fn mouse_drag(index: usize, event: &NSEvent) {
     refresh(index);
 }
 fn mouse_up(index: usize, _event: &NSEvent) {
+    finish_selection(index);
+}
+fn finish_selection(index: usize) {
     if state(|a| index >= a.sessions.len()) {
         return;
     }
@@ -1647,7 +1802,7 @@ fn mouse_up(index: usize, _event: &NSEvent) {
     });
     refresh(index);
     match mode {
-        Some(CaptureMode::Scroll) => start_scroll(index),
+        Some(CaptureMode::Scroll) => {}
         Some(CaptureMode::Record) => show_record_setup(index),
         Some(CaptureMode::Text) => begin_ocr(index),
         _ => {}
@@ -1689,12 +1844,7 @@ fn key_down(index: usize, event: &NSEvent) {
     }
     state(|a| a.active = index);
     if event.keyCode() == 53 {
-        if state(|a| a.recording.is_some()) {
-            stop_recording(true);
-            return;
-        }
-        close_sessions();
-        toast("已取消截图");
+        cancel_capture();
         return;
     }
     if event.keyCode() == 36 {
@@ -1796,6 +1946,22 @@ fn handle_action(tag: isize, window: Option<Retained<NSWindow>>) {
         return;
     }
     match tag {
+        11 => {
+            cancel_capture();
+            return;
+        }
+        304 => {
+            start_scroll(state(|a| a.active));
+            return;
+        }
+        305 => {
+            finish_scroll_output(116);
+            return;
+        }
+        306 => {
+            finish_scroll_output(114);
+            return;
+        }
         701 => {
             open_screen_permission_settings();
             return;
@@ -1929,14 +2095,13 @@ fn handle_action(tag: isize, window: Option<Retained<NSWindow>>) {
                 return;
             }
             110 => {
-                start_scroll(index);
+                switch_mode(CaptureMode::Scroll);
                 return;
             }
             112 => state(|a| a.sessions[index].editor.undo()),
             113 => state(|a| a.sessions[index].editor.redo()),
             115 => {
-                close_sessions();
-                toast("已取消截图");
+                cancel_capture();
                 return;
             }
             200..=202 => state(|a| {
@@ -2219,6 +2384,9 @@ fn toast(message: &str) {
     });
     if let Some(old) = old {
         old.orderOut(None);
+    }
+    if state(|a| a.headless) {
+        return;
     }
     let panel = {
         NSPanel::initWithContentRect_styleMask_backing_defer(
@@ -2560,6 +2728,9 @@ fn apply_preferences() {
 }
 
 fn start_scroll(index: usize) {
+    if state(|a| index >= a.sessions.len()) {
+        return;
+    }
     commit_text(index);
     if state(|a| a.scroll.is_some()) {
         return;
@@ -2590,82 +2761,94 @@ fn start_scroll(index: usize) {
         toast("滚动区域太小, 请扩大选区");
         return;
     }
-    let delegate = state(|a| a.delegate.clone());
-    let panel = {
-        NSPanel::initWithContentRect_styleMask_backing_defer(
-            NSPanel::alloc(mtm()),
-            NSRect::new(NSPoint::ZERO, NSSize::new(360.0, 550.0)),
-            NSWindowStyleMask::Titled,
-            NSBackingStoreType::Buffered,
-            false,
+    let (screen_frame, bounds) = state(|a| {
+        (
+            a.sessions[index].screen.frame,
+            a.sessions[index].editor.bounds,
         )
-    };
-    unsafe {
-        panel.setReleasedWhenClosed(false);
-    }
+    });
+    let (toolbar_rect, preview_rect) = scroll_panel_rects(bounds, region);
+    let panel = floating_panel(toolbar_rect.w, toolbar_rect.h);
     panel.setTitle(&ns_ui("滚动截图"));
-    panel.setLevel(26);
-    panel.setFloatingPanel(true);
-    panel.setCollectionBehavior(
-        NSWindowCollectionBehavior::CanJoinAllSpaces
-            | NSWindowCollectionBehavior::FullScreenAuxiliary,
-    );
     let root = panel.contentView().unwrap();
-    let preview = NSImageView::initWithFrame(
-        NSImageView::alloc(mtm()),
-        NSRect::new(NSPoint::new(12.0, 88.0), NSSize::new(336.0, 440.0)),
-    );
-    preview.setImageScaling(NSImageScaling::ScaleProportionallyUpOrDown);
-    root.addSubview(&preview);
     let status = label(
         "缓慢滚动页面, 右侧预览会实时更新",
-        NSRect::new(NSPoint::new(12.0, 51.0), NSSize::new(336.0, 32.0)),
-        12.0,
+        NSRect::new(
+            NSPoint::new(12.0, 46.0),
+            NSSize::new(toolbar_rect.w - 24.0, 22.0),
+        ),
+        11.0,
     );
     root.addSubview(&status);
+    let delegate = state(|a| a.delegate.clone());
     let auto_button = button("自动滚动", None, 301, &delegate);
-    auto_button.setBordered(true);
-    auto_button.setBezelStyle(NSBezelStyle::Push);
+    set_caption(&auto_button, "自动滚动", Color(0.16, 0.18, 0.22), 13.0);
     auto_button.setFrame(NSRect::new(
-        NSPoint::new(12.0, 12.0),
-        NSSize::new(112.0, 32.0),
+        NSPoint::new(8.0, 8.0),
+        NSSize::new(154.0, 32.0),
     ));
     root.addSubview(&auto_button);
-    for (title, tag, x) in [("取消", 303, 140.0), ("完成并编辑", 302, 222.0)] {
-        let b = button(title, None, tag, &delegate);
-        b.setBordered(true);
-        b.setBezelStyle(NSBezelStyle::Push);
-        b.setFrame(NSRect::new(
-            NSPoint::new(x, 12.0),
-            NSSize::new(if tag == 303 { 70.0 } else { 126.0 }, 32.0),
-        ));
+    for (title, symbol, tag, x) in [
+        ("完成并编辑", "pencil", 302, 174.0),
+        ("保存长截图", "arrow.down", 306, 214.0),
+        ("取消", "xmark", 303, 254.0),
+        ("复制长截图", "checkmark", 305, 294.0),
+    ] {
+        let b = button(title, Some(symbol), tag, &delegate);
+        b.setFrame(NSRect::new(NSPoint::new(x, 8.0), NSSize::new(36.0, 32.0)));
+        if tag == 303 {
+            b.setContentTintColor(Some(&render::color(Color(0.88, 0.23, 0.22), 1.0)));
+        }
+        if tag == 305 {
+            b.setContentTintColor(Some(&render::color(Color(0.22, 0.6, 0.28), 1.0)));
+        }
         root.addSubview(&b);
     }
-    let frame = state(|a| a.sessions[index].screen.frame);
-    let panel_x = if region.x + region.w + 380.0 < frame.size.width {
-        frame.origin.x + region.x + region.w + 12.0
-    } else if region.x >= 380.0 {
-        frame.origin.x + region.x - 372.0
-    } else {
-        frame.origin.x + frame.size.width - 380.0
+    let preview_panel = floating_panel(preview_rect.w, preview_rect.h);
+    preview_panel.setTitle(&ns_ui("长截图预览"));
+    let preview = NSImageView::initWithFrame(
+        NSImageView::alloc(mtm()),
+        NSRect::new(
+            NSPoint::new(4.0, 4.0),
+            NSSize::new(preview_rect.w - 8.0, preview_rect.h - 8.0),
+        ),
+    );
+    preview.setImageScaling(NSImageScaling::ScaleProportionallyUpOrDown);
+    preview_panel.contentView().unwrap().addSubview(&preview);
+    let position = |window: &NSPanel, rect: Rect| {
+        window.setFrameOrigin(NSPoint::new(
+            screen_frame.origin.x + rect.x,
+            screen_frame.origin.y + screen_frame.size.height - rect.y - rect.h,
+        ));
     };
-    panel.setFrameOrigin(NSPoint::new(panel_x, frame.origin.y + 70.0));
-    let image = render::native_image(
+    position(&panel, toolbar_rect);
+    position(&preview_panel, preview_rect);
+    let image = match render::native_image(
         &pixels,
         NSSize::new(pixels.width() as f64, pixels.height() as f64),
-    )
-    .unwrap();
+    ) {
+        Ok(image) => image,
+        Err(error) => {
+            toast(&error);
+            return;
+        }
+    };
     preview.setImage(Some(&image));
-    state(|a| {
+    let windows = state(|a| {
         a.prefer_scroll = false;
         a.pending = 0;
         a.generation += 1;
-        a.sessions[index].window.setIgnoresMouseEvents(true);
+        let windows = a
+            .sessions
+            .iter()
+            .map(|s| s.window.clone())
+            .collect::<Vec<_>>();
         a.scroll = Some(ScrollSession {
             stitcher: Stitcher::new(pixels),
             region,
             screen_index: index,
             panel: panel.clone(),
+            preview_panel: preview_panel.clone(),
             preview,
             status,
             auto_button,
@@ -2675,9 +2858,19 @@ fn start_scroll(index: usize) {
             unchanged: 0,
             auto_step: None,
         });
+        windows
     });
-    panel.orderFrontRegardless();
-    refresh(index);
+    for (i, window) in windows.iter().enumerate() {
+        if i == index {
+            window.setIgnoresMouseEvents(true);
+        } else {
+            window.orderOut(None);
+        }
+        refresh(i);
+    }
+    NSCursor::arrowCursor().set();
+    present_floating(&panel);
+    present_floating(&preview_panel);
 }
 fn toggle_auto() {
     let enabling = state(|a| a.scroll.as_ref().is_some_and(|s| !s.auto));
@@ -2713,6 +2906,7 @@ fn finish_scroll(edit: bool) {
         return;
     };
     scroll.panel.orderOut(None);
+    scroll.preview_panel.orderOut(None);
     let pixels = scroll.stitcher.image;
     close_sessions();
     if edit {
@@ -2720,6 +2914,12 @@ fn finish_scroll(edit: bool) {
         toast("长截图已完成, 可以继续标注");
     } else {
         toast("已取消滚动截图");
+    }
+}
+fn finish_scroll_output(tag: isize) {
+    finish_scroll(true);
+    if state(|a| !a.sessions.is_empty()) {
+        output(tag);
     }
 }
 fn tick() {
@@ -2734,9 +2934,7 @@ fn tick() {
         }
     });
     while let Ok(event) = GlobalHotKeyEvent::receiver().try_recv() {
-        if event.state == HotKeyState::Pressed && state(|a| a.hotkey.id()) == event.id {
-            start_capture(false);
-        }
+        dispatch_hotkey(event);
     }
     let messages = state(|a| a.rx.try_iter().collect::<Vec<_>>());
     for message in messages {
@@ -2776,7 +2974,7 @@ fn tick() {
     }
     let timeout = state(|a| a.pending > 0 && a.capture_started.elapsed() > Duration::from_secs(12));
     if timeout {
-        state(|a| a.pending = 0);
+        close_sessions();
         toast("截图超时, 请检查屏幕录制权限后重试");
         show_home();
     }
@@ -2830,6 +3028,23 @@ fn tick() {
     });
     if let Some((request, generation, tx)) = request {
         capture::capture(vec![request], generation, tx);
+    }
+}
+fn dispatch_hotkey(event: GlobalHotKeyEvent) {
+    if event.state != HotKeyState::Pressed {
+        return;
+    }
+    let active = state(|a| !a.sessions.is_empty() || a.pending > 0);
+    if state(|a| a.escape_hotkey.id()) == event.id && active {
+        cancel_capture();
+    } else if state(|a| a.hotkey.id()) == event.id {
+        if state(|a| a.recording.is_some()) {
+            toast("正在录屏, 请先停止当前录制");
+        } else if active {
+            cancel_capture();
+        } else {
+            start_capture(false);
+        }
     }
 }
 fn handle_capture(message: CaptureMessage) {
@@ -3030,6 +3245,47 @@ fn snapshot_view(view: &NSView, path: &std::path::Path) -> Result<RgbaImage, Str
         .map(|i| i.to_rgba8())
         .map_err(|e| e.to_string())
 }
+fn verify_live_status_item() -> Result<(), String> {
+    let button = state(|a| {
+        if !a._status_item.isVisible() {
+            return Err("Status item is hidden".to_string());
+        }
+        if a.home.isVisible() || !a.sessions.is_empty() {
+            return Err("Unexpected application window".to_string());
+        }
+        a._status_item
+            .button(mtm())
+            .ok_or_else(|| "Missing status item button".to_string())
+    })?;
+    let window = button
+        .window()
+        .ok_or("Status item has no menu bar window")?;
+    let frame = window.frame();
+    println!(
+        "Menu bar item: window_visible={}, frame={frame:?}, button={:?}, image={}",
+        window.isVisible(),
+        button.frame(),
+        button.image().is_some()
+    );
+    if button.isHidden() || button.frame().size.width < 18.0 || button.image().is_none() {
+        return Err("Status item button has no visible icon".into());
+    }
+    if !window.isVisible() {
+        return Err("Status item window is not visible".into());
+    }
+    let directory = PathBuf::from("target/menubar-check");
+    std::fs::create_dir_all(&directory).map_err(|e| e.to_string())?;
+    snapshot_view(&button, &directory.join("button.png"))?;
+    state(|a| {
+        a.manager.register(a.escape_hotkey)?;
+        a.manager.unregister(a.escape_hotkey)
+    })
+    .map_err(|e| format!("Could not register and release the capture Escape hotkey: {e}"))?;
+    println!(
+        "Menu bar check passed: visible native icon, menu, Escape registration, no main window, no permission request."
+    );
+    Ok(())
+}
 fn ui_snapshot(directory: &std::path::Path) -> Result<(), String> {
     std::fs::create_dir_all(directory).map_err(|e| e.to_string())?;
     let pixels = demo_image();
@@ -3112,11 +3368,114 @@ fn ui_snapshot(directory: &std::path::Path) -> Result<(), String> {
     if state(|a| a.permission_help.is_some()) {
         return Err("Permission recovery panel did not dismiss".into());
     }
+    let scroll_mode = state(|a| a.sessions[0].mode_buttons[1].clone());
+    unsafe {
+        let _: () = msg_send![&*scroll_mode,performClick:Option::<&AnyObject>::None];
+    }
+    finish_selection(0);
+    if state(|a| a.scroll.is_some() || a.sessions[0].scroll_actions.iter().any(|b| b.isHidden())) {
+        return Err(
+            "Scrolling capture started before confirmation or its start button was hidden".into(),
+        );
+    }
+    snapshot_view(&view, &directory.join("scroll-ready.png"))?;
+    let start = state(|a| a.sessions[0].scroll_actions[0].clone());
+    unsafe {
+        let _: () = msg_send![&*start,performClick:Option::<&AnyObject>::None];
+    }
+    let (toolbar, preview, stale_generation) = state(|a| {
+        let scroll = a
+            .scroll
+            .as_ref()
+            .ok_or("Start scrolling button did not start capture")?;
+        Ok::<_, &str>((
+            scroll.panel.clone(),
+            scroll.preview_panel.clone(),
+            a.generation,
+        ))
+    })?;
+    if toolbar.hidesOnDeactivate() || preview.hidesOnDeactivate() || !window.ignoresMouseEvents() {
+        return Err("Scroll controls hide when the source app gets focus".into());
+    }
+    snapshot_view(
+        &toolbar.contentView().unwrap(),
+        &directory.join("scroll-controls.png"),
+    )?;
+    snapshot_view(
+        &preview.contentView().unwrap(),
+        &directory.join("scroll-preview.png"),
+    )?;
+    let live_overlay = snapshot_view(&view, &directory.join("scroll-overlay.png"))?;
+    let inside = live_overlay.get_pixel((1100.0 * sx) as u32, (550.0 * sy) as u32);
+    if inside[3] != 0 {
+        return Err("Scrolling overlay retained the frozen screenshot inside the selection".into());
+    }
+    dispatch_hotkey(GlobalHotKeyEvent {
+        id: state(|a| a.escape_hotkey.id()),
+        state: HotKeyState::Pressed,
+    });
+    if state(|a| !a.sessions.is_empty() || a.scroll.is_some() || a.pending != 0)
+        || window.isVisible()
+        || toolbar.isVisible()
+        || preview.isVisible()
+        || window.ignoresMouseEvents()
+    {
+        return Err("Escape did not fully dispose of the scrolling capture session".into());
+    }
+    handle_capture(CaptureMessage {
+        generation: stale_generation,
+        id: 0,
+        pixels: Ok(demo_image()),
+        windows: vec![],
+    });
+    if state(|a| {
+        !a.sessions.is_empty()
+            || a._status_item
+                .menu(mtm())
+                .unwrap()
+                .itemWithTag(11)
+                .unwrap()
+                .isEnabled()
+    }) {
+        return Err("A late capture callback restored a canceled overlay".into());
+    }
+    for cancel_tag in [115, 11, 0] {
+        create_session(
+            Screen {
+                id: 0,
+                frame: NSRect::new(
+                    NSPoint::new(-10_000.0, -10_000.0),
+                    NSSize::new(1440.0, 900.0),
+                ),
+                scale: 1.0,
+            },
+            demo_image(),
+            false,
+            vec![],
+        );
+        if cancel_tag == 0 {
+            let notification = unsafe {
+                NSNotification::notificationWithName_object(
+                    NSApplicationDidResignActiveNotification,
+                    None,
+                )
+            };
+            let delegate = state(|a| a.delegate.clone());
+            unsafe {
+                let _: () = msg_send![&*delegate,applicationDidResignActive:&*notification];
+            }
+        } else {
+            handle_action(cancel_tag, None);
+        }
+        if state(|a| !a.sessions.is_empty()) {
+            return Err("Cancel or app deactivation left a capture session alive".into());
+        }
+    }
     if state(|a| a.sessions.iter().any(|s| s.window.isVisible()) || a.home.isVisible()) {
         return Err("An offscreen test window became visible".into());
     }
     println!(
-        "Native UI check passed: selection mask, real controls, hover labels, capture modes, permission recovery, silent startup. Language: {}",
+        "Native UI check passed: mask, controls, modes, permission recovery, scroll confirmation, persistent controls, Escape cleanup, stale callback rejection, silent startup. Language: {}",
         i18n::language_name(i18n::current())
     );
     close_sessions();
