@@ -22,7 +22,7 @@ define_class!(
     unsafe impl NSObjectProtocol for UpdateDelegate {}
     impl UpdateDelegate {
         #[unsafe(method(updater:mayPerformUpdateCheck:error:))]
-        fn may_check(&self,_updater:&AnyObject,_kind:usize,error:*mut *mut NSError)->bool {
+        fn may_check(&self,_updater:&AnyObject,_kind:isize,error:*mut *mut NSError)->bool {
             let busy=super::app::update_busy();
             if busy && !error.is_null() {
                 let message=NSString::from_str(&crate::i18n::tr("请先结束当前截图或录屏, 再检查更新"));
