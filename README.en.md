@@ -47,6 +47,17 @@ The default shortcut is `Command+Shift+A`. Select one of the four modes at the t
 
 Scroll over pinned images to zoom, Option+scroll to adjust opacity, and right-click for actions. Recording copy uses the macOS file clipboard; GIF also provides animated image data. Paste behavior depends on the receiving app's supported formats. Recording files remain in the local cache so copied files remain available for pasting.
 
+## Screen access fails after an upgrade
+
+Older test packages used ad-hoc signing. New packages use an available stable developer certificate. This identity transition requires permission again. The app offers Open System Settings, Show This App, and Check Again without resetting system permissions.
+
+1. Quit flytoSnap from the menu bar. Place the new app in a consistent location, preferably `/Applications/flytoSnap.app`.
+2. Open System Settings -> Privacy & Security -> Screen & System Audio Recording (Screen Recording on older systems).
+3. If flytoSnap is already enabled but capture still fails, remove the old entry. Use `+` to add the current app and enable it.
+4. Quit completely and reopen. Enabling an entry for an older build may not authorize the new app.
+
+The build script prefers a local Developer ID Application certificate, then Apple Development. Set `FLYTOSNAP_SIGNING_IDENTITY` to choose a certificate name or fingerprint. Without a valid certificate, it falls back to ad-hoc signing with a warning, and upgrades may need permission again. Keep the same certificate type, team, and bundle identifier for later builds. The script does not change keychain trust settings.
+
 ## Validation
 
 ```sh

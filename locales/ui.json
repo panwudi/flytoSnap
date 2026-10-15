@@ -682,5 +682,53 @@
   "已取消保存录屏": {
     "zh-TW": "已取消儲存錄影",
     "en": "Saving recording cancelled."
+  },
+  "系统尚未允许当前版本截取屏幕": {
+    "zh-TW": "系統尚未允許目前版本擷取螢幕",
+    "en": "Screen access is not enabled for this version"
+  },
+  "1. 打开系统设置, 在屏幕与系统音频录制中允许 flytoSnap.": {
+    "zh-TW": "1. 開啟系統設定, 在螢幕與系統音訊錄製中允許 flytoSnap.",
+    "en": "1. Open System Settings and allow flytoSnap under Screen & System Audio Recording."
+  },
+  "2. 若开关已打开但仍失败, 移除旧条目, 再添加当前应用.": {
+    "zh-TW": "2. 若開關已開啟但仍失敗, 移除舊項目, 再加入目前的應用程式.",
+    "en": "2. If already enabled but capture fails, remove the old entry and add this app again."
+  },
+  "3. 完全退出 flytoSnap 后重新打开, 或点击重新检测.": {
+    "zh-TW": "3. 完全結束 flytoSnap 後重新開啟, 或按一下重新檢查.",
+    "en": "3. Quit flytoSnap completely and reopen it, or click Check Again."
+  },
+  "升级旧测试版可能需要重新授权. 应用不会自动重置权限.": {
+    "zh-TW": "升級舊測試版可能需要重新授權. 應用程式不會自動重設權限.",
+    "en": "Upgrading an older test build may require permission again. The app will not reset permissions."
+  },
+  "显示当前应用": {
+    "zh-TW": "顯示目前的應用程式",
+    "en": "Show This App"
+  },
+  "重新检测": {
+    "zh-TW": "重新檢查",
+    "en": "Check Again"
+  },
+  "已取消截图, 可从菜单栏重新开始": {
+    "zh-TW": "已取消截圖, 可從選單列重新開始",
+    "en": "Capture canceled. Start again from the menu bar."
+  },
+  "系统设置已打开, 更改权限后请重新检测或重启应用": {
+    "zh-TW": "系統設定已開啟, 更改權限後請重新檢查或重新啟動",
+    "en": "Settings opened. After allowing access, check again or restart."
+  },
+  "无法打开系统设置, 请从苹果菜单手动打开": {
+    "zh-TW": "無法開啟系統設定, 請從蘋果選單手動開啟",
+    "en": "Could not open Settings. Open it from the Apple menu."
+  },
+  "已在 Finder 中显示当前应用, 请将它添加到权限列表": {
+    "zh-TW": "已在 Finder 中顯示目前的應用程式, 請將它加入權限列表",
+    "en": "This app is shown in Finder. Add it to the permission list."
+  },
+  "权限仍未生效, 请移除旧条目并重新添加, 然后退出再打开": {
+    "zh-TW": "權限仍未生效, 請移除舊項目並重新加入, 然後結束再開啟",
+    "en": "Access is still unavailable. Remove and re-add this app, then quit and reopen."
   }
 }

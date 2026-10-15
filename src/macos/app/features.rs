@@ -59,6 +59,118 @@ fn control(root: &NSView, title: &str, tag: isize, frame: NSRect) -> Retained<NS
     b
 }
 
+pub(super) fn dismiss_permission_help() {
+    if let Some(help) = state(|a| a.permission_help.take()) {
+        help.window.orderOut(None);
+    }
+}
+
+pub(super) fn show_permission_help() {
+    if let Some(window) = state(|a| a.permission_help.as_ref().map(|p| p.window.clone())) {
+        present(&window);
+        return;
+    }
+    let window = panel("屏幕录制权限", 660.0, 400.0);
+    let root = window.contentView().unwrap();
+    let status = label(
+        "系统尚未允许当前版本截取屏幕",
+        NSRect::new(NSPoint::new(24.0, 328.0), NSSize::new(612.0, 48.0)),
+        15.0,
+    );
+    status.setMaximumNumberOfLines(2);
+    status.setLineBreakMode(NSLineBreakMode::ByWordWrapping);
+    root.addSubview(&status);
+    for (text, y, height) in [
+        (
+            "1. 打开系统设置, 在屏幕与系统音频录制中允许 flytoSnap.",
+            284.0,
+            44.0,
+        ),
+        (
+            "2. 若开关已打开但仍失败, 移除旧条目, 再添加当前应用.",
+            226.0,
+            44.0,
+        ),
+        (
+            "3. 完全退出 flytoSnap 后重新打开, 或点击重新检测.",
+            168.0,
+            44.0,
+        ),
+        (
+            "升级旧测试版可能需要重新授权. 应用不会自动重置权限.",
+            118.0,
+            40.0,
+        ),
+    ] {
+        let text = label(
+            text,
+            NSRect::new(NSPoint::new(24.0, y), NSSize::new(612.0, height)),
+            13.0,
+        );
+        text.setMaximumNumberOfLines(2);
+        text.setLineBreakMode(NSLineBreakMode::ByWordWrapping);
+        root.addSubview(&text);
+    }
+    for (title, tag, x, width) in [
+        ("打开系统设置", 701, 24.0, 160.0),
+        ("显示当前应用", 703, 194.0, 160.0),
+        ("重新检测", 702, 364.0, 150.0),
+        ("稍后", 704, 524.0, 112.0),
+    ] {
+        control(
+            &root,
+            title,
+            tag,
+            NSRect::new(NSPoint::new(x, 30.0), NSSize::new(width, 36.0)),
+        );
+    }
+    state(|a| {
+        a.home_status
+            .setStringValue(&ns_ui("系统尚未允许当前版本截取屏幕"));
+        a.permission_help = Some(PermissionHelp {
+            window: window.clone(),
+            status,
+        });
+    });
+    present(&window);
+}
+
+fn permission_status(message: &str) {
+    state(|a| {
+        if let Some(help) = &a.permission_help {
+            help.status.setStringValue(&ns_ui(message));
+        }
+    });
+}
+
+pub(super) fn open_screen_permission_settings() {
+    let url = NSURL::URLWithString(ns_string!(
+        "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture"
+    ));
+    if url.is_some_and(|url| NSWorkspace::sharedWorkspace().openURL(&url)) {
+        permission_status("系统设置已打开, 更改权限后请重新检测或重启应用");
+    } else {
+        permission_status("无法打开系统设置, 请从苹果菜单手动打开");
+    }
+}
+
+pub(super) fn reveal_current_app() {
+    let url = NSBundle::mainBundle().bundleURL();
+    NSWorkspace::sharedWorkspace().activateFileViewerSelectingURLs(&NSArray::from_slice(&[&*url]));
+    permission_status("已在 Finder 中显示当前应用, 请将它添加到权限列表");
+}
+
+pub(super) fn retry_screen_permission() {
+    if unsafe { capture::CGPreflightScreenCaptureAccess() } {
+        let mode = state(|a| a.mode);
+        dismiss_permission_help();
+        toast("屏幕录制权限已就绪");
+        start_capture_mode(mode);
+    } else {
+        permission_status("权限仍未生效, 请移除旧条目并重新添加, 然后退出再打开");
+    }
+}
+
 pub(super) fn start_capture_mode(mode: CaptureMode) {
     if state(|a| a.recording.is_some()) {
         toast("正在录屏, 请先停止当前录制");

@@ -113,6 +113,10 @@ struct MediaResult {
     path: PathBuf,
     format: super::media::Format,
 }
+struct PermissionHelp {
+    window: Retained<NSPanel>,
+    status: Retained<NSTextField>,
+}
 struct App {
     delegate: Retained<Delegate>,
     home: Retained<NSWindow>,
@@ -146,6 +150,8 @@ struct App {
     record_setup: Option<RecordSetup>,
     recording: Option<Recording>,
     media_result: Option<MediaResult>,
+    permission_help: Option<PermissionHelp>,
+    screen_access_requested: bool,
 }
 
 define_class!(
@@ -587,6 +593,9 @@ fn relocalize_all() {
         if let Some(p) = &a.media_result {
             windows.push(p.window.as_super().retain());
         }
+        if let Some(p) = &a.permission_help {
+            windows.push(p.window.as_super().retain());
+        }
         windows.extend(a.sessions.iter().map(|s| s.window.as_super().retain()));
         (windows, a._status_item.menu(mtm()), a.sessions.len())
     });
@@ -842,6 +851,8 @@ fn initialize(delegate: &Delegate) {
             record_setup: None,
             recording: None,
             media_result: None,
+            permission_help: None,
+            screen_access_requested: false,
         })
     });
     if !headless {
@@ -901,18 +912,22 @@ fn start_capture(prefer_scroll: bool) {
         }
     });
     if !unsafe { capture::CGPreflightScreenCaptureAccess() } {
-        unsafe {
-            capture::CGRequestScreenCaptureAccess();
+        let should_request = state(|a| {
+            let first = !a.screen_access_requested;
+            a.screen_access_requested = true;
+            first
+        });
+        if should_request {
+            unsafe {
+                capture::CGRequestScreenCaptureAccess();
+            }
         }
         if !unsafe { capture::CGPreflightScreenCaptureAccess() } {
-            permission_alert(
-                "屏幕录制权限",
-                "请在系统设置中允许 flytoSnap 录制屏幕, 然后重新打开应用.",
-                "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture",
-            );
+            show_permission_help();
             return;
         }
     }
+    dismiss_permission_help();
     let requests = screens()
         .iter()
         .map(|s| ScreenRequest {
@@ -1781,6 +1796,23 @@ fn handle_action(tag: isize, window: Option<Retained<NSWindow>>) {
         return;
     }
     match tag {
+        701 => {
+            open_screen_permission_settings();
+            return;
+        }
+        702 => {
+            retry_screen_permission();
+            return;
+        }
+        703 => {
+            reveal_current_app();
+            return;
+        }
+        704 => {
+            dismiss_permission_help();
+            toast("已取消截图, 可从菜单栏重新开始");
+            return;
+        }
         1 => {
             start_capture(false);
             return;
@@ -2888,7 +2920,16 @@ fn handle_capture(message: CaptureMessage) {
         }
         Err(e) => {
             toast(&format!("截图失败: {e}"));
-            show_home();
+            if !unsafe { capture::CGPreflightScreenCaptureAccess() } {
+                close_sessions();
+                state(|a| {
+                    a.generation += 1;
+                    a.pending = 0;
+                });
+                show_permission_help();
+            } else {
+                show_home();
+            }
         }
     }
 }
@@ -3056,11 +3097,26 @@ fn ui_snapshot(directory: &std::path::Path) -> Result<(), String> {
     if state(|a| a.mode) != CaptureMode::Screenshot {
         return Err("Native mode button did not change mode".into());
     }
+    show_permission_help();
+    let help = state(|a| a.permission_help.as_ref().unwrap().window.clone());
+    let root = help.contentView().unwrap();
+    snapshot_view(&root, &directory.join("permissions.png"))?;
+    if help.isVisible() || state(|a| a.screen_access_requested) {
+        return Err("Permission UI check displayed a window or requested access".into());
+    }
+    show_permission_help();
+    if state(|a| a.permission_help.as_ref().unwrap().window.clone()) != help {
+        return Err("Permission recovery created duplicate panels".into());
+    }
+    dismiss_permission_help();
+    if state(|a| a.permission_help.is_some()) {
+        return Err("Permission recovery panel did not dismiss".into());
+    }
     if state(|a| a.sessions.iter().any(|s| s.window.isVisible()) || a.home.isVisible()) {
         return Err("An offscreen test window became visible".into());
     }
     println!(
-        "Native UI check passed: selection mask, real controls, hover labels, capture modes, silent startup. Language: {}",
+        "Native UI check passed: selection mask, real controls, hover labels, capture modes, permission recovery, silent startup. Language: {}",
         i18n::language_name(i18n::current())
     );
     close_sessions();
