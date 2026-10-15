@@ -273,6 +273,71 @@ define_class!(
     }
 );
 
+define_class!(
+    #[unsafe(super(NSButton))]
+    #[thread_kind=MainThreadOnly]
+    struct ActionButton;
+    impl ActionButton {
+        #[unsafe(method(viewDidMoveToWindow))]
+        fn moved_to_window(&self) {
+            unsafe {let _: () = msg_send![super(self),viewDidMoveToWindow];}
+            if let Some(window)=self.window(){window.setAcceptsMouseMovedEvents(true);}
+        }
+        #[unsafe(method(resetCursorRects))]
+        fn cursor_rects(&self) {self.addCursorRect_cursor(self.bounds(), &NSCursor::arrowCursor());}
+        #[unsafe(method(cursorUpdate:))]
+        fn cursor_update(&self,_event:&NSEvent) {button_hover(self);}
+        #[unsafe(method(mouseEntered:))]
+        fn entered(&self,_event:&NSEvent) {button_hover(self);}
+        #[unsafe(method(mouseMoved:))]
+        fn moved(&self,_event:&NSEvent) {button_hover(self);}
+        #[unsafe(method(mouseExited:))]
+        fn exited(&self,event:&NSEvent) {
+            if let Some(index)=button_session(self) {mouse_move(index,event);}
+        }
+    }
+);
+
+fn track_pointer(view: &NSView) {
+    let tracking = unsafe {
+        NSTrackingArea::initWithRect_options_owner_userInfo(
+            NSTrackingArea::alloc(),
+            NSRect::ZERO,
+            NSTrackingAreaOptions::MouseEnteredAndExited
+                | NSTrackingAreaOptions::MouseMoved
+                | NSTrackingAreaOptions::ActiveAlways
+                | NSTrackingAreaOptions::InVisibleRect,
+            Some(view),
+            None,
+        )
+    };
+    view.addTrackingArea(&tracking);
+}
+
+fn button_session(button: &NSButton) -> Option<usize> {
+    let window = button.window()?;
+    APP.with(|app| {
+        app.borrow()
+            .as_ref()?
+            .sessions
+            .iter()
+            .position(|s| s.window.as_super() == window.as_ref())
+    })
+}
+
+fn button_hover(button: &NSButton) {
+    if let Some(index) = button_session(button) {
+        state(|a| {
+            let session = &mut a.sessions[index];
+            if session.hovered.map(|h| h.0) != Some(button.tag()) {
+                session.hovered = Some((button.tag(), Instant::now()));
+                session.view.setNeedsDisplay(true);
+            }
+        });
+    }
+    NSCursor::arrowCursor().set();
+}
+
 struct PinIvars {
     image: Retained<NSImage>,
     png: Vec<u8>,
@@ -355,7 +420,9 @@ const TOOLS: [(isize, &str, &str); 17] = [
 ];
 
 fn button(title: &str, symbol: Option<&str>, tag: isize, target: &Delegate) -> Retained<NSButton> {
-    let b = NSButton::initWithFrame(NSButton::alloc(mtm()), NSRect::ZERO);
+    let b: Retained<ActionButton> =
+        unsafe { msg_send![ActionButton::alloc(mtm()),initWithFrame:NSRect::ZERO] };
+    track_pointer(&b);
     b.setTitle(&ns_ui(title));
     b.setBordered(false);
     b.setRefusesFirstResponder(true);
@@ -376,7 +443,7 @@ fn button(title: &str, symbol: Option<&str>, tag: isize, target: &Delegate) -> R
         b.setTarget(Some(target));
         b.setAction(Some(sel!(action:)));
     }
-    b
+    b.into_super()
 }
 fn ns_ui(s: &str) -> Retained<NSString> {
     NSString::from_str(&tr(s))
@@ -3286,6 +3353,87 @@ fn verify_live_status_item() -> Result<(), String> {
     );
     Ok(())
 }
+fn pointer_event(
+    view: &NSView,
+    point: NSPoint,
+    kind: NSEventType,
+) -> Result<Retained<NSEvent>, String> {
+    let location = view.convertPoint_toView(point, None);
+    let window_number = view
+        .window()
+        .ok_or("Pointer target has no window")?
+        .windowNumber();
+    if kind == NSEventType::MouseMoved {
+        NSEvent::mouseEventWithType_location_modifierFlags_timestamp_windowNumber_context_eventNumber_clickCount_pressure(
+            kind, location, NSEventModifierFlags::empty(), 0.0, window_number, None, 0, 0, 0.0,
+        )
+    } else {
+        unsafe {
+            NSEvent::enterExitEventWithType_location_modifierFlags_timestamp_windowNumber_context_eventNumber_trackingNumber_userData(
+                kind, location, NSEventModifierFlags::empty(), 0.0, window_number, None, 0, 0, std::ptr::null_mut(),
+            )
+        }
+    }.ok_or_else(||"Could not create native pointer event".into())
+}
+fn verify_arrow_events(view: &NSView) -> Result<(), String> {
+    if !view
+        .window()
+        .is_some_and(|window| window.acceptsMouseMovedEvents())
+    {
+        return Err("The host window does not deliver mouse-moved events".into());
+    }
+    if !view.trackingAreas().iter().any(|area| {
+        area.options().contains(
+            NSTrackingAreaOptions::ActiveAlways
+                | NSTrackingAreaOptions::MouseEnteredAndExited
+                | NSTrackingAreaOptions::MouseMoved
+                | NSTrackingAreaOptions::InVisibleRect,
+        )
+    }) {
+        return Err("Pointer tracking is missing for inactive windows or resized controls".into());
+    }
+    let original = NSCursor::currentCursor();
+    let result = (|| {
+        let bounds = view.bounds();
+        let point = NSPoint::new(
+            bounds.origin.x + bounds.size.width / 2.0,
+            bounds.origin.y + bounds.size.height / 2.0,
+        );
+        for kind in [NSEventType::MouseEntered, NSEventType::MouseMoved] {
+            NSCursor::crosshairCursor().set();
+            let event = pointer_event(view, point, kind)?;
+            unsafe {
+                if kind == NSEventType::MouseEntered {
+                    let _: () = msg_send![view,mouseEntered:&*event];
+                } else {
+                    let _: () = msg_send![view,mouseMoved:&*event];
+                }
+            }
+            if NSCursor::currentCursor() != NSCursor::arrowCursor() {
+                return Err(
+                    "A native control inherited the capture crosshair instead of the arrow".into(),
+                );
+            }
+        }
+        Ok(())
+    })();
+    original.set();
+    result
+}
+fn verify_button_cursors(view: &NSView) -> Result<usize, String> {
+    let mut count = 0;
+    for child in view.subviews() {
+        if child.isHidden() {
+            continue;
+        }
+        if let Ok(button) = child.clone().downcast::<NSButton>() {
+            verify_arrow_events(&button).map_err(|e| format!("Button {}: {e}", button.tag()))?;
+            count += 1;
+        }
+        count += verify_button_cursors(&child)?;
+    }
+    Ok(count)
+}
 fn ui_snapshot(directory: &std::path::Path) -> Result<(), String> {
     std::fs::create_dir_all(directory).map_err(|e| e.to_string())?;
     let pixels = demo_image();
@@ -3314,6 +3462,7 @@ fn ui_snapshot(directory: &std::path::Path) -> Result<(), String> {
     });
     refresh(0);
     let view = state(|a| a.sessions[0].view.clone());
+    let mut cursor_checks = verify_button_cursors(&view)?;
     let image = snapshot_view(&view, &directory.join("screenshot.png"))?;
     let sx = image.width() as f64 / 1440.0;
     let sy = image.height() as f64 / 900.0;
@@ -3339,6 +3488,7 @@ fn ui_snapshot(directory: &std::path::Path) -> Result<(), String> {
             .unwrap()
     });
     snapshot_view(&root, &directory.join("recording.png"))?;
+    cursor_checks += verify_button_cursors(&root)?;
     let window = state(|a| a.sessions[0].window.clone());
     let frame = window.frame();
     let mut altered = frame;
@@ -3379,7 +3529,33 @@ fn ui_snapshot(directory: &std::path::Path) -> Result<(), String> {
         );
     }
     snapshot_view(&view, &directory.join("scroll-ready.png"))?;
+    cursor_checks += verify_button_cursors(&view)?;
     let start = state(|a| a.sessions[0].scroll_actions[0].clone());
+    verify_arrow_events(&start)?;
+    if state(|a| a.sessions[0].hovered.map(|h| h.0)) != Some(304) {
+        return Err("Native button hover did not reach the tooltip state".into());
+    }
+    let original = NSCursor::currentCursor();
+    for (handle, point) in state(|a| a.sessions[0].editor.selection.unwrap().handles())
+        .into_iter()
+        .enumerate()
+    {
+        let event = pointer_event(
+            &view,
+            NSPoint::new(point.x, point.y),
+            NSEventType::MouseExited,
+        )?;
+        unsafe {
+            let _: () = msg_send![&*start,mouseExited:&*event];
+        }
+        if NSCursor::currentCursor() != native_cursor(resize_cursor(handle)) {
+            original.set();
+            return Err(
+                "Leaving a native button did not restore the selection resize cursor".into(),
+            );
+        }
+    }
+    original.set();
     unsafe {
         let _: () = msg_send![&*start,performClick:Option::<&AnyObject>::None];
     }
@@ -3397,6 +3573,13 @@ fn ui_snapshot(directory: &std::path::Path) -> Result<(), String> {
     if toolbar.hidesOnDeactivate() || preview.hidesOnDeactivate() || !window.ignoresMouseEvents() {
         return Err("Scroll controls hide when the source app gets focus".into());
     }
+    if toolbar.isKeyWindow() {
+        return Err("Inactive toolbar cursor check unexpectedly has keyboard focus".into());
+    }
+    let toolbar_root = toolbar.contentView().unwrap();
+    cursor_checks += verify_button_cursors(&toolbar_root)?;
+    verify_arrow_events(&toolbar_root)?;
+    verify_arrow_events(&preview.contentView().unwrap())?;
     snapshot_view(
         &toolbar.contentView().unwrap(),
         &directory.join("scroll-controls.png"),
@@ -3477,6 +3660,9 @@ fn ui_snapshot(directory: &std::path::Path) -> Result<(), String> {
     println!(
         "Native UI check passed: mask, controls, modes, permission recovery, scroll confirmation, persistent controls, Escape cleanup, stale callback rejection, silent startup. Language: {}",
         i18n::language_name(i18n::current())
+    );
+    println!(
+        "Native pointer check passed: {cursor_checks} buttons, scroll toolbar and preview, inactive panels, hover labels, eight resize cursors on exit."
     );
     close_sessions();
     Ok(())

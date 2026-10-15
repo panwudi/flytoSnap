@@ -10,6 +10,23 @@ define_class!(
         fn paint(&self,_rect:NSRect){render::rounded(Rect::new(0.0,0.0,self.bounds().size.width,self.bounds().size.height),0.0,Color(0.97,0.975,0.985),1.0);}
     }
 );
+define_class!(
+    #[unsafe(super(NSView))]
+    #[thread_kind=MainThreadOnly]
+    struct FloatingPanelContent;
+    impl FloatingPanelContent {
+        #[unsafe(method(drawRect:))]
+        fn paint(&self,_rect:NSRect){render::rounded(Rect::new(0.0,0.0,self.bounds().size.width,self.bounds().size.height),0.0,Color(0.97,0.975,0.985),1.0);}
+        #[unsafe(method(resetCursorRects))]
+        fn cursor_rects(&self) {self.addCursorRect_cursor(self.bounds(), &NSCursor::arrowCursor());}
+        #[unsafe(method(cursorUpdate:))]
+        fn cursor_update(&self,_event:&NSEvent) {NSCursor::arrowCursor().set();}
+        #[unsafe(method(mouseEntered:))]
+        fn entered(&self,_event:&NSEvent) {NSCursor::arrowCursor().set();}
+        #[unsafe(method(mouseMoved:))]
+        fn moved(&self,_event:&NSEvent) {NSCursor::arrowCursor().set();}
+    }
+);
 
 fn panel(title: &str, width: f64, height: f64) -> Retained<NSPanel> {
     let panel = NSPanel::initWithContentRect_styleMask_backing_defer(
@@ -24,6 +41,7 @@ fn panel(title: &str, width: f64, height: f64) -> Retained<NSPanel> {
     }
     panel.setTitle(&ns_ui(title));
     panel.setLevel(26);
+    panel.setAcceptsMouseMovedEvents(true);
     panel.setFloatingPanel(true);
     panel.setHidesOnDeactivate(false);
     panel.setCollectionBehavior(
@@ -61,6 +79,7 @@ pub(super) fn floating_panel(width: f64, height: f64) -> Retained<NSPanel> {
         panel.setReleasedWhenClosed(false);
     }
     panel.setLevel(26);
+    panel.setAcceptsMouseMovedEvents(true);
     panel.setFloatingPanel(true);
     panel.setHidesOnDeactivate(false);
     panel.setOpaque(false);
@@ -71,9 +90,10 @@ pub(super) fn floating_panel(width: f64, height: f64) -> Retained<NSPanel> {
             | NSWindowCollectionBehavior::FullScreenAuxiliary,
     );
     panel.setAppearance(NSAppearance::appearanceNamed(unsafe { NSAppearanceNameAqua }).as_deref());
-    let root: Retained<PanelContent> = unsafe {
-        msg_send![PanelContent::alloc(mtm()),initWithFrame:NSRect::new(NSPoint::ZERO,NSSize::new(width,height))]
+    let root: Retained<FloatingPanelContent> = unsafe {
+        msg_send![FloatingPanelContent::alloc(mtm()),initWithFrame:NSRect::new(NSPoint::ZERO,NSSize::new(width,height))]
     };
+    track_pointer(&root);
     panel.setContentView(Some(&root));
     panel
 }
