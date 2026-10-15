@@ -73,9 +73,10 @@ cargo test
 cargo clippy --all-targets -- -D warnings
 cargo run -- --self-check target/self-check
 cargo run -- --ui-snapshot target/ui-check --lang en
+cargo run -- --window-check
 ```
 
-The last two checks do not show application windows. Checks cover editing geometry, cursor regions, selection masking, translations, native controls, Retina cropping, system OCR, animated GIF, and finalized H.264 MP4.
+The last three checks do not show application windows in your workspace. Checks cover editing geometry, cursor regions, selection masking, translations, native controls, Retina cropping, system OCR, animated GIF, and finalized H.264 MP4. `--window-check` uses real native windows outside the physical displays to verify WindowServer layers, occlusion detection, hit testing, window event dispatch, recording format selection, and cancellation. It does not record the screen or request permissions.
 
 This optional check briefly shows the actual menu bar icon for about one second, without opening a main window or requesting permissions:
 

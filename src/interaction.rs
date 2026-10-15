@@ -18,6 +18,22 @@ impl CaptureMode {
             Self::Text => "提取文字",
         }
     }
+    pub fn selection_prompt(self) -> &'static str {
+        match self {
+            Self::Screenshot => "拖动选择截图区域   Esc 取消",
+            Self::Scroll => "框选滚动区域, 然后点击开始滚动截图. Esc 取消",
+            Self::Record => "框选录屏区域, 松开后选择 MP4 或 GIF. Esc 取消",
+            Self::Text => "框选需要提取文字的区域. Esc 取消",
+        }
+    }
+    pub fn confirm_hint(self) -> &'static str {
+        match self {
+            Self::Screenshot => "Esc 退出 / Enter 复制",
+            Self::Scroll => "Esc 退出 / Enter 开始",
+            Self::Record => "Esc 退出 / Enter 录制",
+            Self::Text => "Esc 退出 / Enter 复制文字",
+        }
+    }
     pub fn tag(self) -> isize {
         match self {
             Self::Screenshot => 401,

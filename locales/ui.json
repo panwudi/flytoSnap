@@ -766,5 +766,25 @@
   "Esc 快捷键不可用, 可从菜单栏取消当前截图": {
     "zh-TW": "Esc 快捷鍵無法使用, 可從選單列取消目前截圖",
     "en": "Esc is unavailable. Cancel the capture from the menu bar."
+  },
+  "框选滚动区域, 然后点击开始滚动截图. Esc 取消": {
+    "zh-TW": "框選捲動區域, 然後按一下開始捲動截圖. Esc 取消",
+    "en": "Select a scrolling area, then click Start Scrolling Capture. Esc cancels."
+  },
+  "框选录屏区域, 松开后选择 MP4 或 GIF. Esc 取消": {
+    "zh-TW": "框選錄影區域, 放開後選擇 MP4 或 GIF. Esc 取消",
+    "en": "Select a recording area, then choose MP4 or GIF. Esc cancels."
+  },
+  "框选需要提取文字的区域. Esc 取消": {
+    "zh-TW": "框選需要擷取文字的區域. Esc 取消",
+    "en": "Select an area to extract text. Esc cancels."
+  },
+  "Esc 退出 / Enter 录制": {
+    "zh-TW": "Esc 離開 / Enter 錄影",
+    "en": "Esc Cancel / Enter Record"
+  },
+  "Esc 退出 / Enter 复制文字": {
+    "zh-TW": "Esc 離開 / Enter 複製文字",
+    "en": "Esc Cancel / Enter Copy Text"
   }
 }

@@ -73,9 +73,10 @@ cargo test
 cargo clippy --all-targets -- -D warnings
 cargo run -- --self-check target/self-check
 cargo run -- --ui-snapshot target/ui-check --lang zh-TW
+cargo run -- --window-check
 ```
 
-後兩項不顯示應用程式視窗. 檢查涵蓋編輯幾何, 游標區域, 遮罩, 語言文字, 原生控制項, Retina 裁剪, 系統 OCR, GIF 動畫與 H.264 MP4 封裝.
+後三項不在工作區顯示應用程式視窗. 檢查涵蓋編輯幾何, 游標區域, 遮罩, 語言文字, 原生控制項, Retina 裁剪, 系統 OCR, GIF 動畫與 H.264 MP4 封裝. `--window-check` 使用螢幕外的實際原生視窗, 檢查 WindowServer 層級, 遮擋偵測, 按鈕命中, 視窗事件分發, 錄影格式切換與取消. 此檢查不錄製螢幕或請求權限.
 
 以下指令會短暫顯示實際選單列圖示約一秒, 不開啟主視窗或請求權限:
 

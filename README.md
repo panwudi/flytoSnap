@@ -73,9 +73,10 @@ cargo test
 cargo clippy --all-targets -- -D warnings
 cargo run -- --self-check target/self-check
 cargo run -- --ui-snapshot target/ui-check --lang zh-CN
+cargo run -- --window-check
 ```
 
-后两项不显示应用窗口. 检查覆盖编辑几何, 光标区域, 遮罩, 语言文本, 原生控件, Retina 裁剪, 系统 OCR, GIF 动画和 H.264 MP4 封装.
+后三项不在工作区显示应用窗口. 检查覆盖编辑几何, 光标区域, 遮罩, 语言文本, 原生控件, Retina 裁剪, 系统 OCR, GIF 动画和 H.264 MP4 封装. `--window-check` 使用屏幕外的真实原生窗口, 检查 WindowServer 层级, 遮挡检测, 按钮命中, 窗口事件分发, 录屏格式切换和取消. 此检查不录制屏幕或请求权限.
 
 以下命令会短暂显示真实菜单栏图标约一秒, 不打开主窗口或请求权限:
 

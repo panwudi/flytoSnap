@@ -29,8 +29,11 @@ use std::{
     sync::mpsc::{self, Receiver, Sender},
     time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
+mod checks;
 mod features;
 use features::*;
+const CAPTURE_OVERLAY_LEVEL: isize = 25;
+const CAPTURE_CONTROL_LEVEL: isize = 26;
 
 thread_local! {static APP:RefCell<Option<App>>=const {RefCell::new(None)};}
 fn mtm() -> MainThreadMarker {
@@ -173,7 +176,7 @@ define_class!(
         #[unsafe(method(applicationDidFinishLaunching:))]
         fn launched(&self,_notification:&NSNotification) {
             initialize(self);
-            if !std::env::args().any(|a|a=="--menubar-check") {startup_feedback();}
+            if !std::env::args().any(|a|a=="--menubar-check"||a=="--window-check") {startup_feedback();}
         }
         #[unsafe(method(applicationDidResignActive:))]
         fn deactivated(&self,_notification:&NSNotification) {
@@ -264,10 +267,15 @@ define_class!(
         fn up(&self,event:&NSEvent) {mouse_up(self.ivars().index,event);}
         #[unsafe(method(mouseMoved:))]
         fn moved(&self,event:&NSEvent) {mouse_move(self.ivars().index,event);}
+        #[unsafe(method(mouseEntered:))]
+        fn entered(&self,event:&NSEvent) {mouse_move(self.ivars().index,event);}
         #[unsafe(method(mouseExited:))]
-        fn exited(&self,_event:&NSEvent) {state(|a|{if let Some(s)=a.sessions.get_mut(self.ivars().index){s.hovered=None;s.view.setNeedsDisplay(true);}});NSCursor::arrowCursor().set();}
-        #[unsafe(method(resetCursorRects))]
-        fn cursor_rects(&self) {reset_cursor_rects(self.ivars().index);}
+        fn exited(&self,_event:&NSEvent) {
+            let interactive=state(|a|{if let Some(s)=a.sessions.get_mut(self.ivars().index){s.hovered=None;s.view.setNeedsDisplay(true);!s.window.ignoresMouseEvents()}else{false}});
+            if interactive{NSCursor::arrowCursor().set();}
+        }
+        #[unsafe(method(cursorUpdate:))]
+        fn cursor_update(&self,event:&NSEvent) {mouse_move(self.ivars().index,event);}
         #[unsafe(method(keyDown:))]
         fn key(&self,event:&NSEvent) {key_down(self.ivars().index,event);}
     }
@@ -312,6 +320,18 @@ fn track_pointer(view: &NSView) {
         )
     };
     view.addTrackingArea(&tracking);
+    let cursor = unsafe {
+        NSTrackingArea::initWithRect_options_owner_userInfo(
+            NSTrackingArea::alloc(),
+            NSRect::ZERO,
+            NSTrackingAreaOptions::CursorUpdate
+                | NSTrackingAreaOptions::ActiveInKeyWindow
+                | NSTrackingAreaOptions::InVisibleRect,
+            Some(view),
+            None,
+        )
+    };
+    view.addTrackingArea(&cursor);
 }
 
 fn button_session(button: &NSButton) -> Option<usize> {
@@ -550,50 +570,6 @@ fn native_cursor(intent: CursorIntent) -> Retained<NSCursor> {
         }
     }
 }
-fn reset_cursor_rects(index: usize) {
-    let data = state(|a| {
-        a.sessions
-            .get(index)
-            .map(|s| (s.view.clone(), s.editor.clone(), controls(s), bar(s)))
-    });
-    let Some((view, editor, buttons, bar)) = data else {
-        return;
-    };
-    view.addCursorRect_cursor(view.bounds(), &native_cursor(CursorIntent::Crosshair));
-    if let Some(selection) = editor.selection {
-        view.addCursorRect_cursor(
-            nr(selection),
-            &native_cursor(if editor.tool.is_text() {
-                CursorIntent::IBeam
-            } else if editor.tool == Tool::Select {
-                CursorIntent::OpenHand
-            } else {
-                CursorIntent::Crosshair
-            }),
-        );
-        for (i, p) in selection.handles().iter().enumerate() {
-            view.addCursorRect_cursor(
-                nr(Rect::new(p.x - 7.0, p.y - 7.0, 14.0, 14.0)),
-                &native_cursor(resize_cursor(i)),
-            );
-        }
-    }
-    if let Some(i) = editor.selected {
-        for (h, p) in editor.annotations[i].bounds().handles().iter().enumerate() {
-            view.addCursorRect_cursor(
-                nr(Rect::new(p.x - 7.0, p.y - 7.0, 14.0, 14.0)),
-                &native_cursor(resize_cursor(h)),
-            );
-        }
-    }
-    view.addCursorRect_cursor(
-        nr(Rect::new(bar.x, bar.y, 22.0, bar.h)),
-        &native_cursor(CursorIntent::OpenHand),
-    );
-    for (_, rect, _) in buttons {
-        view.addCursorRect_cursor(nr(rect), &native_cursor(CursorIntent::Arrow));
-    }
-}
 fn draw_tooltip(s: &Session) {
     let Some((tag, when)) = s.hovered else {
         return;
@@ -734,9 +710,10 @@ fn initialize(delegate: &Delegate) {
             }
         }
     }
-    let headless = std::env::args().any(|s| s == "--ui-snapshot");
+    let window_check = std::env::args().any(|s| s == "--window-check");
+    let headless = window_check || std::env::args().any(|s| s == "--ui-snapshot");
     let menubar_check = std::env::args().any(|s| s == "--menubar-check");
-    application.setActivationPolicy(if headless {
+    application.setActivationPolicy(if headless && !window_check {
         NSApplicationActivationPolicy::Prohibited
     } else {
         NSApplicationActivationPolicy::Accessory
@@ -1162,7 +1139,7 @@ fn create_session(screen: Screen, pixels: RgbaImage, demo: bool, windows: Vec<Re
     window.setTitle(&ns_ui("flytoSnap - 图片标注"));
     window.setAcceptsMouseMovedEvents(true);
     if !demo {
-        window.setLevel(25);
+        window.setLevel(CAPTURE_OVERLAY_LEVEL);
         window.setOpaque(false);
         window.setBackgroundColor(Some(NSColor::clearColor().as_ref()));
         window.setCollectionBehavior(
@@ -1208,19 +1185,7 @@ fn create_session(screen: Screen, pixels: RgbaImage, demo: bool, windows: Vec<Re
         view.addSubview(&b);
         scroll_actions.push(b);
     }
-    let tracking = unsafe {
-        NSTrackingArea::initWithRect_options_owner_userInfo(
-            NSTrackingArea::alloc(),
-            NSRect::ZERO,
-            NSTrackingAreaOptions::MouseMoved
-                | NSTrackingAreaOptions::MouseEnteredAndExited
-                | NSTrackingAreaOptions::ActiveAlways
-                | NSTrackingAreaOptions::InVisibleRect,
-            Some(&view),
-            None,
-        )
-    };
-    view.addTrackingArea(&tracking);
+    track_pointer(&view);
     let mut buttons = vec![];
     for (tag, symbol, title) in TOOLS {
         let b = button(title, Some(symbol), tag, &delegate);
@@ -1330,6 +1295,22 @@ fn close_sessions() {
         session.window.close();
     }
     NSCursor::arrowCursor().set();
+}
+fn pass_through_capture(index: usize) {
+    let windows = state(|a| {
+        a.sessions
+            .iter()
+            .map(|s| s.window.clone())
+            .collect::<Vec<_>>()
+    });
+    for (i, window) in windows.iter().enumerate() {
+        window.disableCursorRects();
+        window.discardCursorRects();
+        window.setIgnoresMouseEvents(true);
+        if i != index {
+            window.orderOut(None);
+        }
+    }
 }
 fn bar(s: &Session) -> Rect {
     let Some(r) = s.editor.selection else {
@@ -1577,11 +1558,7 @@ fn draw_canvas(index: usize) {
                 );
                 render::rounded(hint, 5.0, Color(0.12, 0.14, 0.18), 0.88);
                 render::ui_text(
-                    if a.mode == CaptureMode::Scroll {
-                        "Esc 退出 / Enter 开始"
-                    } else {
-                        "Esc 退出 / Enter 复制"
-                    },
+                    a.mode.confirm_hint(),
                     Point::new(hint.x + 9.0, hint.y + 7.0),
                     11.0,
                     Color(1.0, 1.0, 1.0),
@@ -1694,10 +1671,15 @@ fn draw_canvas(index: usize) {
                     render::rounded(bounds, 0.0, Color(0.0, 0.0, 0.0), 0.32);
                 }
             }
-            let msg = "拖动选择截图区域   Esc 取消";
-            let p = Point::new((bounds.w - 280.0) / 2.0, 28.0);
+            let msg = a.mode.selection_prompt();
+            let text_width = tr(msg)
+                .chars()
+                .map(|c| if c.is_ascii() { 7.0 } else { 13.0 })
+                .sum::<f64>();
+            let width = (text_width + 32.0).min(bounds.w - 32.0);
+            let p = Point::new((bounds.w - width) / 2.0 + 16.0, 100.0);
             render::rounded(
-                Rect::new(p.x - 16.0, p.y - 9.0, 310.0, 38.0),
+                Rect::new(p.x - 16.0, p.y - 9.0, width, 38.0),
                 6.0,
                 Color(0.12, 0.14, 0.18),
                 0.9,
@@ -1876,7 +1858,11 @@ fn finish_selection(index: usize) {
     }
 }
 fn mouse_move(index: usize, event: &NSEvent) {
-    if state(|a| index >= a.sessions.len()) {
+    if state(|a| {
+        a.sessions
+            .get(index)
+            .is_none_or(|s| s.window.ignoresMouseEvents())
+    }) {
         return;
     }
     let p = event_point(index, event);
@@ -2901,15 +2887,10 @@ fn start_scroll(index: usize) {
         }
     };
     preview.setImage(Some(&image));
-    let windows = state(|a| {
+    let count = state(|a| {
         a.prefer_scroll = false;
         a.pending = 0;
         a.generation += 1;
-        let windows = a
-            .sessions
-            .iter()
-            .map(|s| s.window.clone())
-            .collect::<Vec<_>>();
         a.scroll = Some(ScrollSession {
             stitcher: Stitcher::new(pixels),
             region,
@@ -2925,14 +2906,10 @@ fn start_scroll(index: usize) {
             unchanged: 0,
             auto_step: None,
         });
-        windows
+        a.sessions.len()
     });
-    for (i, window) in windows.iter().enumerate() {
-        if i == index {
-            window.setIgnoresMouseEvents(true);
-        } else {
-            window.orderOut(None);
-        }
+    pass_through_capture(index);
+    for i in 0..count {
         refresh(i);
     }
     NSCursor::arrowCursor().set();
@@ -3280,6 +3257,14 @@ pub fn run() {
     let delegate = unsafe { msg_send![Delegate::alloc(mtm()), init] };
     let delegate: Retained<Delegate> = delegate;
     app.setDelegate(Some(ProtocolObject::from_ref(&*delegate)));
+    if arguments.iter().any(|a| a == "--window-check") {
+        initialize(&delegate);
+        if let Err(error) = checks::window_check() {
+            eprintln!("Window interaction check failed: {error}");
+            std::process::exit(1);
+        }
+        return;
+    }
     if let Some(index) = arguments.iter().position(|a| a == "--ui-snapshot") {
         initialize(&delegate);
         let path = arguments
@@ -3399,14 +3384,20 @@ fn verify_arrow_events(view: &NSView) -> Result<(), String> {
             bounds.origin.x + bounds.size.width / 2.0,
             bounds.origin.y + bounds.size.height / 2.0,
         );
-        for kind in [NSEventType::MouseEntered, NSEventType::MouseMoved] {
+        for kind in [
+            NSEventType::MouseEntered,
+            NSEventType::MouseMoved,
+            NSEventType::CursorUpdate,
+        ] {
             NSCursor::crosshairCursor().set();
             let event = pointer_event(view, point, kind)?;
             unsafe {
                 if kind == NSEventType::MouseEntered {
                     let _: () = msg_send![view,mouseEntered:&*event];
-                } else {
+                } else if kind == NSEventType::MouseMoved {
                     let _: () = msg_send![view,mouseMoved:&*event];
+                } else {
+                    let _: () = msg_send![view,cursorUpdate:&*event];
                 }
             }
             if NSCursor::currentCursor() != NSCursor::arrowCursor() {
@@ -3479,6 +3470,17 @@ fn ui_snapshot(directory: &std::path::Path) -> Result<(), String> {
     });
     refresh(0);
     show_record_setup(0);
+    let (setup_level, overlay_level) = state(|a| {
+        (
+            a.record_setup.as_ref().unwrap().window.level(),
+            a.sessions[0].window.level(),
+        )
+    });
+    if setup_level <= overlay_level {
+        return Err(format!(
+            "Recording setup is hidden behind the capture overlay: panel level={setup_level}, overlay level={overlay_level}"
+        ));
+    }
     let root = state(|a| {
         a.record_setup
             .as_ref()
@@ -3572,6 +3574,12 @@ fn ui_snapshot(directory: &std::path::Path) -> Result<(), String> {
     })?;
     if toolbar.hidesOnDeactivate() || preview.hidesOnDeactivate() || !window.ignoresMouseEvents() {
         return Err("Scroll controls hide when the source app gets focus".into());
+    }
+    if toolbar.level() <= window.level() || preview.level() <= window.level() {
+        return Err("Scrolling controls are hidden behind the capture overlay".into());
+    }
+    if window.areCursorRectsEnabled() {
+        return Err("A pass-through capture overlay still owns cursor rectangles".into());
     }
     if toolbar.isKeyWindow() {
         return Err("Inactive toolbar cursor check unexpectedly has keyboard focus".into());

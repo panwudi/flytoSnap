@@ -175,6 +175,49 @@ pub fn verify_window_metadata() -> Result<usize, String> {
     Ok(windows.len())
 }
 
+pub struct ApplicationWindow {
+    pub id: u32,
+    pub level: i32,
+    pub bounds: Rect,
+}
+
+pub fn application_windows() -> Result<Vec<ApplicationWindow>, String> {
+    use objc2_core_foundation::CFRetained;
+    use objc2_core_graphics::{CGWindowListCopyWindowInfo, CGWindowListOption};
+    let info = CGWindowListCopyWindowInfo(CGWindowListOption::OptionAll, 0)
+        .ok_or("WindowServer returned no window list")?;
+    let array: Retained<NSArray<NSDictionary>> =
+        unsafe { Retained::retain(CFRetained::as_ptr(&info).as_ptr().cast()) }.unwrap();
+    let number = |dict: &NSDictionary, key: &NSString| {
+        dict.objectForKey(key)?
+            .downcast::<NSNumber>()
+            .ok()
+            .map(|n| n.doubleValue())
+    };
+    Ok(array
+        .iter()
+        .filter_map(|window| {
+            if number(&window, ns_string!("kCGWindowOwnerPID"))? as u32 != std::process::id() {
+                return None;
+            }
+            let bounds = window
+                .objectForKey(ns_string!("kCGWindowBounds"))?
+                .downcast::<NSDictionary>()
+                .ok()?;
+            Some(ApplicationWindow {
+                id: number(&window, ns_string!("kCGWindowNumber"))? as u32,
+                level: number(&window, ns_string!("kCGWindowLayer"))? as i32,
+                bounds: Rect::new(
+                    number(&bounds, ns_string!("X"))?,
+                    number(&bounds, ns_string!("Y"))?,
+                    number(&bounds, ns_string!("Width"))?,
+                    number(&bounds, ns_string!("Height"))?,
+                ),
+            })
+        })
+        .collect())
+}
+
 #[link(name = "CoreGraphics", kind = "framework")]
 unsafe extern "C" {
     pub fn CGPreflightScreenCaptureAccess() -> bool;

@@ -1,6 +1,33 @@
 use super::super::{media, ocr};
 use super::*;
 
+struct ControlPanelIvars {
+    offscreen: bool,
+}
+define_class!(
+    #[unsafe(super(NSPanel))]
+    #[thread_kind=MainThreadOnly]
+    #[ivars=ControlPanelIvars]
+    struct ControlPanel;
+    impl ControlPanel {
+        #[unsafe(method(constrainFrameRect:toScreen:))]
+        fn constrain(&self, frame:NSRect, screen:Option<&NSScreen>)->NSRect {
+            if self.ivars().offscreen {frame}
+            else {unsafe {msg_send![super(self),constrainFrameRect:frame,toScreen:screen]}}
+        }
+    }
+);
+
+fn new_panel(width: f64, height: f64, style: NSWindowStyleMask) -> Retained<NSPanel> {
+    let this = ControlPanel::alloc(mtm()).set_ivars(ControlPanelIvars {
+        offscreen: state(|a| a.headless),
+    });
+    let panel: Retained<ControlPanel> = unsafe {
+        msg_send![super(this),initWithContentRect:NSRect::new(NSPoint::ZERO,NSSize::new(width,height)),styleMask:style,backing:NSBackingStoreType::Buffered,defer:false]
+    };
+    panel.into_super()
+}
+
 define_class!(
     #[unsafe(super(NSView))]
     #[thread_kind=MainThreadOnly]
@@ -29,20 +56,19 @@ define_class!(
 );
 
 fn panel(title: &str, width: f64, height: f64) -> Retained<NSPanel> {
-    let panel = NSPanel::initWithContentRect_styleMask_backing_defer(
-        NSPanel::alloc(mtm()),
-        NSRect::new(NSPoint::ZERO, NSSize::new(width, height)),
+    let panel = new_panel(
+        width,
+        height,
         NSWindowStyleMask::Titled | NSWindowStyleMask::Closable,
-        NSBackingStoreType::Buffered,
-        false,
     );
     unsafe {
         panel.setReleasedWhenClosed(false);
     }
     panel.setTitle(&ns_ui(title));
-    panel.setLevel(26);
     panel.setAcceptsMouseMovedEvents(true);
     panel.setFloatingPanel(true);
+    // setFloatingPanel resets the level to NSFloatingWindowLevel.
+    panel.setLevel(CAPTURE_CONTROL_LEVEL);
     panel.setHidesOnDeactivate(false);
     panel.setCollectionBehavior(
         NSWindowCollectionBehavior::CanJoinAllSpaces
@@ -68,19 +94,17 @@ fn present(panel: &NSPanel) {
     }
 }
 pub(super) fn floating_panel(width: f64, height: f64) -> Retained<NSPanel> {
-    let panel = NSPanel::initWithContentRect_styleMask_backing_defer(
-        NSPanel::alloc(mtm()),
-        NSRect::new(NSPoint::ZERO, NSSize::new(width, height)),
+    let panel = new_panel(
+        width,
+        height,
         NSWindowStyleMask::Borderless | NSWindowStyleMask::NonactivatingPanel,
-        NSBackingStoreType::Buffered,
-        false,
     );
     unsafe {
         panel.setReleasedWhenClosed(false);
     }
-    panel.setLevel(26);
     panel.setAcceptsMouseMovedEvents(true);
     panel.setFloatingPanel(true);
+    panel.setLevel(CAPTURE_CONTROL_LEVEL);
     panel.setHidesOnDeactivate(false);
     panel.setOpaque(false);
     panel.setHasShadow(true);
@@ -351,6 +375,9 @@ pub(super) fn copy_ocr() {
 }
 
 pub(super) fn show_record_setup(index: usize) {
+    if state(|a| index >= a.sessions.len()) {
+        return;
+    }
     if state(|a| a.record_setup.is_some() || a.recording.is_some()) {
         return;
     }
@@ -363,6 +390,11 @@ pub(super) fn show_record_setup(index: usize) {
         return;
     };
     let window = panel("录屏设置", 440.0, 250.0);
+    let frame = state(|a| a.sessions[index].screen.frame);
+    window.setFrameOrigin(NSPoint::new(
+        frame.origin.x + (frame.size.width - window.frame().size.width) / 2.0,
+        frame.origin.y + (frame.size.height - window.frame().size.height) / 2.0,
+    ));
     let root = window.contentView().unwrap();
     root.addSubview(&label(
         "格式",
@@ -442,8 +474,8 @@ pub(super) fn set_record_format(format: media::Format) {
     });
 }
 pub(super) fn cancel_record_setup() {
-    if let Some(setup) = state(|a| a.record_setup.take()) {
-        setup.window.orderOut(None);
+    if state(|a| a.record_setup.is_some()) {
+        close_sessions();
         toast("录屏已取消");
     }
 }
@@ -523,7 +555,6 @@ pub(super) fn begin_recording() {
         if let Some(setup) = a.record_setup.take() {
             setup.window.orderOut(None);
         }
-        a.sessions[index].window.setIgnoresMouseEvents(true);
         a.recording = Some(Recording {
             handle,
             window: window.clone(),
@@ -533,6 +564,7 @@ pub(super) fn begin_recording() {
             finishing: false,
         });
     });
+    pass_through_capture(index);
     native_cursor(CursorIntent::Arrow).set();
     refresh(index);
     present(&window);
