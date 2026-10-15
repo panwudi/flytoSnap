@@ -117,8 +117,12 @@ struct Recording {
 }
 struct MediaResult {
     window: Retained<NSPanel>,
-    path: PathBuf,
+    file: crate::temporary::RecordingFile,
     format: super::media::Format,
+}
+struct ClipboardRecording {
+    file: crate::temporary::RecordingFile,
+    change_count: isize,
 }
 struct PermissionHelp {
     window: Retained<NSPanel>,
@@ -157,6 +161,7 @@ struct App {
     record_setup: Option<RecordSetup>,
     recording: Option<Recording>,
     media_result: Option<MediaResult>,
+    clipboard_recording: Option<ClipboardRecording>,
     permission_help: Option<PermissionHelp>,
     screen_access_requested: bool,
     escape_hotkey: HotKey,
@@ -178,6 +183,8 @@ define_class!(
             initialize(self);
             if !std::env::args().any(|a|a=="--menubar-check"||a=="--window-check") {startup_feedback();}
         }
+        #[unsafe(method(applicationWillTerminate:))]
+        fn terminating(&self,_notification:&NSNotification) {dispose_recording_results();}
         #[unsafe(method(applicationDidResignActive:))]
         fn deactivated(&self,_notification:&NSNotification) {
             if state(|a|!a.sessions.is_empty()&&a.scroll.is_none()&&a.recording.is_none()) {cancel_capture();}
@@ -200,6 +207,7 @@ define_class!(
                 let record=state(|a|{
                     if a.record_setup.as_ref().is_some_and(|s|s.window.as_super()==window.as_ref()){a.record_setup=None;}
                     if a.ocr_panel.as_ref().is_some_and(|s|s.window.as_super()==window.as_ref()){a.feature_job+=1;a.ocr_panel=None;}
+                    if a.media_result.as_ref().is_some_and(|s|s.window.as_super()==window.as_ref()){a.media_result=None;}
                     a.recording.as_ref().is_some_and(|s|s.window.as_super()==window.as_ref())
                 });if record{stop_recording(false);}
             }
@@ -933,6 +941,7 @@ fn initialize(delegate: &Delegate) {
             record_setup: None,
             recording: None,
             media_result: None,
+            clipboard_recording: None,
             permission_help: None,
             screen_access_requested: false,
             escape_hotkey: HotKey::from_str("Escape").expect("valid Escape hotkey"),
@@ -1001,6 +1010,7 @@ fn show_status_menu() {
     }
 }
 fn startup_feedback() {
+    restore_recording_clipboard();
     if !screen_access_ready() {
         show_permission_help();
     } else {
@@ -3427,6 +3437,7 @@ fn verify_button_cursors(view: &NSView) -> Result<usize, String> {
 }
 fn ui_snapshot(directory: &std::path::Path) -> Result<(), String> {
     std::fs::create_dir_all(directory).map_err(|e| e.to_string())?;
+    verify_recording_result(directory)?;
     let pixels = demo_image();
     let screen = Screen {
         id: 0,

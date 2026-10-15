@@ -583,18 +583,13 @@ pub(super) fn stop_recording(cancelled: bool) {
         handle.stop(cancelled);
     }
 }
-fn show_result(path: PathBuf, format: media::Format) {
-    let window = panel("录屏完成", 540.0, 190.0);
+fn show_result(file: crate::temporary::RecordingFile, format: media::Format) {
+    let window = panel("录屏完成", 540.0, 150.0);
     let root = window.contentView().unwrap();
     root.addSubview(&label(
-        "录屏文件已保存在本机",
-        NSRect::new(NSPoint::new(20.0, 138.0), NSSize::new(500.0, 26.0)),
+        "可预览, 复制或保存",
+        NSRect::new(NSPoint::new(20.0, 92.0), NSSize::new(500.0, 28.0)),
         16.0,
-    ));
-    root.addSubview(&label(
-        &path.file_name().unwrap_or_default().to_string_lossy(),
-        NSRect::new(NSPoint::new(20.0, 99.0), NSSize::new(500.0, 28.0)),
-        12.0,
     ));
     control(
         &root,
@@ -614,29 +609,32 @@ fn show_result(path: PathBuf, format: media::Format) {
         608,
         NSRect::new(NSPoint::new(346.0, 24.0), NSSize::new(174.0, 34.0)),
     );
-    state(|a| {
-        if let Some(old) = a.media_result.take() {
-            old.window.orderOut(None);
-        }
-        a.media_result = Some(MediaResult {
+    let old = state(|a| {
+        a.media_result.replace(MediaResult {
             window: window.clone(),
-            path,
+            file,
             format,
-        });
+        })
     });
+    if let Some(old) = old {
+        old.window.orderOut(None);
+    }
     present(&window);
 }
 pub(super) fn copy_recording() {
-    let data = state(|a| a.media_result.as_ref().map(|r| (r.path.clone(), r.format)));
-    if let Some((path, format)) = data {
-        let url = NSURL::fileURLWithPath(&NSString::from_str(&path.to_string_lossy()));
-        let board = NSPasteboard::generalPasteboard();
+    let board = NSPasteboard::generalPasteboard();
+    copy_recording_to(&board);
+}
+fn copy_recording_to(board: &NSPasteboard) {
+    let data = state(|a| a.media_result.as_ref().map(|r| (r.file.clone(), r.format)));
+    if let Some((file, format)) = data {
+        let url = NSURL::fileURLWithPath(&NSString::from_str(&file.path().to_string_lossy()));
         board.clearContents();
         let ok = url.absoluteString().is_some_and(|value| {
             board.setString_forType(&value, unsafe { NSPasteboardTypeFileURL })
         });
         if format == media::Format::Gif {
-            if let Ok(bytes) = std::fs::read(&path) {
+            if let Ok(bytes) = std::fs::read(file.path()) {
                 board.setData_forType(
                     Some(&NSData::with_bytes(&bytes)),
                     &NSString::from_str("com.compuserve.gif"),
@@ -644,22 +642,29 @@ pub(super) fn copy_recording() {
             }
         }
         if ok {
-            toast("已复制录屏, 可粘贴到支持文件的应用");
+            let change_count = board.changeCount();
+            let remembered = file.remember_clipboard(change_count);
+            state(|a| a.clipboard_recording = Some(ClipboardRecording { file, change_count }));
+            if remembered.is_ok() {
+                toast("已复制录屏, 可粘贴到支持文件的应用");
+            } else {
+                toast("复制失败, 请重试");
+            }
         } else {
             toast("复制失败, 请重试");
         }
     }
 }
 pub(super) fn play_recording() {
-    if let Some(path) = state(|a| a.media_result.as_ref().map(|r| r.path.clone())) {
-        let url = NSURL::fileURLWithPath(&NSString::from_str(&path.to_string_lossy()));
+    if let Some(file) = state(|a| a.media_result.as_ref().map(|r| r.file.clone())) {
+        let url = NSURL::fileURLWithPath(&NSString::from_str(&file.path().to_string_lossy()));
         if !NSWorkspace::sharedWorkspace().openURL(&url) {
             toast("无法打开录屏预览");
         }
     }
 }
 pub(super) fn save_recording() {
-    let data = state(|a| a.media_result.as_ref().map(|r| (r.path.clone(), r.format)));
+    let data = state(|a| a.media_result.as_ref().map(|r| (r.file.clone(), r.format)));
     let Some((source, format)) = data else {
         return;
     };
@@ -687,19 +692,107 @@ pub(super) fn save_recording() {
         .and_then(|u| u.path())
         .map(|p| PathBuf::from(p.to_string()))
     {
-        match std::fs::copy(&source, &path) {
+        match std::fs::copy(source.path(), &path) {
             Ok(_) => {
                 state(|a| a.last_file = Some(path.clone()));
-                toast(&format!(
-                    "已保存 {}",
-                    path.file_name().unwrap_or_default().to_string_lossy()
-                ));
+                toast("录屏已保存");
             }
             Err(error) => toast(&format!("保存失败: {error}")),
         }
     }
 }
+pub(super) fn restore_recording_clipboard() {
+    let change_count = NSPasteboard::generalPasteboard().changeCount();
+    let file = crate::temporary::restore_clipboard(change_count);
+    crate::temporary::clean_abandoned(file.as_ref().map(|file| file.path()));
+    state(|a| a.clipboard_recording = file.map(|file| ClipboardRecording { file, change_count }));
+}
+
+fn release_replaced_clipboard(board: &NSPasteboard) {
+    let change_count = board.changeCount();
+    let old = state(|a| {
+        if a.clipboard_recording
+            .as_ref()
+            .is_some_and(|lease| lease.change_count != change_count)
+        {
+            a.clipboard_recording.take()
+        } else {
+            None
+        }
+    });
+    if let Some(old) = old {
+        old.file.forget_clipboard();
+    }
+}
+
+pub(super) fn dispose_recording_results() {
+    let (result, clipboard) = state(|a| (a.media_result.take(), a.clipboard_recording.take()));
+    if let Some(clipboard) = clipboard {
+        if clipboard.change_count == NSPasteboard::generalPasteboard().changeCount() {
+            clipboard.file.keep_for_paste();
+        } else {
+            clipboard.file.forget_clipboard();
+        }
+    }
+    drop(result);
+}
+
+pub(super) fn verify_recording_result(directory: &std::path::Path) -> Result<(), String> {
+    let root = std::fs::canonicalize(directory)
+        .map_err(|e| e.to_string())?
+        .join("temporary-recordings");
+    let file =
+        crate::temporary::RecordingFile::create_in(&root, "mp4").map_err(|e| e.to_string())?;
+    std::fs::write(file.path(), b"recording preview fixture").map_err(|e| e.to_string())?;
+    let path = file.path().to_owned();
+    let exported = directory.join("saved-recording-test.mp4");
+    std::fs::copy(&path, &exported).map_err(|e| e.to_string())?;
+    show_result(file, media::Format::Mp4);
+    let window = state(|a| a.media_result.as_ref().unwrap().window.clone());
+    let content = window.contentView().unwrap();
+    if content
+        .subviews()
+        .iter()
+        .filter_map(|view| view.clone().downcast::<NSTextField>().ok())
+        .any(|text| {
+            let text = text.stringValue().to_string();
+            text.contains("Recording.mp4") || text.contains(&path.to_string_lossy().to_string())
+        })
+    {
+        return Err("Recording result exposed its temporary filename".into());
+    }
+    snapshot_view(&content, &directory.join("recording-result.png"))?;
+    let board = NSPasteboard::pasteboardWithUniqueName();
+    copy_recording_to(&board);
+    window.close();
+    if state(|a| a.media_result.is_some()) || !path.exists() {
+        return Err("Closing the result invalidated a recording still on the clipboard".into());
+    }
+    board.clearContents();
+    release_replaced_clipboard(&board);
+    if path.exists() || !exported.exists() {
+        return Err("Temporary cleanup failed or removed the explicit export".into());
+    }
+    let file =
+        crate::temporary::RecordingFile::create_in(&root, "gif").map_err(|e| e.to_string())?;
+    std::fs::write(file.path(), b"GIF89a").map_err(|e| e.to_string())?;
+    let path = file.path().to_owned();
+    show_result(file, media::Format::Gif);
+    let window = state(|a| a.media_result.as_ref().unwrap().window.clone());
+    window.close();
+    if path.exists() {
+        return Err("Closing an uncopied recording did not remove its temporary file".into());
+    }
+    println!(
+        "Recording result check passed: no filename, close cleanup, clipboard lifetime, explicit export preservation."
+    );
+    Ok(())
+}
+
 pub(super) fn feature_tick() {
+    if !state(|a| a.headless) {
+        release_replaced_clipboard(&NSPasteboard::generalPasteboard());
+    }
     state(|a| {
         if let Some(menu) = a._status_item.menu(mtm()) {
             if let Some(stop) = menu.itemWithTag(605) {
@@ -750,7 +843,7 @@ pub(super) fn feature_tick() {
             }),
             media::Event::Finished {
                 job,
-                path,
+                file,
                 format,
                 cancelled,
             } => {
@@ -767,7 +860,7 @@ pub(super) fn feature_tick() {
                     if cancelled {
                         toast("录屏已取消");
                     } else {
-                        show_result(path, format);
+                        show_result(file, format);
                     }
                 }
             }

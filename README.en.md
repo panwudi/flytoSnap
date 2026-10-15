@@ -53,7 +53,7 @@ The default shortcut is `Command+Shift+A`. Select one of the four modes at the t
 | Exit capture | `Escape` |
 | Quit the app | `Command+Q` |
 
-Scroll over pinned images to zoom, Option+scroll to adjust opacity, and right-click for actions. Recording copy uses the macOS file clipboard; GIF also provides animated image data. Paste behavior depends on the receiving app's supported formats. Recording files remain in the local cache so copied files remain available for pasting.
+Scroll over pinned images to zoom, Option+scroll to adjust opacity, and right-click for actions. Recording copy uses the macOS file clipboard; GIF also provides animated image data. Paste behavior depends on the receiving app's supported formats. Recordings are temporary until you choose Save and select a destination. Closing a result removes unused temporary files. Copied recordings remain available while on the clipboard, including after quitting the app; obsolete files are cleaned on the next launch.
 
 ## Screen access fails after an upgrade
 

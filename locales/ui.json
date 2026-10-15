@@ -655,10 +655,6 @@
     "zh-TW": "僅錄製螢幕畫面",
     "en": "Records the screen only"
   },
-  "录屏文件已保存在本机": {
-    "zh-TW": "錄影檔案已儲存在本機",
-    "en": "The recording is saved on this Mac."
-  },
   "调整选区": {
     "zh-TW": "調整選取區域",
     "en": "Resize selection"
@@ -786,5 +782,13 @@
   "Esc 退出 / Enter 复制文字": {
     "zh-TW": "Esc 離開 / Enter 複製文字",
     "en": "Esc Cancel / Enter Copy Text"
+  },
+  "可预览, 复制或保存": {
+    "zh-TW": "可預覽, 複製或儲存",
+    "en": "Preview, copy, or save your recording."
+  },
+  "录屏已保存": {
+    "zh-TW": "錄影已儲存",
+    "en": "Recording saved."
   }
 }

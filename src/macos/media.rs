@@ -1,3 +1,4 @@
+use crate::temporary::RecordingFile;
 use block2::RcBlock;
 use dispatch2::DispatchQueue;
 use image::{
@@ -19,14 +20,14 @@ use objc2_foundation::{
 use objc2_screen_capture_kit::*;
 use std::{
     fs::File,
-    path::{Path, PathBuf},
+    path::Path,
     ptr::NonNull,
     sync::{
         Arc, Mutex,
         atomic::{AtomicU64, Ordering},
         mpsc::{self, Sender},
     },
-    time::{Duration, Instant, SystemTime, UNIX_EPOCH},
+    time::{Duration, Instant},
 };
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -49,7 +50,7 @@ pub enum Event {
     Started(u64),
     Finished {
         job: u64,
-        path: PathBuf,
+        file: RecordingFile,
         format: Format,
         cancelled: bool,
     },
@@ -65,7 +66,7 @@ struct Inner {
     output: Option<Retained<Output>>,
     encoder: Option<Encoder>,
     stopping: bool,
-    path: PathBuf,
+    file: Option<RecordingFile>,
     format: Format,
     job: u64,
     tx: Sender<Event>,
@@ -383,22 +384,15 @@ pub fn start(options: Options, job: u64, tx: Sender<Event>) -> Result<Handle, St
         format,
         shows_cursor,
     } = options;
-    let directory = PathBuf::from(std::env::var("HOME").unwrap_or_else(|_| ".".into()))
-        .join("Library/Caches/flytoSnap/Recordings");
-    std::fs::create_dir_all(&directory).map_err(|e| e.to_string())?;
-    let stamp = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap_or_default()
-        .as_nanos();
-    let path = directory.join(format!("flytoSnap-{stamp}.{}", format.extension()));
-    let encoder = Encoder::new(&path, format, width, height)?;
+    let file = RecordingFile::create(format.extension()).map_err(|e| e.to_string())?;
+    let encoder = Encoder::new(file.path(), format, width, height)?;
     let handle = Handle {
         inner: Arc::new(Mutex::new(Inner {
             stream: None,
             output: None,
             encoder: Some(encoder),
             stopping: false,
-            path,
+            file: Some(file),
             format,
             job,
             tx: tx.clone(),
@@ -519,26 +513,28 @@ impl Handle {
         }
     }
     fn finalize(&self, cancelled: bool) {
-        let (encoder, path, format, job, tx) = {
+        let (encoder, file, format, job, tx) = {
             let mut inner = self.inner.lock().unwrap();
             inner.stream = None;
             inner.output = None;
             (
                 inner.encoder.take(),
-                inner.path.clone(),
+                inner.file.take(),
                 inner.format,
                 inner.job,
                 inner.tx.clone(),
             )
         };
+        let Some(file) = file else {
+            return;
+        };
         let result = encoder
             .map(|e| autoreleasepool(|_| e.finish()))
             .unwrap_or(Ok(()));
         if cancelled {
-            let _ = std::fs::remove_file(&path);
             let _ = tx.send(Event::Finished {
                 job,
-                path,
+                file,
                 format,
                 cancelled: true,
             });
@@ -547,7 +543,7 @@ impl Handle {
                 Ok(()) => {
                     let _ = tx.send(Event::Finished {
                         job,
-                        path,
+                        file,
                         format,
                         cancelled: false,
                     });
