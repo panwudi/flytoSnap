@@ -11,7 +11,11 @@ else
     build_profile="release"
 fi
 bundle_dir="$project_dir/dist/flytoSnap.app"
+sparkle_dir="$(bash scripts/prepare-sparkle.sh)"
 mkdir -p "$bundle_dir/Contents/MacOS" "$bundle_dir/Contents/Resources"
+mkdir -p "$bundle_dir/Contents/Frameworks"
+ditto "$sparkle_dir/Sparkle.framework" "$bundle_dir/Contents/Frameworks/Sparkle.framework"
+cp "$sparkle_dir/LICENSE" "$bundle_dir/Contents/Resources/Sparkle-LICENSE.txt"
 cp "target/$build_profile/flytosnap" "$bundle_dir/Contents/MacOS/flytosnap"
 cp assets/Info.plist "$bundle_dir/Contents/Info.plist"
 icon_dir="$project_dir/target/flytoSnap.iconset"
@@ -33,11 +37,17 @@ if [ -z "$signing_identity" ]; then
         signing_identity="$(printf '%s\n' "$identities" | awk '/"Apple Development:/{print $2; exit}')"
     fi
 fi
-if [ -z "$signing_identity" ] || [ "$signing_identity" = "-" ]; then
+if [ -z "$signing_identity" ]; then signing_identity="-"; fi
+sparkle_framework="$bundle_dir/Contents/Frameworks/Sparkle.framework/Versions/B"
+for component in "$sparkle_framework/XPCServices/Downloader.xpc" "$sparkle_framework/XPCServices/Installer.xpc" "$sparkle_framework/Updater.app" "$sparkle_framework/Autoupdate"; do
+    codesign --force --sign "$signing_identity" --options runtime --timestamp --preserve-metadata=entitlements "$component"
+done
+codesign --force --sign "$signing_identity" --options runtime --timestamp "$bundle_dir/Contents/Frameworks/Sparkle.framework"
+if [ "$signing_identity" = "-" ]; then
     printf 'Warning: ad-hoc signing changes the permission identity between builds. Reauthorization may be required.\n' >&2
     codesign --force --sign - --identifier com.flyto.snap "$bundle_dir"
 else
-    codesign --force --sign "$signing_identity" --options runtime --timestamp=none --identifier com.flyto.snap "$bundle_dir"
+    codesign --force --sign "$signing_identity" --options runtime --timestamp --identifier com.flyto.snap "$bundle_dir"
 fi
 codesign --verify --deep --strict "$bundle_dir"
 machine_arch="$(uname -m)"

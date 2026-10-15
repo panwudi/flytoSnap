@@ -790,5 +790,33 @@
   "录屏已保存": {
     "zh-TW": "錄影已儲存",
     "en": "Recording saved."
+  },
+  "检查更新...": {
+    "zh-TW": "檢查更新...",
+    "en": "Check for Updates..."
+  },
+  "自动下载并安装更新": {
+    "zh-TW": "自動下載並安裝更新",
+    "en": "Download and install updates automatically"
+  },
+  "请先结束当前截图或录屏, 再检查更新": {
+    "zh-TW": "請先結束目前的截圖或錄影, 再檢查更新",
+    "en": "Finish the current capture or recording before checking for updates."
+  },
+  "正在检查或下载更新, 请稍候": {
+    "zh-TW": "正在檢查或下載更新, 請稍候",
+    "en": "An update check or download is already in progress."
+  },
+  "更新组件不可用, 请从 GitHub Releases 下载完整安装包": {
+    "zh-TW": "更新元件無法使用, 請從 GitHub Releases 下載完整安裝包",
+    "en": "Updates are unavailable. Download the complete app from GitHub Releases."
+  },
+  "自动更新已开启": {
+    "zh-TW": "自動更新已開啟",
+    "en": "Automatic updates enabled"
+  },
+  "自动更新已关闭": {
+    "zh-TW": "自動更新已關閉",
+    "en": "Automatic updates disabled"
   }
 }

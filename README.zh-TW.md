@@ -2,7 +2,9 @@
 
 # flytoSnap
 
-[简体中文](README.md) | 繁體中文 | [English](README.en.md)
+**[简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | [English](README.en.md)**
+
+[Home / 首页 / 首頁](README.md)
 
 原生 macOS 截圖與錄影工具, 使用 Rust 實作. 按一個快捷鍵, 即可在截圖, 捲動截圖, 錄影和擷取文字之間切換.
 
@@ -23,11 +25,17 @@
 
 選取區域後先確認開始, 再選擇自動捲動:
 
-![Scroll capture confirmation](docs/images/scroll-ready-zh-TW.png)
+![捲動截圖開始確認](docs/images/scroll-ready-zh-TW.png)
 
-![Compact scrolling controls](docs/images/scroll-controls-zh-TW.png)
+![精簡捲動控制列](docs/images/scroll-controls-zh-TW.png)
 
 以上為應用程式原生控制項的離屏截圖, 內容來自內建示範資料.
+
+## 下載與自動更新
+
+[下載最新 macOS 版本](https://github.com/panwudi/flytoSnap/releases/latest) (Apple Silicon, macOS 14+). 解壓縮後將 flytoSnap.app 放入應用程式資料夾.
+
+從 0.3.0 起, 選單列提供檢查更新與自動更新開關. 預設每天檢查並下載簽署的更新, 結束應用程式時安裝; 截圖和錄影期間延後更新. 舊的 0.2.x 版本需先手動安裝一次.
 
 ## 建置與使用
 
@@ -84,7 +92,7 @@ cargo run -- --window-check
 dist/flytoSnap.app/Contents/MacOS/flytosnap --menubar-check
 ```
 
-目前錄影僅包含螢幕畫面, 不錄製聲音或攝影機. 自動捲動拼接適合靜態頁面; 避免固定頁首, 捲軸, 動畫和影片. 長圖上限為 8000 萬像素和 32000 像素高. 本機測試包未完成 Developer ID 公證, 正式散布需另外簽署與公證.
+目前錄影僅包含螢幕畫面, 不錄製聲音或攝影機. 自動捲動拼接適合靜態頁面; 避免固定頁首, 捲軸, 動畫和影片. 長圖上限為 8000 萬像素和 32000 像素高. 發行包使用 Developer ID 簽署與 Sparkle 更新簽章. Apple 公證狀態以 Release 說明為準.
 
 ## 參考與授權
 

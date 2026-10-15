@@ -2,7 +2,9 @@
 
 # flytoSnap
 
-[简体中文](README.md) | [繁體中文](README.zh-TW.md) | English
+**[简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | [English](README.en.md)**
+
+[Home / 首页 / 首頁](README.md)
 
 A native macOS screenshot and recording tool written in Rust. One shortcut opens a mode selector for screenshots, scrolling capture, recording, and text extraction.
 
@@ -28,6 +30,12 @@ Confirm the region before starting, then choose automatic scrolling:
 ![Compact scrolling controls](docs/images/scroll-controls-en.png)
 
 These are offscreen captures of the application's native controls, using built-in example data.
+
+## Download and automatic updates
+
+[Download the latest macOS release](https://github.com/panwudi/flytoSnap/releases/latest) (Apple Silicon, macOS 14+). Unzip and move flytoSnap.app into Applications.
+
+Starting with 0.3.0, the menu bar offers Check for Updates and an automatic-update toggle. Signed updates are checked and downloaded daily and installed when the app quits. Updates wait while a capture or recording is in progress. Versions 0.2.x need one manual upgrade first.
 
 ## Build and use
 
@@ -84,7 +92,7 @@ This optional check briefly shows the actual menu bar icon for about one second,
 dist/flytoSnap.app/Contents/MacOS/flytosnap --menubar-check
 ```
 
-Recording currently captures screen video only, without audio or webcam. Scrolling capture works best on static pages; avoid fixed headers, scrollbars, animation, and video. Long captures are limited to 80 million pixels and 32,000 pixels in height. Local test packages are not Developer ID notarized; distribution requires separate signing and notarization.
+Recording currently captures screen video only, without audio or webcam. Scrolling capture works best on static pages; avoid fixed headers, scrollbars, animation, and video. Long captures are limited to 80 million pixels and 32,000 pixels in height. Release packages use Developer ID code signing and Sparkle update signatures. Check the release notes for Apple notarization status.
 
 ## References and license
 

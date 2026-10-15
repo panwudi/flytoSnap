@@ -5,8 +5,8 @@
     <key>CFBundleName</key><string>flytoSnap</string>
     <key>CFBundleDisplayName</key><string>flytoSnap</string>
     <key>CFBundleIdentifier</key><string>com.flyto.snap</string>
-    <key>CFBundleVersion</key><string>7</string>
-    <key>CFBundleShortVersionString</key><string>0.2.5</string>
+    <key>CFBundleVersion</key><string>8</string>
+    <key>CFBundleShortVersionString</key><string>0.3.0</string>
     <key>CFBundleIconFile</key><string>AppIcon</string>
     <key>CFBundleExecutable</key><string>flytosnap</string>
     <key>CFBundlePackageType</key><string>APPL</string>
@@ -15,5 +15,14 @@
     <key>NSHighResolutionCapable</key><true/>
     <key>NSScreenCaptureUsageDescription</key><string>flytoSnap captures selected screen regions for screenshots, scrolling capture, recording, and text extraction.</string>
     <key>NSPrincipalClass</key><string>NSApplication</string>
+    <key>SUFeedURL</key><string>https://raw.githubusercontent.com/panwudi/flytoSnap/main/appcast.xml</string>
+    <key>SUPublicEDKey</key><string>xE7s4bqgEF9yMONxzVoBMDB85TldyUHEKoT7LQEcuTk=</string>
+    <key>SUEnableAutomaticChecks</key><true/>
+    <key>SUAutomaticallyUpdate</key><true/>
+    <key>SUVerifyUpdateBeforeExtraction</key><true/>
+    <key>SURequireSignedFeed</key><true/>
+    <key>SUEnableSystemProfiling</key><false/>
+    <key>SUScheduledCheckInterval</key><integer>86400</integer>
+    <key>CFBundleLocalizations</key><array><string>en</string><string>zh-Hans</string><string>zh-Hant</string></array>
 </dict>
 </plist>

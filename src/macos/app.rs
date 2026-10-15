@@ -166,6 +166,7 @@ struct App {
     screen_access_requested: bool,
     escape_hotkey: HotKey,
     escape_registered: bool,
+    updater: Option<super::updater::Updater>,
 }
 
 define_class!(
@@ -780,6 +781,8 @@ fn initialize(delegate: &Delegate) {
         ("提取文字", 10),
         ("隐藏 / 显示全部贴图", 4),
         ("设置...", 5),
+        ("检查更新...", 12),
+        ("自动下载并安装更新", 13),
         ("打开最近保存的位置", 6),
         ("显示主窗口", 7),
         ("退出 flytoSnap", 9),
@@ -946,6 +949,7 @@ fn initialize(delegate: &Delegate) {
             screen_access_requested: false,
             escape_hotkey: HotKey::from_str("Escape").expect("valid Escape hotkey"),
             escape_registered: false,
+            updater: None,
         })
     });
     if !headless && !menubar_check {
@@ -1016,6 +1020,31 @@ fn startup_feedback() {
     } else {
         toast("flytoSnap 已就绪, 按 ⌘⇧A 开始截图");
     }
+    match super::updater::Updater::load().and_then(|updater| {
+        updater.start()?;
+        Ok(updater)
+    }) {
+        Ok(updater) => state(|a| a.updater = Some(updater)),
+        Err(error) => eprintln!("Updater unavailable: {error}"),
+    }
+}
+pub(super) fn update_busy() -> bool {
+    APP.with(|app| {
+        app.try_borrow()
+            .ok()
+            .and_then(|a| {
+                a.as_ref().map(|a| {
+                    a.pending > 0
+                        || !a.sessions.is_empty()
+                        || a.recording.is_some()
+                        || a.media_result.is_some()
+                        || a.ocr_panel.is_some()
+                        || a.record_setup.is_some()
+                        || a.permission_help.is_some()
+                })
+            })
+            .unwrap_or(true)
+    })
 }
 fn screen_access_ready() -> bool {
     if unsafe { capture::CGPreflightScreenCaptureAccess() } {
@@ -2009,6 +2038,40 @@ fn handle_action(tag: isize, window: Option<Retained<NSWindow>>) {
         return;
     }
     match tag {
+        12 => {
+            if update_busy() {
+                toast("请先结束当前截图或录屏, 再检查更新");
+                return;
+            }
+            let controller = state(|a| a.updater.take());
+            if let Some(updater) = controller {
+                if updater.can_check() {
+                    updater.check();
+                } else {
+                    toast("正在检查或下载更新, 请稍候");
+                }
+                state(|a| a.updater = Some(updater));
+            } else {
+                toast("更新组件不可用, 请从 GitHub Releases 下载完整安装包");
+            }
+            return;
+        }
+        13 => {
+            let controller = state(|a| a.updater.take());
+            if let Some(updater) = controller {
+                let enabled = !updater.automatic();
+                updater.set_automatic(enabled);
+                state(|a| a.updater = Some(updater));
+                toast(if enabled {
+                    "自动更新已开启"
+                } else {
+                    "自动更新已关闭"
+                });
+            } else {
+                toast("更新组件不可用, 请从 GitHub Releases 下载完整安装包");
+            }
+            return;
+        }
         11 => {
             cancel_capture();
             return;
@@ -2978,6 +3041,21 @@ fn finish_scroll_output(tag: isize) {
 }
 fn tick() {
     feature_tick();
+    if !update_busy() {
+        let install = state(|a| a.updater.as_ref().and_then(|u| u.deferred_install()));
+        if let Some(install) = install {
+            install.call(());
+        }
+    }
+    state(|a| {
+        if let Some(item) = a._status_item.menu(mtm()).and_then(|m| m.itemWithTag(13)) {
+            item.setState(if a.updater.as_ref().is_some_and(|u| u.automatic()) {
+                1
+            } else {
+                0
+            });
+        }
+    });
     state(|a| {
         for s in &a.sessions {
             if s.hovered
@@ -3206,6 +3284,14 @@ fn handle_capture(message: CaptureMessage) {
 pub fn run() {
     let app = NSApplication::sharedApplication(mtm());
     let arguments = std::env::args().collect::<Vec<_>>();
+    if arguments.iter().any(|a| a == "--updater-check") {
+        app.setActivationPolicy(NSApplicationActivationPolicy::Prohibited);
+        if let Err(error) = super::updater::verify() {
+            eprintln!("Updater check failed: {error}");
+            std::process::exit(1);
+        }
+        return;
+    }
     if let Some(index) = arguments.iter().position(|a| a == "--self-check") {
         app.setActivationPolicy(NSApplicationActivationPolicy::Prohibited);
         let path = arguments
