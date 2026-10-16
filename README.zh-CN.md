@@ -31,6 +31,14 @@
 
 以上为应用原生控件的离屏截图, 内容来自内置演示数据.
 
+## 文字提取
+
+按 `Command+Shift+A`, 选择提取文字并框选区域. 识别在本机完成, 支持简体中文, 繁体中文和英语, 图片与文字不会上传.
+
+结果可以直接编辑; 点击复制文字复制全部内容, 或在文字框中选中部分内容后按 `Command+C`. 重新选择可重画区域; 取消, `Escape` 和关闭结果窗口都会退出本次截图. 空白区域或识别失败会显示提示.
+
+![可编辑的文字提取结果](docs/images/ocr-zh-CN.png)
+
 ## 下载与自动更新
 
 [下载最新 macOS 版本](https://github.com/panwudi/flytoSnap/releases/latest) (Apple Silicon, macOS 14+). 解压后将 flytoSnap.app 放入应用程序文件夹.

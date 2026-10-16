@@ -292,6 +292,14 @@ pub(super) fn switch_mode(mode: CaptureMode) {
     }
 }
 pub(super) fn begin_ocr(index: usize) {
+    if !state(|a| {
+        a.sessions
+            .get(index)
+            .is_some_and(|s| s.editor.selection.is_some())
+    }) {
+        toast("框选需要提取文字的区域. Esc 取消");
+        return;
+    }
     commit_text(index);
     let png = state(|a| {
         let s = &a.sessions[index];
@@ -305,6 +313,11 @@ pub(super) fn begin_ocr(index: usize) {
         }
     };
     let window = panel("提取文字", 560.0, 390.0);
+    let frame = state(|a| a.sessions[index].screen.frame);
+    window.setFrameOrigin(NSPoint::new(
+        frame.origin.x + (frame.size.width - window.frame().size.width) / 2.0,
+        frame.origin.y + (frame.size.height - window.frame().size.height) / 2.0,
+    ));
     let root = window.contentView().unwrap();
     let status = label(
         "正在识别文字...",
@@ -317,13 +330,21 @@ pub(super) fn begin_ocr(index: usize) {
         NSRect::new(NSPoint::new(20.0, 68.0), NSSize::new(520.0, 270.0)),
     );
     scroll.setHasVerticalScroller(true);
-    let text = NSTextView::initWithFrame(
-        NSTextView::alloc(mtm()),
-        NSRect::new(NSPoint::ZERO, NSSize::new(500.0, 270.0)),
-    );
+    let text: Retained<TextInput> = unsafe {
+        msg_send![TextInput::alloc(mtm()),initWithFrame:NSRect::new(NSPoint::ZERO, NSSize::new(500.0, 270.0))]
+    };
+    let text = text.into_super();
     text.setRichText(false);
+    text.setEditable(false);
+    text.setAllowsUndo(true);
     text.setFont(Some(&NSFont::systemFontOfSize(16.0)));
+    text.setTextContainerInset(NSSize::new(12.0, 12.0));
     text.setVerticallyResizable(true);
+    text.setHorizontallyResizable(false);
+    if let Some(container) = unsafe { text.textContainer() } {
+        container.setWidthTracksTextView(true);
+        container.setContainerSize(NSSize::new(500.0, f64::MAX));
+    }
     text.setAutoresizingMask(NSAutoresizingMaskOptions::ViewWidthSizable);
     scroll.setDocumentView(Some(&text));
     root.addSubview(&scroll);
@@ -339,6 +360,12 @@ pub(super) fn begin_ocr(index: usize) {
         "重新选择",
         502,
         NSRect::new(NSPoint::new(20.0, 18.0), NSSize::new(140.0, 34.0)),
+    );
+    control(
+        &root,
+        "取消 (Esc)",
+        503,
+        NSRect::new(NSPoint::new(172.0, 18.0), NSSize::new(120.0, 34.0)),
     );
     let (job, tx) = state(|a| {
         if let Some(old) = a.ocr_panel.take() {
@@ -360,16 +387,58 @@ pub(super) fn begin_ocr(index: usize) {
     });
 }
 pub(super) fn copy_ocr() {
-    let text = state(|a| a.ocr_panel.as_ref().map(|p| p.text.string().to_string()));
-    if let Some(text) = text {
-        let board = NSPasteboard::generalPasteboard();
-        board.clearContents();
-        if board.setString_forType(&NSString::from_str(&text), unsafe {
-            NSPasteboardTypeString
-        }) {
+    match copy_ocr_to(&NSPasteboard::generalPasteboard()) {
+        Ok(()) => {
+            state(|a| {
+                if let Some(panel) = &a.ocr_panel {
+                    panel.status.setStringValue(&ns_ui("已复制文字"));
+                }
+            });
             toast("已复制文字");
-        } else {
-            toast("复制失败, 请重试");
+        }
+        Err(error) => toast(error),
+    }
+}
+
+pub(super) fn copy_ocr_to(board: &NSPasteboard) -> Result<(), &'static str> {
+    let text = state(|a| {
+        a.ocr_panel
+            .as_ref()
+            .filter(|p| p.copy.isEnabled())
+            .map(|p| p.text.string().to_string())
+    })
+    .ok_or("正在识别文字...")?;
+    if text.trim().is_empty() {
+        return Err("没有可复制的文字");
+    }
+    board.clearContents();
+    if board.setString_forType(&NSString::from_str(&text), unsafe {
+        NSPasteboardTypeString
+    }) {
+        Ok(())
+    } else {
+        Err("复制失败, 请重试")
+    }
+}
+
+pub(super) fn reselect_ocr() {
+    let count = state(|a| {
+        a.feature_job += 1;
+        if let Some(panel) = a.ocr_panel.take() {
+            panel.window.orderOut(None);
+        }
+        for s in &mut a.sessions {
+            s.editor.selection = None;
+            s.editor.choose(Tool::Select);
+        }
+        a.sessions.len()
+    });
+    for index in 0..count {
+        refresh(index);
+    }
+    if !state(|a| a.headless) {
+        if let Some(window) = state(|a| a.sessions.get(a.active).map(|s| s.window.clone())) {
+            window.makeKeyAndOrderFront(None);
         }
     }
 }
@@ -818,7 +887,11 @@ pub(super) fn feature_tick() {
                         panel.copy.setEnabled(false);
                     } else {
                         panel.text.setString(&NSString::from_str(&text));
-                        panel.status.setStringValue(&ns_ui("识别结果可直接编辑"));
+                        panel.text.setEditable(true);
+                        panel.status.setStringValue(&ns_ui(&format!(
+                            "已识别 {} 个字符, 可直接编辑",
+                            text.chars().filter(|c| !c.is_whitespace()).count()
+                        )));
                         panel.copy.setEnabled(true);
                     }
                 }

@@ -575,6 +575,14 @@
     "zh-TW": "辨識結果可直接編輯",
     "en": "You can edit the recognized text."
   },
+  "已识别 {} 个字符, 可直接编辑": {
+    "zh-TW": "已辨識 {} 個字元, 可直接編輯",
+    "en": "Recognized {} characters. You can edit the text."
+  },
+  "没有可复制的文字": {
+    "zh-TW": "沒有可複製的文字",
+    "en": "There is no text to copy."
+  },
   "录屏设置": {
     "zh-TW": "錄影設定",
     "en": "Recording settings"

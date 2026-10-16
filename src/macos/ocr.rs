@@ -7,6 +7,7 @@ pub fn recognize(png: &[u8]) -> Result<String, String> {
         let request = VNRecognizeTextRequest::new();
         request.setRecognitionLevel(VNRequestTextRecognitionLevel::Accurate);
         request.setUsesLanguageCorrection(true);
+        request.setAutomaticallyDetectsLanguage(true);
         request.setRecognitionLanguages(&NSArray::from_retained_slice(&[
             NSString::from_str("zh-Hans"),
             NSString::from_str("zh-Hant"),
@@ -47,22 +48,37 @@ pub fn verify() -> Result<(), String> {
     use super::render;
     use crate::model::{Editor, Point, Tool};
     use objc2_foundation::NSSize;
-    let pixels = image::RgbaImage::from_pixel(800, 240, image::Rgba([255, 255, 255, 255]));
-    let source = render::native_image(&pixels, NSSize::new(800.0, 240.0))?;
-    let mut editor = Editor::new(800.0, 240.0);
+    let pixels = image::RgbaImage::from_pixel(1200, 400, image::Rgba([255, 255, 255, 255]));
+    let source = render::native_image(&pixels, NSSize::new(1200.0, 400.0))?;
+    let mut editor = Editor::new(1200.0, 400.0);
     editor.selection = Some(editor.bounds);
-    let mut annotation = editor.new_annotation(Tool::Text, Point::new(40.0, 60.0));
-    annotation.text = "flytoSnap 123".into();
-    annotation.font_size = 64.0;
-    annotation.color = crate::model::Color(0.0, 0.0, 0.0);
-    editor.annotations.push(annotation);
+    let samples = ["flytoSnap 123", "简体中文 文字提取", "繁體中文 擷取文字"];
+    for (line, sample) in samples.iter().enumerate() {
+        let mut annotation =
+            editor.new_annotation(Tool::Text, Point::new(40.0, 30.0 + line as f64 * 110.0));
+        annotation.text = (*sample).into();
+        annotation.font_size = 64.0;
+        annotation.color = crate::model::Color(0.0, 0.0, 0.0);
+        editor.annotations.push(annotation);
+    }
     let png = render::export(&editor, &source, &source, 1.0)?;
     let text = recognize(&png)?;
-    if !text.contains("123") || !text.to_lowercase().contains("flyto") {
+    let compact = text.split_whitespace().collect::<String>();
+    if samples
+        .iter()
+        .any(|s| !compact.contains(&s.split_whitespace().collect::<String>()))
+    {
         return Err(format!(
             "OCR did not recognize the generated test text: {text:?}"
         ));
     }
-    println!("On-device OCR check passed.");
+    editor.annotations.clear();
+    let blank = render::export(&editor, &source, &source, 1.0)?;
+    if !recognize(&blank)?.is_empty() || recognize(b"invalid image").is_ok() {
+        return Err("OCR blank-image or invalid-image handling failed".into());
+    }
+    println!(
+        "On-device OCR check passed: Simplified Chinese, Traditional Chinese, English, blank and invalid images."
+    );
     Ok(())
 }

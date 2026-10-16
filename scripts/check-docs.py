@@ -18,6 +18,7 @@ for name, language in [
         if path.startswith("docs/images/"):
             assert path.endswith(f"-{language}.png"), f"Wrong screenshot language in {name}: {path}"
     assert "releases/latest" in text, f"Missing download link in {name}"
+    assert f"ocr-{language}.png" in text, f"Missing localized OCR screenshot in {name}"
     for readme in ["README.zh-CN.md", "README.zh-TW.md", "README.en.md"]:
         assert readme in text, f"Missing language navigation in {name}"
 overview = (root / "README.md").read_text()

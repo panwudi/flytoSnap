@@ -31,6 +31,14 @@ Confirm the region before starting, then choose automatic scrolling:
 
 These are offscreen captures of the application's native controls, using built-in example data.
 
+## Text extraction
+
+Press `Command+Shift+A`, choose Extract Text, and select a region. Recognition runs on your Mac and supports Simplified Chinese, Traditional Chinese, and English. Images and text are not uploaded.
+
+Edit the result directly, then click Copy text to copy everything. To copy part of the result, select it in the text box and press `Command+C`. Select again lets you redraw the region. Cancel, `Escape`, and closing the result window end the capture. Blank regions and recognition errors show a message.
+
+![Editable text extraction result](docs/images/ocr-en.png)
+
 ## Download and automatic updates
 
 [Download the latest macOS release](https://github.com/panwudi/flytoSnap/releases/latest) (Apple Silicon, macOS 14+). Unzip and move flytoSnap.app into Applications.

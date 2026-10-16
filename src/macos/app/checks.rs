@@ -127,9 +127,95 @@ fn click(window: &NSWindow, tag: isize) -> Result<(), String> {
     Ok(())
 }
 
+pub(super) fn wait_for_ocr() -> Result<Retained<NSPanel>, String> {
+    let deadline = Instant::now() + Duration::from_secs(15);
+    loop {
+        feature_tick();
+        let (window, ready, status) = state(|a| {
+            let panel = a.ocr_panel.as_ref().ok_or("OCR result panel disappeared")?;
+            Ok::<_, String>((
+                panel.window.clone(),
+                panel.copy.isEnabled(),
+                panel.status.stringValue().to_string(),
+            ))
+        })?;
+        if ready {
+            return Ok(window);
+        }
+        if status != tr("正在识别文字...") || Instant::now() >= deadline {
+            return Err(format!("OCR did not finish successfully: {status}"));
+        }
+        pump();
+    }
+}
+
+fn check_ocr() -> Result<(), String> {
+    let overlay = create_scene()?;
+    click(&overlay, 404)?;
+    let panel = wait_for_ocr()?;
+    show_offscreen(&panel)?;
+    if panel.level() <= overlay.level() {
+        return Err("OCR result is behind the capture overlay".into());
+    }
+    for tag in [501, 502, 503] {
+        let button = target(&panel, tag)?;
+        verify_arrow_events(&button)?;
+    }
+    let text = state(|a| a.ocr_panel.as_ref().unwrap().text.clone());
+    let recognized = text.string().to_string();
+    if !text.isEditable() || !recognized.contains(&tr("项目进度")) || recognized.contains("Laura")
+    {
+        return Err(format!(
+            "OCR selection crop or editing failed: {recognized:?}"
+        ));
+    }
+    let board = NSPasteboard::pasteboardWithUniqueName();
+    let edited = "Edited text\n简体中文 / 繁體中文 123";
+    text.setString(&NSString::from_str(edited));
+    copy_ocr_to(&board).map_err(tr)?;
+    if board
+        .stringForType(unsafe { NSPasteboardTypeString })
+        .map(|s| s.to_string())
+        .as_deref()
+        != Some(edited)
+    {
+        return Err("OCR copy did not preserve the edited multiline text".into());
+    }
+    let change_count = board.changeCount();
+    text.setString(&NSString::from_str(" \n"));
+    if copy_ocr_to(&board).is_ok() || board.changeCount() != change_count {
+        return Err("Empty OCR result overwrote the clipboard".into());
+    }
+    let (old_job, tx) = state(|a| (a.feature_job, a.ocr_tx.clone()));
+    click(&panel, 502)?;
+    if panel.isVisible()
+        || state(|a| a.ocr_panel.is_some() || a.sessions[0].editor.selection.is_some())
+    {
+        return Err("OCR reselect did not dismiss the result and clear selection".into());
+    }
+    tx.send((old_job, Ok("stale result".into())))
+        .map_err(|e| e.to_string())?;
+    feature_tick();
+    if state(|a| a.ocr_panel.is_some()) {
+        return Err("A stale OCR job restored its panel".into());
+    }
+    state(|a| a.sessions[0].editor.selection = Some(Rect::new(320.0, 130.0, 800.0, 540.0)));
+    begin_ocr(0);
+    let panel = state(|a| a.ocr_panel.as_ref().unwrap().window.clone());
+    show_offscreen(&panel)?;
+    panel.close();
+    if overlay.isVisible() || state(|a| !a.sessions.is_empty() || a.ocr_panel.is_some()) {
+        return Err("Closing OCR during recognition left a capture overlay active".into());
+    }
+    println!(
+        "OCR interaction check passed: native mode click, selection-only recognition, editable results, Unicode clipboard, empty-copy protection, reselect, stale jobs, close cleanup."
+    );
+    Ok(())
+}
+
 pub(super) fn window_check() -> Result<(), String> {
     std::thread::spawn(|| {
-        std::thread::sleep(Duration::from_secs(12));
+        std::thread::sleep(Duration::from_secs(30));
         eprintln!("Window interaction check timed out");
         std::process::exit(1);
     });
@@ -223,6 +309,7 @@ pub(super) fn window_check() -> Result<(), String> {
     if state(|a| !a.sessions.is_empty() || a.scroll.is_some()) {
         return Err("Cancel left scrolling capture active".into());
     }
+    check_ocr()?;
     println!(
         "Window interaction check passed: WindowServer layer assignments, covered-panel regression detection, native hit testing and mouse clicks, record setup visibility, GIF/MP4 selection, scroll toolbar targeting, passive overlay cursor release, cancellation. No screen capture or permission request."
     );

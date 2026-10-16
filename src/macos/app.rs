@@ -205,9 +205,12 @@ define_class!(
             let is_editor=notification.object().and_then(|o|o.downcast::<OverlayWindow>().ok()).is_some();
             if is_editor {close_sessions();}
             else if let Some(window)=notification.object().and_then(|o|o.downcast::<NSWindow>().ok()){
+                if state(|a|a.ocr_panel.as_ref().is_some_and(|s|s.window.as_super()==window.as_ref())) {
+                    close_sessions();
+                    return;
+                }
                 let record=state(|a|{
                     if a.record_setup.as_ref().is_some_and(|s|s.window.as_super()==window.as_ref()){a.record_setup=None;}
-                    if a.ocr_panel.as_ref().is_some_and(|s|s.window.as_super()==window.as_ref()){a.feature_job+=1;a.ocr_panel=None;}
                     if a.media_result.as_ref().is_some_and(|s|s.window.as_super()==window.as_ref()){a.media_result=None;}
                     a.recording.as_ref().is_some_and(|s|s.window.as_super()==window.as_ref())
                 });if record{stop_recording(false);}
@@ -1970,7 +1973,13 @@ fn key_down(index: usize, event: &NSEvent) {
         .unwrap_or_default();
     if cmd {
         match key.as_str() {
-            "c" => output(116),
+            "c" => {
+                if state(|a| a.mode == CaptureMode::Text) {
+                    copy_ocr();
+                } else {
+                    output(116);
+                }
+            }
             "s" => output(114),
             "z" => handle_action(if shift { 113 } else { 112 }, None),
             "a" => {
@@ -2130,7 +2139,11 @@ fn handle_action(tag: isize, window: Option<Retained<NSWindow>>) {
             return;
         }
         502 => {
-            start_capture_mode(CaptureMode::Text);
+            reselect_ocr();
+            return;
+        }
+        503 => {
+            cancel_capture();
             return;
         }
         601 => {
@@ -3602,6 +3615,12 @@ fn ui_snapshot(directory: &std::path::Path) -> Result<(), String> {
     if state(|a| a.mode) != CaptureMode::Screenshot {
         return Err("Native mode button did not change mode".into());
     }
+    switch_mode(CaptureMode::Text);
+    let ocr = checks::wait_for_ocr()?;
+    let root = ocr.contentView().unwrap();
+    snapshot_view(&root, &directory.join("ocr.png"))?;
+    cursor_checks += verify_button_cursors(&root)?;
+    switch_mode(CaptureMode::Screenshot);
     show_permission_help();
     let help = state(|a| a.permission_help.as_ref().unwrap().window.clone());
     let root = help.contentView().unwrap();
