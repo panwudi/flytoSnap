@@ -166,6 +166,7 @@ struct App {
     screen_access_requested: bool,
     escape_hotkey: HotKey,
     escape_registered: bool,
+    menu_tracking: bool,
     updater: Option<super::updater::Updater>,
 }
 
@@ -188,7 +189,7 @@ define_class!(
         fn terminating(&self,_notification:&NSNotification) {dispose_recording_results();}
         #[unsafe(method(applicationDidResignActive:))]
         fn deactivated(&self,_notification:&NSNotification) {
-            if state(|a|!a.sessions.is_empty()&&a.scroll.is_none()&&a.recording.is_none()) {cancel_capture();}
+            // Menu and toolbar focus changes are not an application switch.
         }
         #[unsafe(method(applicationShouldHandleReopen:hasVisibleWindows:))]
         fn reopened(&self,_app:&NSApplication,_visible:bool)->bool {
@@ -217,7 +218,24 @@ define_class!(
             }
         }
     }
+    unsafe impl NSMenuDelegate for Delegate {
+        #[unsafe(method(menuWillOpen:))]
+        fn menu_opened(&self,_menu:&NSMenu) {state(|a|a.menu_tracking=true);}
+        #[unsafe(method(menuDidClose:))]
+        fn menu_closed(&self,_menu:&NSMenu) {state(|a|a.menu_tracking=false);}
+    }
     impl Delegate {
+        #[unsafe(method(workspaceActivated:))]
+        fn workspace_activated(&self,notification:&NSNotification) {
+            let application=notification.userInfo()
+                .and_then(|info|info.objectForKey(unsafe {NSWorkspaceApplicationKey}))
+                .and_then(|object|object.downcast::<NSRunningApplication>().ok());
+            if let Some(application)=application {
+                let switched=application.processIdentifier()!=std::process::id() as i32
+                    && application.activationPolicy()==NSApplicationActivationPolicy::Regular;
+                if switched && state(|a|!a.menu_tracking&&!a.sessions.is_empty()&&a.scroll.is_none()&&a.recording.is_none()) {cancel_capture();}
+            }
+        }
         #[unsafe(method(action:))]
         fn action(&self,sender:&NSButton) { handle_action(sender.tag(),sender.window()); }
         #[unsafe(method(menuAction:))]
@@ -774,6 +792,7 @@ fn initialize(delegate: &Delegate) {
         manager.register(hotkey)
     };
     let menu = NSMenu::new(mtm());
+    menu.setDelegate(Some(ProtocolObject::from_ref(&*delegate)));
     for (title, tag) in [
         ("开始截图", 1),
         ("打开图片...", 2),
@@ -952,9 +971,22 @@ fn initialize(delegate: &Delegate) {
             screen_access_requested: false,
             escape_hotkey: HotKey::from_str("Escape").expect("valid Escape hotkey"),
             escape_registered: false,
+            menu_tracking: false,
             updater: None,
         })
     });
+    if !headless {
+        unsafe {
+            NSWorkspace::sharedWorkspace()
+                .notificationCenter()
+                .addObserver_selector_name_object(
+                    &delegate,
+                    sel!(workspaceActivated:),
+                    Some(NSWorkspaceDidActivateApplicationNotification),
+                    None,
+                );
+        }
+    }
     if !headless && !menubar_check {
         unsafe {
             let timer = NSTimer::scheduledTimerWithTimeInterval_target_selector_userInfo_repeats(
@@ -3761,21 +3793,12 @@ fn ui_snapshot(directory: &std::path::Path) -> Result<(), String> {
             vec![],
         );
         if cancel_tag == 0 {
-            let notification = unsafe {
-                NSNotification::notificationWithName_object(
-                    NSApplicationDidResignActiveNotification,
-                    None,
-                )
-            };
-            let delegate = state(|a| a.delegate.clone());
-            unsafe {
-                let _: () = msg_send![&*delegate,applicationDidResignActive:&*notification];
-            }
+            checks::simulate_other_app_activation()?;
         } else {
             handle_action(cancel_tag, None);
         }
         if state(|a| !a.sessions.is_empty()) {
-            return Err("Cancel or app deactivation left a capture session alive".into());
+            return Err("Cancel or a confirmed app switch left a capture session alive".into());
         }
     }
     if state(|a| a.sessions.iter().any(|s| s.window.isVisible()) || a.home.isVisible()) {

@@ -213,12 +213,103 @@ fn check_ocr() -> Result<(), String> {
     Ok(())
 }
 
+fn notify_workspace_activation(application: &NSRunningApplication) {
+    let info = NSDictionary::from_slices(
+        &[unsafe { NSWorkspaceApplicationKey }],
+        &[application as &AnyObject],
+    );
+    // Widen NSString keys to AnyObject for NSNotification's untyped userInfo.
+    let info: Retained<NSDictionary> = unsafe { Retained::cast_unchecked(info) };
+    let notification = unsafe {
+        NSNotification::notificationWithName_object_userInfo(
+            NSWorkspaceDidActivateApplicationNotification,
+            Some(&NSWorkspace::sharedWorkspace()),
+            Some(&info),
+        )
+    };
+    let delegate = state(|a| a.delegate.clone());
+    unsafe {
+        let _: () = msg_send![&*delegate,workspaceActivated:&*notification];
+    }
+}
+
+fn other_regular_app() -> Result<Retained<NSRunningApplication>, String> {
+    NSWorkspace::sharedWorkspace()
+        .runningApplications()
+        .into_iter()
+        .find(|app| {
+            app.processIdentifier() != std::process::id() as i32
+                && app.activationPolicy() == NSApplicationActivationPolicy::Regular
+        })
+        .ok_or("No other regular app is available for the focus notification check".into())
+}
+
+pub(super) fn simulate_other_app_activation() -> Result<(), String> {
+    let application = other_regular_app()?;
+    notify_workspace_activation(&application);
+    Ok(())
+}
+
+fn check_large_selection_focus() -> Result<(), String> {
+    let window = create_scene()?;
+    let notification = unsafe {
+        NSNotification::notificationWithName_object(NSApplicationDidResignActiveNotification, None)
+    };
+    let delegate = state(|a| a.delegate.clone());
+    let other = other_regular_app()?;
+    let menu = state(|a| a._status_item.menu(mtm()).unwrap());
+    for region in [
+        Rect::new(0.0, 0.0, 1440.0, 900.0),
+        Rect::new(0.0, 24.0, 1440.0, 876.0),
+        Rect::new(4.0, 8.0, 1432.0, 884.0),
+        Rect::new(320.0, 130.0, 800.0, 540.0),
+    ] {
+        state(|a| a.sessions[0].editor.selection = Some(region));
+        refresh(0);
+        unsafe {
+            let _: () = msg_send![&*delegate,applicationDidResignActive:&*notification];
+        }
+        if state(|a| a.sessions.is_empty()) {
+            return Err("Temporary deactivation discarded a large capture selection before its toolbar action".into());
+        }
+        notify_workspace_activation(&NSRunningApplication::currentApplication());
+        unsafe {
+            let _: () = msg_send![&*delegate,menuWillOpen:&*menu];
+        }
+        notify_workspace_activation(&other);
+        if state(|a| a.sessions.is_empty()) {
+            return Err("Opening the status menu discarded the capture selection".into());
+        }
+        unsafe {
+            let _: () = msg_send![&*delegate,menuDidClose:&*menu];
+        }
+        click(&window, 100)?;
+        click(&window, 213)?;
+        if !state(|a| {
+            a.sessions[0].editor.tool == Tool::Rectangle
+                && a.sessions[0].editor.selection == Some(region)
+                && a.sessions[0].editor.color == PALETTE[3]
+        }) {
+            return Err("Large-selection toolbar or color action changed the selection or failed to activate".into());
+        }
+    }
+    notify_workspace_activation(&other);
+    if window.isVisible() || state(|a| !a.sessions.is_empty()) {
+        return Err("A confirmed switch to another app left capture active".into());
+    }
+    println!(
+        "Capture focus check passed: full-screen and large selections, temporary deactivation, status-menu tracking, native toolbar/color clicks, confirmed app-switch cleanup."
+    );
+    Ok(())
+}
+
 pub(super) fn window_check() -> Result<(), String> {
     std::thread::spawn(|| {
         std::thread::sleep(Duration::from_secs(30));
         eprintln!("Window interaction check timed out");
         std::process::exit(1);
     });
+    check_large_selection_focus()?;
     let overlay = create_scene()?;
     click(&overlay, 403)?;
     let setup = state(|a| a.record_setup.as_ref().map(|s| s.window.clone()))
