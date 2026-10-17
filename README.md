@@ -2,7 +2,7 @@
 
 # flytoSnap
 
-**[简体中文文档](README.zh-CN.md) | [繁體中文文件](README.zh-TW.md) | [English documentation](README.en.md)**
+**[简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | [English](README.en.md) | [日本語](README.ja.md) | [Русский](README.ru.md) | [Français](README.fr.md) | [Español](README.es.md) | [Português](README.pt.md) | [Deutsch](README.de.md) | [한국어](README.ko.md)**
 
 **[下载最新版本 / 下載最新版本 / Download latest release](https://github.com/panwudi/flytoSnap/releases/latest)**
 
@@ -14,14 +14,22 @@ A native macOS capture app built with Rust and AppKit. One shortcut for screensh
 
 macOS 14+ · Apple Silicon · MIT · `Command+Shift+A`
 
-## 三种语言 / 三種語言 / Three languages
+## 十种语言 / 十種語言 / Ten languages
 
-Choose a language above for the full guide. Each guide includes screenshots in that language.
+Choose a language above for a guide with matching interface screenshots. Update dialogs follow the language selected in Settings.
 
 | 简体中文 | 繁體中文 | English |
 | --- | --- | --- |
 | [![简体中文界面](docs/images/screenshot-zh-CN.png)](README.zh-CN.md) | [![繁體中文介面](docs/images/screenshot-zh-TW.png)](README.zh-TW.md) | [![English interface](docs/images/screenshot-en.png)](README.en.md) |
 | [使用说明](README.zh-CN.md) | [使用說明](README.zh-TW.md) | [User guide](README.en.md) |
+
+| 日本語 | Русский | Français |
+| --- | --- | --- |
+| [![日本語](docs/images/screenshot-ja.png)](README.ja.md) | [![Русский](docs/images/screenshot-ru.png)](README.ru.md) | [![Français](docs/images/screenshot-fr.png)](README.fr.md) |
+
+| Español | Português | Deutsch | 한국어 |
+| --- | --- | --- | --- |
+| [![Español](docs/images/screenshot-es.png)](README.es.md) | [![Português](docs/images/screenshot-pt.png)](README.pt.md) | [![Deutsch](docs/images/screenshot-de.png)](README.de.md) | [![한국어](docs/images/screenshot-ko.png)](README.ko.md) |
 
 ## 安装与更新 / 安裝與更新 / Install and update
 

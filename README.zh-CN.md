@@ -2,13 +2,13 @@
 
 # flytoSnap
 
-**[简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | [English](README.en.md)**
+**[简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | [English](README.en.md) | [日本語](README.ja.md) | [Русский](README.ru.md) | [Français](README.fr.md) | [Español](README.es.md) | [Português](README.pt.md) | [Deutsch](README.de.md) | [한국어](README.ko.md)**
 
 [Home / 首页 / 首頁](README.md)
 
 原生 macOS 截图和录屏工具, 使用 Rust 实现. 按一个快捷键, 即可在截图, 滚动截图, 录屏和提取文字之间切换.
 
-支持 macOS 14+, 界面支持简体中文, 繁体中文和英语, 默认跟随系统语言. 启动后驻留菜单栏, 不自动打开主窗口.
+支持 macOS 14+, 界面支持简体中文, 繁体中文, 英语, 日语, 俄语, 法语, 西班牙语, 葡萄牙语, 德语和韩语, 默认跟随系统语言. 启动后驻留菜单栏, 不自动打开主窗口.
 
 ![截图, 遮罩, 工具栏和悬停提示](docs/images/screenshot-zh-CN.png)
 
@@ -107,3 +107,7 @@ dist/flytoSnap.app/Contents/MacOS/flytosnap --menubar-check
 交互参考 [飞书截图](https://www.feishu.cn/hc/zh-CN/articles/319286513754) 和 [滚动截图](https://www.feishu.cn/hc/zh-CN/articles/145659580677). 原生接口使用 [objc2](https://github.com/madsmtm/objc2).
 
 MIT, 见 [LICENSE](LICENSE). 图标沿用 FLYTO 蓝灰色, 橙色和对角框形品牌标记, 加入相机元素.
+
+设置页可选择界面语言. 更新窗口跟随此选择. 从菜单栏打开关于窗口, 查看版本, 构建号, 作者, 版权和项目地址. 支持截取 flytoSnap 自身的设置, 关于和贴图窗口.
+
+![About flytoSnap](docs/images/about-zh-CN.png)

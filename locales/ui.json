@@ -1,830 +1,2367 @@
 {
   "截图": {
     "zh-TW": "截圖",
-    "en": "Screenshot"
+    "en": "Screenshot",
+    "ja": "スクリーンショット",
+    "ru": "Снимок экрана",
+    "fr": "Capture d'écran",
+    "es": "Captura de pantalla",
+    "pt": "Captura de tela",
+    "de": "Bildschirmfoto",
+    "ko": "스크린샷"
   },
   "滚动截图": {
     "zh-TW": "捲動截圖",
-    "en": "Scrolling Capture"
+    "en": "Scrolling Capture",
+    "ja": "スクロール撮影",
+    "ru": "Снимок с прокруткой",
+    "fr": "Capture défilante",
+    "es": "Captura con desplazamiento",
+    "pt": "Captura com rolagem",
+    "de": "Scroll-Aufnahme",
+    "ko": "스크롤 캡처"
   },
   "录屏": {
     "zh-TW": "錄影",
-    "en": "Recording"
+    "en": "Recording",
+    "ja": "画面録画",
+    "ru": "Запись экрана",
+    "fr": "Enregistrement",
+    "es": "Grabación",
+    "pt": "Gravação",
+    "de": "Bildschirmaufnahme",
+    "ko": "화면 녹화"
   },
   "提取文字": {
     "zh-TW": "擷取文字",
-    "en": "Extract Text"
+    "en": "Extract Text",
+    "ja": "テキスト抽出",
+    "ru": "Распознать текст",
+    "fr": "Extraire le texte",
+    "es": "Extraer texto",
+    "pt": "Extrair texto",
+    "de": "Text erkennen",
+    "ko": "텍스트 추출"
   },
   "Esc 退出 / Enter 复制": {
     "zh-TW": "Esc 離開 / Enter 複製",
-    "en": "Esc to exit / Enter to copy"
+    "en": "Esc to exit / Enter to copy",
+    "ja": "Esc で終了 / Enter でコピー",
+    "ru": "Esc - выход / Enter - копировать",
+    "fr": "Esc pour quitter / Entrée pour copier",
+    "es": "Esc para salir / Intro para copiar",
+    "pt": "Esc para sair / Enter para copiar",
+    "de": "Esc zum Beenden / Enter zum Kopieren",
+    "ko": "Esc 종료 / Enter 복사"
   },
   "flytoSnap - 固定图片": {
     "zh-TW": "flytoSnap - 固定圖片",
-    "en": "flytoSnap - Pinned image"
+    "en": "flytoSnap - Pinned image",
+    "ja": "flytoSnap - 画像の固定",
+    "ru": "flytoSnap - Закреплённое изображение",
+    "fr": "flytoSnap - Image épinglée",
+    "es": "flytoSnap - Imagen fijada",
+    "pt": "flytoSnap - Imagem fixada",
+    "de": "flytoSnap - Angeheftetes Bild",
+    "ko": "flytoSnap - 고정 이미지"
   },
   "flytoSnap - 图片标注": {
     "zh-TW": "flytoSnap - 圖片標註",
-    "en": "flytoSnap - Image editor"
+    "en": "flytoSnap - Image editor",
+    "ja": "flytoSnap - 画像編集",
+    "ru": "flytoSnap - Редактор изображений",
+    "fr": "flytoSnap - Éditeur d'images",
+    "es": "flytoSnap - Editor de imágenes",
+    "pt": "flytoSnap - Editor de imagens",
+    "de": "flytoSnap - Bildeditor",
+    "ko": "flytoSnap - 이미지 편집기"
   },
   "flytoSnap 设置": {
     "zh-TW": "flytoSnap 設定",
-    "en": "flytoSnap Settings"
+    "en": "flytoSnap Settings",
+    "ja": "flytoSnap 設定",
+    "ru": "Настройки flytoSnap",
+    "fr": "Réglages de flytoSnap",
+    "es": "Ajustes de flytoSnap",
+    "pt": "Ajustes do flytoSnap",
+    "de": "flytoSnap-Einstellungen",
+    "ko": "flytoSnap 설정"
   },
   "中等线条": {
     "zh-TW": "中等線條",
-    "en": "Medium stroke"
+    "en": "Medium stroke",
+    "ja": "中程度の線",
+    "ru": "Средняя линия",
+    "fr": "Trait moyen",
+    "es": "Trazo medio",
+    "pt": "Traço médio",
+    "de": "Mittlere Linie",
+    "ko": "중간 선"
   },
   "产品设计": {
     "zh-TW": "產品設計",
-    "en": "Product design"
+    "en": "Product design",
+    "ja": "プロダクトデザイン",
+    "ru": "Дизайн продукта",
+    "fr": "Conception du produit",
+    "es": "Diseño de producto",
+    "pt": "Design de produto",
+    "de": "Produktdesign",
+    "ko": "제품 디자인"
   },
   "例如 Command+Shift+A, 或 Control+Option+S": {
     "zh-TW": "例如 Command+Shift+A, 或 Control+Option+S",
-    "en": "For example, Command+Shift+A or Control+Option+S"
+    "en": "For example, Command+Shift+A or Control+Option+S",
+    "ja": "例: Command+Shift+A または Control+Option+S",
+    "ru": "Например, Command+Shift+A или Control+Option+S",
+    "fr": "Par exemple, Command+Shift+A ou Control+Option+S",
+    "es": "Por ejemplo, Command+Shift+A o Control+Option+S",
+    "pt": "Por exemplo, Command+Shift+A ou Control+Option+S",
+    "de": "Zum Beispiel Command+Shift+A oder Control+Option+S",
+    "ko": "예: Command+Shift+A 또는 Control+Option+S"
   },
   "保存 (⌘S)": {
     "zh-TW": "儲存 (⌘S)",
-    "en": "Save (⌘S)"
+    "en": "Save (⌘S)",
+    "ja": "保存 (⌘S)",
+    "ru": "Сохранить (⌘S)",
+    "fr": "Enregistrer (⌘S)",
+    "es": "Guardar (⌘S)",
+    "pt": "Salvar (⌘S)",
+    "de": "Sichern (⌘S)",
+    "ko": "저장 (⌘S)"
   },
   "保存到剪贴板 (Enter)": {
     "zh-TW": "儲存至剪貼簿 (Enter)",
-    "en": "Copy to clipboard (Enter)"
+    "en": "Copy to clipboard (Enter)",
+    "ja": "クリップボードにコピー (Enter)",
+    "ru": "Копировать в буфер (Enter)",
+    "fr": "Copier dans le presse-papiers (Entrée)",
+    "es": "Copiar al portapapeles (Intro)",
+    "pt": "Copiar para a área de transferência (Enter)",
+    "de": "In die Zwischenablage kopieren (Enter)",
+    "ko": "클립보드에 복사 (Enter)"
   },
   "保存图片...": {
     "zh-TW": "儲存圖片...",
-    "en": "Save image..."
+    "en": "Save image...",
+    "ja": "画像を保存...",
+    "ru": "Сохранить изображение...",
+    "fr": "Enregistrer l'image...",
+    "es": "Guardar imagen...",
+    "pt": "Salvar imagem...",
+    "de": "Bild sichern...",
+    "ko": "이미지 저장..."
   },
   "保存失败: {}": {
     "zh-TW": "儲存失敗: {}",
-    "en": "Could not save: {}"
+    "en": "Could not save: {}",
+    "ja": "保存できませんでした: {}",
+    "ru": "Не удалось сохранить: {}",
+    "fr": "Impossible d'enregistrer: {}",
+    "es": "No se pudo guardar: {}",
+    "pt": "Não foi possível salvar: {}",
+    "de": "Sichern fehlgeschlagen: {}",
+    "ko": "저장하지 못했습니다: {}"
   },
   "保存目录": {
     "zh-TW": "儲存資料夾",
-    "en": "Save folder"
+    "en": "Save folder",
+    "ja": "保存先フォルダ",
+    "ru": "Папка сохранения",
+    "fr": "Dossier de destination",
+    "es": "Carpeta de destino",
+    "pt": "Pasta de destino",
+    "de": "Sicherungsordner",
+    "ko": "저장 폴더"
   },
   "保存设置": {
     "zh-TW": "儲存設定",
-    "en": "Save settings"
+    "en": "Save settings",
+    "ja": "設定を保存",
+    "ru": "Сохранить настройки",
+    "fr": "Enregistrer les réglages",
+    "es": "Guardar ajustes",
+    "pt": "Salvar ajustes",
+    "de": "Einstellungen sichern",
+    "ko": "설정 저장"
   },
   "停止自动滚动": {
     "zh-TW": "停止自動捲動",
-    "en": "Stop auto scroll"
+    "en": "Stop auto scroll",
+    "ja": "自動スクロールを停止",
+    "ru": "Стоп автопрокрутки",
+    "fr": "Arrêter défil. auto",
+    "es": "Detener despl. auto",
+    "pt": "Parar rolagem auto",
+    "de": "Auto-Scroll stoppen",
+    "ko": "자동 스크롤 중지"
   },
   "关闭贴图": {
     "zh-TW": "關閉貼圖",
-    "en": "Close pinned image"
+    "en": "Close pinned image",
+    "ja": "固定画像を閉じる",
+    "ru": "Закрыть закреплённое изображение",
+    "fr": "Fermer l'image épinglée",
+    "es": "Cerrar imagen fijada",
+    "pt": "Fechar imagem fixada",
+    "de": "Angeheftetes Bild schließen",
+    "ko": "고정 이미지 닫기"
   },
   "取消": {
     "zh-TW": "取消",
-    "en": "Cancel"
+    "en": "Cancel",
+    "ja": "キャンセル",
+    "ru": "Отмена",
+    "fr": "Annuler",
+    "es": "Cancelar",
+    "pt": "Cancelar",
+    "de": "Abbrechen",
+    "ko": "취소"
   },
   "取消 (Esc)": {
     "zh-TW": "取消 (Esc)",
-    "en": "Cancel (Esc)"
+    "en": "Cancel (Esc)",
+    "ja": "キャンセル (Esc)",
+    "ru": "Отмена (Esc)",
+    "fr": "Annuler (Esc)",
+    "es": "Cancelar (Esc)",
+    "pt": "Cancelar (Esc)",
+    "de": "Abbrechen (Esc)",
+    "ko": "취소 (Esc)"
   },
   "固定到屏幕": {
     "zh-TW": "固定至螢幕",
-    "en": "Pin to screen"
+    "en": "Pin to screen",
+    "ja": "画面に固定",
+    "ru": "Закрепить на экране",
+    "fr": "Épingler à l'écran",
+    "es": "Fijar en pantalla",
+    "pt": "Fixar na tela",
+    "de": "Auf dem Bildschirm anheften",
+    "ko": "화면에 고정"
   },
   "图片超过 8000 万像素, 请先缩小图片": {
     "zh-TW": "圖片超過 8000 萬像素, 請先縮小圖片",
-    "en": "The image exceeds 80 million pixels. Resize it first."
+    "en": "The image exceeds 80 million pixels. Resize it first.",
+    "ja": "画像が8000万画素を超えています. 先に縮小してください.",
+    "ru": "Изображение превышает 80 миллионов пикселей. Сначала уменьшите его.",
+    "fr": "L'image dépasse 80 millions de pixels. Réduisez-la d'abord.",
+    "es": "La imagen supera los 80 millones de píxeles. Redúcela primero.",
+    "pt": "A imagem ultrapassa 80 milhões de pixels. Reduza-a primeiro.",
+    "de": "Das Bild überschreitet 80 Millionen Pixel. Verkleinere es zuerst.",
+    "ko": "이미지가 8천만 픽셀을 초과합니다. 먼저 크기를 줄이세요."
   },
   "在周报里同步一下本周专项进展吧": {
     "zh-TW": "在週報裡同步一下本週專案進度吧",
-    "en": "Share this week's progress in the weekly report."
+    "en": "Share this week's progress in the weekly report.",
+    "ja": "今週の進捗を週報で共有しましょう.",
+    "ru": "Поделитесь ходом работы в еженедельном отчёте.",
+    "fr": "Partagez les progrès de la semaine dans le rapport hebdomadaire.",
+    "es": "Comparte el progreso de esta semana en el informe semanal.",
+    "pt": "Compartilhe o progresso desta semana no relatório semanal.",
+    "de": "Teile den Fortschritt dieser Woche im Wochenbericht.",
+    "ko": "이번 주 진행 상황을 주간 보고서에 공유하세요."
   },
   "复制图片": {
     "zh-TW": "複製圖片",
-    "en": "Copy image"
+    "en": "Copy image",
+    "ja": "画像をコピー",
+    "ru": "Копировать изображение",
+    "fr": "Copier l'image",
+    "es": "Copiar imagen",
+    "pt": "Copiar imagem",
+    "de": "Bild kopieren",
+    "ko": "이미지 복사"
   },
   "复制失败, 请重试": {
     "zh-TW": "複製失敗, 請重試",
-    "en": "Could not copy. Please try again."
+    "en": "Could not copy. Please try again.",
+    "ja": "コピーできませんでした. 再試行してください.",
+    "ru": "Не удалось скопировать. Повторите попытку.",
+    "fr": "Impossible de copier. Réessayez.",
+    "es": "No se pudo copiar. Vuelve a intentarlo.",
+    "pt": "Não foi possível copiar. Tente novamente.",
+    "de": "Kopieren fehlgeschlagen. Versuche es erneut.",
+    "ko": "복사하지 못했습니다. 다시 시도하세요."
   },
   "字体大小": {
     "zh-TW": "字體大小",
-    "en": "Font size"
+    "en": "Font size",
+    "ja": "文字サイズ",
+    "ru": "Размер шрифта",
+    "fr": "Taille du texte",
+    "es": "Tamaño del texto",
+    "pt": "Tamanho do texto",
+    "de": "Schriftgröße",
+    "ko": "글자 크기"
   },
   "完成并编辑": {
     "zh-TW": "完成並編輯",
-    "en": "Finish and edit"
+    "en": "Finish and edit",
+    "ja": "完了して編集",
+    "ru": "Завершить и редактировать",
+    "fr": "Terminer et modifier",
+    "es": "Terminar y editar",
+    "pt": "Concluir e editar",
+    "de": "Fertigstellen und bearbeiten",
+    "ko": "완료 후 편집"
   },
   "屏幕录制权限": {
     "zh-TW": "螢幕錄製權限",
-    "en": "Screen Recording permission"
+    "en": "Screen Recording permission",
+    "ja": "画面収録のアクセス権",
+    "ru": "Разрешение на запись экрана",
+    "fr": "Autorisation d'enregistrement de l'écran",
+    "es": "Permiso de grabación de pantalla",
+    "pt": "Permissão de gravação da tela",
+    "de": "Berechtigung zur Bildschirmaufnahme",
+    "ko": "화면 기록 권한"
   },
   "屏幕录制权限已就绪": {
     "zh-TW": "螢幕錄製權限已就緒",
-    "en": "Screen Recording permission is ready"
+    "en": "Screen Recording permission is ready",
+    "ja": "画面収録のアクセス権は有効です",
+    "ru": "Доступ к записи экрана разрешён",
+    "fr": "L'enregistrement de l'écran est autorisé",
+    "es": "La grabación de pantalla está autorizada",
+    "pt": "A gravação da tela está autorizada",
+    "de": "Bildschirmaufnahme ist erlaubt",
+    "ko": "화면 기록 권한이 허용되었습니다"
   },
   "屏幕捕获超时, 自动滚动已停止": {
     "zh-TW": "螢幕擷取逾時, 自動捲動已停止",
-    "en": "Capture timed out. Auto scroll has stopped."
+    "en": "Capture timed out. Auto scroll has stopped.",
+    "ja": "撮影がタイムアウトしました. 自動スクロールを停止しました.",
+    "ru": "Время захвата истекло. Автопрокрутка остановлена.",
+    "fr": "Le délai de capture a expiré. Le défilement automatique est arrêté.",
+    "es": "Se agotó el tiempo de captura. El desplazamiento automático se ha detenido.",
+    "pt": "O tempo de captura esgotou. A rolagem automática foi interrompida.",
+    "de": "Zeitüberschreitung bei der Aufnahme. Automatisches Scrollen wurde gestoppt.",
+    "ko": "캡처 시간이 초과되어 자동 스크롤을 중지했습니다."
   },
   "已保存 {}": {
     "zh-TW": "已儲存 {}",
-    "en": "Saved {}"
+    "en": "Saved {}",
+    "ja": "{} に保存しました",
+    "ru": "Сохранено: {}",
+    "fr": "Enregistré dans {}",
+    "es": "Guardado en {}",
+    "pt": "Salvo em {}",
+    "de": "Unter {} gesichert",
+    "ko": "{}에 저장했습니다"
   },
   "已取消保存, 图片仍可继续编辑": {
     "zh-TW": "已取消儲存, 圖片仍可繼續編輯",
-    "en": "Saving cancelled. You can keep editing."
+    "en": "Saving cancelled. You can keep editing.",
+    "ja": "保存をキャンセルしました. 編集を続けられます.",
+    "ru": "Сохранение отменено. Можно продолжить редактирование.",
+    "fr": "Enregistrement annulé. Vous pouvez continuer à modifier.",
+    "es": "Guardado cancelado. Puedes seguir editando.",
+    "pt": "Salvamento cancelado. Você pode continuar editando.",
+    "de": "Sichern abgebrochen. Du kannst weiter bearbeiten.",
+    "ko": "저장을 취소했습니다. 계속 편집할 수 있습니다."
   },
   "已取消截图": {
     "zh-TW": "已取消截圖",
-    "en": "Screenshot cancelled"
+    "en": "Screenshot cancelled",
+    "ja": "撮影をキャンセルしました",
+    "ru": "Снимок отменён",
+    "fr": "Capture annulée",
+    "es": "Captura cancelada",
+    "pt": "Captura cancelada",
+    "de": "Bildschirmfoto abgebrochen",
+    "ko": "스크린샷을 취소했습니다"
   },
   "已取消滚动截图": {
     "zh-TW": "已取消捲動截圖",
-    "en": "Scrolling capture cancelled"
+    "en": "Scrolling capture cancelled",
+    "ja": "スクロール撮影をキャンセルしました",
+    "ru": "Снимок с прокруткой отменён",
+    "fr": "Capture défilante annulée",
+    "es": "Captura con desplazamiento cancelada",
+    "pt": "Captura com rolagem cancelada",
+    "de": "Scroll-Aufnahme abgebrochen",
+    "ko": "스크롤 캡처를 취소했습니다"
   },
   "已固定到屏幕. 右键查看操作.": {
     "zh-TW": "已固定至螢幕. 按右鍵查看操作.",
-    "en": "Pinned to screen. Right-click for actions."
+    "en": "Pinned to screen. Right-click for actions.",
+    "ja": "画面に固定しました. 右クリックで操作を表示します.",
+    "ru": "Закреплено на экране. Действия доступны по правому щелчку.",
+    "fr": "Image épinglée. Faites un clic droit pour les actions.",
+    "es": "Imagen fijada. Haz clic derecho para ver las acciones.",
+    "pt": "Imagem fixada. Clique com o botão direito para ver as ações.",
+    "de": "Auf dem Bildschirm angeheftet. Rechtsklick zeigt Aktionen.",
+    "ko": "화면에 고정했습니다. 오른쪽 클릭으로 작업을 확인하세요."
   },
   "已复制图片": {
     "zh-TW": "已複製圖片",
-    "en": "Image copied"
+    "en": "Image copied",
+    "ja": "画像をコピーしました",
+    "ru": "Изображение скопировано",
+    "fr": "Image copiée",
+    "es": "Imagen copiada",
+    "pt": "Imagem copiada",
+    "de": "Bild kopiert",
+    "ko": "이미지를 복사했습니다"
   },
   "已恢复贴图大小和透明度": {
     "zh-TW": "已還原貼圖大小與透明度",
-    "en": "Pinned image size and opacity restored"
+    "en": "Pinned image size and opacity restored",
+    "ja": "固定画像のサイズと透明度を元に戻しました",
+    "ru": "Размер и прозрачность закреплённого изображения восстановлены",
+    "fr": "Taille et opacité de l'image épinglée réinitialisées",
+    "es": "Tamaño y opacidad de la imagen fijada restablecidos",
+    "pt": "Tamanho e opacidade da imagem fixada restaurados",
+    "de": "Größe und Deckkraft des angehefteten Bildes zurückgesetzt",
+    "ko": "고정 이미지의 크기와 불투명도를 초기화했습니다"
   },
   "已拼接 {} × {} 像素": {
     "zh-TW": "已拼接 {} × {} 像素",
-    "en": "Stitched {} × {} pixels"
+    "en": "Stitched {} × {} pixels",
+    "ja": "{} × {} ピクセルを連結しました",
+    "ru": "Объединено {} × {} пикселей",
+    "fr": "Image assemblée: {} × {} pixels",
+    "es": "Imagen unida: {} × {} píxeles",
+    "pt": "Imagem combinada: {} × {} pixels",
+    "de": "{} × {} Pixel zusammengefügt",
+    "ko": "{} × {} 픽셀을 연결했습니다"
   },
   "已显示全部贴图": {
     "zh-TW": "已顯示全部貼圖",
-    "en": "All pinned images shown"
+    "en": "All pinned images shown",
+    "ja": "すべての固定画像を表示しました",
+    "ru": "Все закреплённые изображения показаны",
+    "fr": "Toutes les images épinglées sont affichées",
+    "es": "Se muestran todas las imágenes fijadas",
+    "pt": "Todas as imagens fixadas estão visíveis",
+    "de": "Alle angehefteten Bilder werden angezeigt",
+    "ko": "모든 고정 이미지를 표시했습니다"
   },
   "已达到长度上限, 请完成当前截图": {
     "zh-TW": "已達長度上限, 請完成目前截圖",
-    "en": "Length limit reached. Finish this capture."
+    "en": "Length limit reached. Finish this capture.",
+    "ja": "長さの上限に達しました. 撮影を完了してください.",
+    "ru": "Достигнут предел длины. Завершите захват.",
+    "fr": "Limite de longueur atteinte. Terminez la capture.",
+    "es": "Se alcanzó el límite de longitud. Termina la captura.",
+    "pt": "Limite de comprimento atingido. Conclua a captura.",
+    "de": "Maximale Länge erreicht. Beende die Aufnahme.",
+    "ko": "최대 길이에 도달했습니다. 캡처를 완료하세요."
   },
   "已退出截图": {
     "zh-TW": "已離開截圖",
-    "en": "Screenshot closed"
+    "en": "Screenshot closed",
+    "ja": "撮影を終了しました",
+    "ru": "Захват закрыт",
+    "fr": "Capture fermée",
+    "es": "Captura cerrada",
+    "pt": "Captura fechada",
+    "de": "Bildschirmfoto geschlossen",
+    "ko": "캡처를 닫았습니다"
   },
   "已锁定": {
     "zh-TW": "已鎖定",
-    "en": "Locked"
+    "en": "Locked",
+    "ja": "ロック中",
+    "ru": "Заблокировано",
+    "fr": "Verrouillée",
+    "es": "Bloqueada",
+    "pt": "Bloqueada",
+    "de": "Gesperrt",
+    "ko": "잠김"
   },
   "已隐藏全部贴图": {
     "zh-TW": "已隱藏全部貼圖",
-    "en": "All pinned images hidden"
+    "en": "All pinned images hidden",
+    "ja": "すべての固定画像を非表示にしました",
+    "ru": "Все закреплённые изображения скрыты",
+    "fr": "Toutes les images épinglées sont masquées",
+    "es": "Se han ocultado todas las imágenes fijadas",
+    "pt": "Todas as imagens fixadas estão ocultas",
+    "de": "Alle angehefteten Bilder wurden ausgeblendet",
+    "ko": "모든 고정 이미지를 숨겼습니다"
   },
   "开始截图": {
     "zh-TW": "開始截圖",
-    "en": "Start screenshot"
+    "en": "Start screenshot",
+    "ja": "撮影を開始",
+    "ru": "Сделать снимок",
+    "fr": "Faire une capture",
+    "es": "Iniciar captura",
+    "pt": "Iniciar captura",
+    "de": "Bildschirmfoto erstellen",
+    "ko": "스크린샷 시작"
   },
   "开始截图   ⌘⇧A": {
     "zh-TW": "開始截圖   ⌘⇧A",
-    "en": "Start screenshot   ⌘⇧A"
+    "en": "Start screenshot   ⌘⇧A",
+    "ja": "撮影を開始   ⌘⇧A",
+    "ru": "Сделать снимок   ⌘⇧A",
+    "fr": "Faire une capture   ⌘⇧A",
+    "es": "Iniciar captura   ⌘⇧A",
+    "pt": "Iniciar captura   ⌘⇧A",
+    "de": "Bildschirmfoto erstellen   ⌘⇧A",
+    "ko": "스크린샷 시작   ⌘⇧A"
   },
   "快捷键冲突时可以在这里更换": {
     "zh-TW": "快捷鍵衝突時可在這裡更換",
-    "en": "Change the shortcut here if it conflicts."
+    "en": "Change the shortcut here if it conflicts.",
+    "ja": "ショートカットが競合する場合はここで変更できます.",
+    "ru": "Если сочетание клавиш занято, измените его здесь.",
+    "fr": "Modifiez le raccourci ici en cas de conflit.",
+    "es": "Cambia aquí el atajo si hay un conflicto.",
+    "pt": "Altere o atalho aqui se houver conflito.",
+    "de": "Ändere die Tastenkombination hier bei einem Konflikt.",
+    "ko": "단축키가 충돌하면 여기서 변경하세요."
   },
   "快捷键无法使用: {}": {
     "zh-TW": "快捷鍵無法使用: {}",
-    "en": "Shortcut unavailable: {}"
+    "en": "Shortcut unavailable: {}",
+    "ja": "ショートカットを使用できません: {}",
+    "ru": "Сочетание клавиш недоступно: {}",
+    "fr": "Raccourci indisponible: {}",
+    "es": "Atajo no disponible: {}",
+    "pt": "Atalho indisponível: {}",
+    "de": "Tastenkombination nicht verfügbar: {}",
+    "ko": "사용할 수 없는 단축키: {}"
   },
   "快捷键格式不正确: {}": {
     "zh-TW": "快捷鍵格式不正確: {}",
-    "en": "Invalid shortcut: {}"
+    "en": "Invalid shortcut: {}",
+    "ja": "ショートカットの形式が無効です: {}",
+    "ru": "Недопустимое сочетание клавиш: {}",
+    "fr": "Raccourci incorrect: {}",
+    "es": "Atajo no válido: {}",
+    "pt": "Atalho inválido: {}",
+    "de": "Ungültige Tastenkombination: {}",
+    "ko": "잘못된 단축키 형식: {}"
   },
   "快捷键注册失败: {}. 请在设置中更换.": {
     "zh-TW": "快捷鍵註冊失敗: {}. 請在設定中更換.",
-    "en": "Could not register the shortcut: {}. Change it in Settings."
+    "en": "Could not register the shortcut: {}. Change it in Settings.",
+    "ja": "ショートカットを登録できませんでした: {}. 設定で変更してください.",
+    "ru": "Не удалось зарегистрировать сочетание клавиш: {}. Измените его в настройках.",
+    "fr": "Impossible d'enregistrer le raccourci: {}. Modifiez-le dans les réglages.",
+    "es": "No se pudo registrar el atajo: {}. Cámbialo en Ajustes.",
+    "pt": "Não foi possível registrar o atalho: {}. Altere-o nos Ajustes.",
+    "de": "Tastenkombination konnte nicht registriert werden: {}. Ändere sie in den Einstellungen.",
+    "ko": "단축키를 등록하지 못했습니다: {}. 설정에서 변경하세요."
   },
   "恢复大小和透明度": {
     "zh-TW": "還原大小與透明度",
-    "en": "Reset size and opacity"
+    "en": "Reset size and opacity",
+    "ja": "サイズと透明度をリセット",
+    "ru": "Сбросить размер и прозрачность",
+    "fr": "Réinitialiser la taille et l'opacité",
+    "es": "Restablecer tamaño y opacidad",
+    "pt": "Restaurar tamanho e opacidade",
+    "de": "Größe und Deckkraft zurücksetzen",
+    "ko": "크기와 불투명도 초기화"
   },
   "截图, 标注, 固定在屏幕上": {
     "zh-TW": "截圖, 標註, 固定至螢幕",
-    "en": "Capture, annotate, and pin to screen"
+    "en": "Capture, annotate, and pin to screen",
+    "ja": "撮影, 注釈, 画面への固定",
+    "ru": "Снимки, пометки и закрепление на экране",
+    "fr": "Capturer, annoter et épingler à l'écran",
+    "es": "Captura, anota y fija en pantalla",
+    "pt": "Capture, anote e fixe na tela",
+    "de": "Aufnehmen, beschriften und auf dem Bildschirm anheften",
+    "ko": "캡처하고 주석을 달고 화면에 고정하세요"
   },
   "截图后可以画箭头, 标注文字, 添加标签和马赛克.": {
     "zh-TW": "截圖後可畫箭頭, 標註文字, 新增標籤與馬賽克.",
-    "en": "Add arrows, text, callouts, and mosaic to screenshots."
+    "en": "Add arrows, text, callouts, and mosaic to screenshots.",
+    "ja": "スクリーンショットに矢印, 文字, 吹き出し, モザイクを追加できます.",
+    "ru": "Добавляйте стрелки, текст, выноски и мозаику к снимкам.",
+    "fr": "Ajoutez des flèches, du texte, des bulles et de la mosaïque aux captures.",
+    "es": "Añade flechas, texto, etiquetas y mosaico a tus capturas.",
+    "pt": "Adicione setas, texto, rótulos e mosaico às capturas.",
+    "de": "Füge Pfeile, Text, Beschriftungen und Mosaik zu Bildschirmfotos hinzu.",
+    "ko": "스크린샷에 화살표, 글자, 설명선, 모자이크를 추가하세요."
   },
   "截图失败: {}": {
     "zh-TW": "截圖失敗: {}",
-    "en": "Screenshot failed: {}"
+    "en": "Screenshot failed: {}",
+    "ja": "撮影に失敗しました: {}",
+    "ru": "Ошибка захвата: {}",
+    "fr": "Échec de la capture: {}",
+    "es": "Error de captura: {}",
+    "pt": "Falha na captura: {}",
+    "de": "Aufnahme fehlgeschlagen: {}",
+    "ko": "캡처 실패: {}"
   },
   "截图快捷键": {
     "zh-TW": "截圖快捷鍵",
-    "en": "Capture shortcut"
+    "en": "Capture shortcut",
+    "ja": "撮影ショートカット",
+    "ru": "Сочетание для захвата",
+    "fr": "Raccourci de capture",
+    "es": "Atajo de captura",
+    "pt": "Atalho de captura",
+    "de": "Aufnahme-Tastenkürzel",
+    "ko": "캡처 단축키"
   },
   "截图超时, 请检查屏幕录制权限后重试": {
     "zh-TW": "截圖逾時, 請檢查螢幕錄製權限後重試",
-    "en": "Capture timed out. Check Screen Recording permission and try again."
+    "en": "Capture timed out. Check Screen Recording permission and try again.",
+    "ja": "撮影がタイムアウトしました. 画面収録のアクセス権を確認して再試行してください.",
+    "ru": "Время захвата истекло. Проверьте разрешение на запись экрана и повторите попытку.",
+    "fr": "Le délai de capture a expiré. Vérifiez l'autorisation d'enregistrement de l'écran et réessayez.",
+    "es": "Se agotó el tiempo de captura. Comprueba el permiso de grabación de pantalla e inténtalo de nuevo.",
+    "pt": "O tempo de captura esgotou. Verifique a permissão de gravação da tela e tente novamente.",
+    "de": "Zeitüberschreitung bei der Aufnahme. Prüfe die Berechtigung zur Bildschirmaufnahme und versuche es erneut.",
+    "ko": "캡처 시간이 초과되었습니다. 화면 기록 권한을 확인하고 다시 시도하세요."
   },
   "打开图片...": {
     "zh-TW": "開啟圖片...",
-    "en": "Open image..."
+    "en": "Open image...",
+    "ja": "画像を開く...",
+    "ru": "Открыть изображение...",
+    "fr": "Ouvrir une image...",
+    "es": "Abrir imagen...",
+    "pt": "Abrir imagem...",
+    "de": "Bild öffnen...",
+    "ko": "이미지 열기..."
   },
   "打开图片进行标注...": {
     "zh-TW": "開啟圖片進行標註...",
-    "en": "Open an image to annotate..."
+    "en": "Open an image to annotate...",
+    "ja": "注釈を付ける画像を開く...",
+    "ru": "Открыть изображение для пометок...",
+    "fr": "Ouvrir une image à annoter...",
+    "es": "Abrir una imagen para anotar...",
+    "pt": "Abrir uma imagem para anotar...",
+    "de": "Bild zum Beschriften öffnen...",
+    "ko": "주석을 달 이미지 열기..."
   },
   "打开最近保存的位置": {
     "zh-TW": "開啟最近儲存的位置",
-    "en": "Reveal last saved file"
+    "en": "Reveal last saved file",
+    "ja": "最後に保存したファイルを表示",
+    "ru": "Показать последний сохранённый файл",
+    "fr": "Afficher le dernier fichier enregistré",
+    "es": "Mostrar el último archivo guardado",
+    "pt": "Mostrar o último arquivo salvo",
+    "de": "Zuletzt gesicherte Datei zeigen",
+    "ko": "최근 저장한 파일 표시"
   },
   "打开系统设置": {
     "zh-TW": "開啟系統設定",
-    "en": "Open System Settings"
+    "en": "Open System Settings",
+    "ja": "システム設定を開く",
+    "ru": "Открыть Системные настройки",
+    "fr": "Ouvrir Réglages Système",
+    "es": "Abrir Ajustes del Sistema",
+    "pt": "Abrir Ajustes do Sistema",
+    "de": "Systemeinstellungen öffnen",
+    "ko": "시스템 설정 열기"
   },
   "拖动选择截图区域   Esc 取消": {
     "zh-TW": "拖曳選擇截圖區域   Esc 取消",
-    "en": "Drag to select a region   Esc to cancel"
+    "en": "Drag to select a region   Esc to cancel",
+    "ja": "ドラッグして範囲を選択   Esc でキャンセル",
+    "ru": "Выделите область перетаскиванием   Esc - отмена",
+    "fr": "Faites glisser pour sélectionner une zone   Esc pour annuler",
+    "es": "Arrastra para seleccionar una zona   Esc para cancelar",
+    "pt": "Arraste para selecionar uma área   Esc para cancelar",
+    "de": "Bereich durch Ziehen auswählen   Esc zum Abbrechen",
+    "ko": "드래그하여 영역 선택   Esc 취소"
   },
   "撤销 (⌘Z)": {
     "zh-TW": "復原 (⌘Z)",
-    "en": "Undo (⌘Z)"
+    "en": "Undo (⌘Z)",
+    "ja": "元に戻す (⌘Z)",
+    "ru": "Отменить (⌘Z)",
+    "fr": "Annuler (⌘Z)",
+    "es": "Deshacer (⌘Z)",
+    "pt": "Desfazer (⌘Z)",
+    "de": "Widerrufen (⌘Z)",
+    "ko": "실행 취소 (⌘Z)"
   },
   "文字 (T)": {
     "zh-TW": "文字 (T)",
-    "en": "Text (T)"
+    "en": "Text (T)",
+    "ja": "テキスト (T)",
+    "ru": "Текст (T)",
+    "fr": "Texte (T)",
+    "es": "Texto (T)",
+    "pt": "Texto (T)",
+    "de": "Text (T)",
+    "ko": "텍스트 (T)"
   },
   "无法保存设置: {}": {
     "zh-TW": "無法儲存設定: {}",
-    "en": "Could not save settings: {}"
+    "en": "Could not save settings: {}",
+    "ja": "設定を保存できませんでした: {}",
+    "ru": "Не удалось сохранить настройки: {}",
+    "fr": "Impossible d'enregistrer les réglages: {}",
+    "es": "No se pudieron guardar los ajustes: {}",
+    "pt": "Não foi possível salvar os ajustes: {}",
+    "de": "Einstellungen konnten nicht gesichert werden: {}",
+    "ko": "설정을 저장하지 못했습니다: {}"
   },
   "无法打开图片: {}": {
     "zh-TW": "無法開啟圖片: {}",
-    "en": "Could not open image: {}"
+    "en": "Could not open image: {}",
+    "ja": "画像を開けませんでした: {}",
+    "ru": "Не удалось открыть изображение: {}",
+    "fr": "Impossible d'ouvrir l'image: {}",
+    "es": "No se pudo abrir la imagen: {}",
+    "pt": "Não foi possível abrir a imagem: {}",
+    "de": "Bild konnte nicht geöffnet werden: {}",
+    "ko": "이미지를 열지 못했습니다: {}"
   },
   "无法打开贴图": {
     "zh-TW": "無法開啟貼圖",
-    "en": "Could not open pinned image"
+    "en": "Could not open pinned image",
+    "ja": "固定画像を開けませんでした",
+    "ru": "Не удалось открыть закреплённое изображение",
+    "fr": "Impossible d'ouvrir l'image épinglée",
+    "es": "No se pudo abrir la imagen fijada",
+    "pt": "Não foi possível abrir a imagem fixada",
+    "de": "Angeheftetes Bild konnte nicht geöffnet werden",
+    "ko": "고정 이미지를 열지 못했습니다"
   },
   "显示主窗口": {
     "zh-TW": "顯示主視窗",
-    "en": "Show main window"
+    "en": "Show main window",
+    "ja": "メインウインドウを表示",
+    "ru": "Показать главное окно",
+    "fr": "Afficher la fenêtre principale",
+    "es": "Mostrar ventana principal",
+    "pt": "Mostrar janela principal",
+    "de": "Hauptfenster anzeigen",
+    "ko": "기본 창 표시"
   },
   "显示器尺寸发生变化, 请重新截图": {
     "zh-TW": "顯示器尺寸已變更, 請重新截圖",
-    "en": "Display size changed. Start a new capture."
+    "en": "Display size changed. Start a new capture.",
+    "ja": "ディスプレイのサイズが変わりました. 撮影をやり直してください.",
+    "ru": "Размер экрана изменился. Начните захват заново.",
+    "fr": "La taille de l'écran a changé. Recommencez la capture.",
+    "es": "Cambió el tamaño de la pantalla. Inicia otra captura.",
+    "pt": "O tamanho da tela mudou. Inicie outra captura.",
+    "de": "Die Bildschirmgröße wurde geändert. Starte eine neue Aufnahme.",
+    "ko": "디스플레이 크기가 변경되었습니다. 다시 캡처하세요."
   },
   "未找到重叠内容, 请向回滚动一点": {
     "zh-TW": "未找到重疊內容, 請稍微往回捲動",
-    "en": "No overlap found. Scroll back slightly."
+    "en": "No overlap found. Scroll back slightly.",
+    "ja": "重複部分が見つかりません. 少し戻してスクロールしてください.",
+    "ru": "Перекрытие не найдено. Прокрутите немного назад.",
+    "fr": "Aucun chevauchement trouvé. Faites légèrement défiler en arrière.",
+    "es": "No se encontró solapamiento. Desplázate un poco hacia atrás.",
+    "pt": "Nenhuma sobreposição encontrada. Role um pouco para trás.",
+    "de": "Keine Überlappung gefunden. Scrolle etwas zurück.",
+    "ko": "겹치는 영역을 찾지 못했습니다. 조금 뒤로 스크롤하세요."
   },
   "标签 (G)": {
     "zh-TW": "標籤 (G)",
-    "en": "Callout (G)"
+    "en": "Callout (G)",
+    "ja": "吹き出し (G)",
+    "ru": "Выноска (G)",
+    "fr": "Bulle (G)",
+    "es": "Etiqueta (G)",
+    "pt": "Rótulo (G)",
+    "de": "Beschriftung (G)",
+    "ko": "설명선 (G)"
   },
   "框选马赛克": {
     "zh-TW": "框選馬賽克",
-    "en": "Rectangle mosaic"
+    "en": "Rectangle mosaic",
+    "ja": "範囲モザイク",
+    "ru": "Прямоугольная мозаика",
+    "fr": "Mosaïque rectangulaire",
+    "es": "Mosaico rectangular",
+    "pt": "Mosaico retangular",
+    "de": "Rechteckiges Mosaik",
+    "ko": "사각형 모자이크"
   },
   "椭圆 (O)": {
     "zh-TW": "橢圓 (O)",
-    "en": "Ellipse (O)"
+    "en": "Ellipse (O)",
+    "ja": "楕円 (O)",
+    "ru": "Эллипс (O)",
+    "fr": "Ellipse (O)",
+    "es": "Elipse (O)",
+    "pt": "Elipse (O)",
+    "de": "Ellipse (O)",
+    "ko": "타원 (O)"
   },
   "正在截取屏幕...": {
     "zh-TW": "正在擷取螢幕...",
-    "en": "Capturing screen..."
+    "en": "Capturing screen...",
+    "ja": "画面を撮影中...",
+    "ru": "Захват экрана...",
+    "fr": "Capture de l'écran...",
+    "es": "Capturando pantalla...",
+    "pt": "Capturando tela...",
+    "de": "Bildschirm wird erfasst...",
+    "ko": "화면 캡처 중..."
   },
   "正在自动滚动...": {
     "zh-TW": "正在自動捲動...",
-    "en": "Auto scrolling..."
+    "en": "Auto scrolling...",
+    "ja": "自動スクロール中...",
+    "ru": "Автопрокрутка...",
+    "fr": "Défilement automatique...",
+    "es": "Desplazamiento automático...",
+    "pt": "Rolagem automática...",
+    "de": "Automatisches Scrollen...",
+    "ko": "자동 스크롤 중..."
   },
   "水印 (W)": {
     "zh-TW": "浮水印 (W)",
-    "en": "Watermark (W)"
+    "en": "Watermark (W)",
+    "ja": "透かし (W)",
+    "ru": "Водяной знак (W)",
+    "fr": "Filigrane (W)",
+    "es": "Marca de agua (W)",
+    "pt": "Marca d'água (W)",
+    "de": "Wasserzeichen (W)",
+    "ko": "워터마크 (W)"
   },
   "水印透明度": {
     "zh-TW": "浮水印透明度",
-    "en": "Watermark opacity"
+    "en": "Watermark opacity",
+    "ja": "透かしの不透明度",
+    "ru": "Непрозрачность водяного знака",
+    "fr": "Opacité du filigrane",
+    "es": "Opacidad de la marca de agua",
+    "pt": "Opacidade da marca d'água",
+    "de": "Deckkraft des Wasserzeichens",
+    "ko": "워터마크 불투명도"
   },
   "没有可用的显示器": {
     "zh-TW": "沒有可用的顯示器",
-    "en": "No displays available"
+    "en": "No displays available",
+    "ja": "利用できるディスプレイがありません",
+    "ru": "Нет доступных экранов",
+    "fr": "Aucun écran disponible",
+    "es": "No hay pantallas disponibles",
+    "pt": "Nenhuma tela disponível",
+    "de": "Keine Bildschirme verfügbar",
+    "ko": "사용 가능한 디스플레이가 없습니다"
   },
   "消息": {
     "zh-TW": "訊息",
-    "en": "Messages"
+    "en": "Messages",
+    "ja": "メッセージ",
+    "ru": "Сообщения",
+    "fr": "Messages",
+    "es": "Mensajes",
+    "pt": "Mensagens",
+    "de": "Nachrichten",
+    "ko": "메시지"
   },
   "滚动区域太小, 请扩大选区": {
     "zh-TW": "捲動區域太小, 請擴大選取區域",
-    "en": "Scrolling region is too small. Select a larger area."
+    "en": "Scrolling region is too small. Select a larger area.",
+    "ja": "スクロール範囲が小さすぎます. 範囲を広げてください.",
+    "ru": "Область прокрутки слишком мала. Увеличьте её.",
+    "fr": "La zone de défilement est trop petite. Sélectionnez une zone plus grande.",
+    "es": "La zona de desplazamiento es demasiado pequeña. Amplíala.",
+    "pt": "A área de rolagem é pequena demais. Selecione uma área maior.",
+    "de": "Der Scroll-Bereich ist zu klein. Wähle einen größeren Bereich.",
+    "ko": "스크롤 영역이 너무 작습니다. 더 넓게 선택하세요."
   },
   "滚动截图失败: {}": {
     "zh-TW": "捲動截圖失敗: {}",
-    "en": "Scrolling capture failed: {}"
+    "en": "Scrolling capture failed: {}",
+    "ja": "スクロール撮影に失敗しました: {}",
+    "ru": "Ошибка захвата с прокруткой: {}",
+    "fr": "Échec de la capture défilante: {}",
+    "es": "Error de captura con desplazamiento: {}",
+    "pt": "Falha na captura com rolagem: {}",
+    "de": "Scroll-Aufnahme fehlgeschlagen: {}",
+    "ko": "스크롤 캡처 실패: {}"
   },
   "滚动截图需要先选择屏幕上的区域": {
     "zh-TW": "捲動截圖需先選擇螢幕上的區域",
-    "en": "Select a screen region for scrolling capture."
+    "en": "Select a screen region for scrolling capture.",
+    "ja": "スクロール撮影する画面範囲を選択してください.",
+    "ru": "Выберите область экрана для снимка с прокруткой.",
+    "fr": "Sélectionnez une zone de l'écran pour la capture défilante.",
+    "es": "Selecciona una zona de pantalla para la captura con desplazamiento.",
+    "pt": "Selecione uma área da tela para a captura com rolagem.",
+    "de": "Wähle einen Bildschirmbereich für die Scroll-Aufnahme.",
+    "ko": "스크롤 캡처할 화면 영역을 선택하세요."
   },
   "灰色": {
     "zh-TW": "灰色",
-    "en": "Gray"
+    "en": "Gray",
+    "ja": "グレー",
+    "ru": "Серый",
+    "fr": "Gris",
+    "es": "Gris",
+    "pt": "Cinza",
+    "de": "Grau",
+    "ko": "회색"
   },
   "画笔 (P)": {
     "zh-TW": "畫筆 (P)",
-    "en": "Pen (P)"
+    "en": "Pen (P)",
+    "ja": "ペン (P)",
+    "ru": "Перо (P)",
+    "fr": "Crayon (P)",
+    "es": "Lápiz (P)",
+    "pt": "Caneta (P)",
+    "de": "Stift (P)",
+    "ko": "펜 (P)"
   },
   "画笔马赛克": {
     "zh-TW": "畫筆馬賽克",
-    "en": "Brush mosaic"
+    "en": "Brush mosaic",
+    "ja": "ブラシモザイク",
+    "ru": "Мозаика кистью",
+    "fr": "Mosaïque au pinceau",
+    "es": "Mosaico con pincel",
+    "pt": "Mosaico com pincel",
+    "de": "Mosaikpinsel",
+    "ko": "브러시 모자이크"
   },
   "画面已停止变化, 可完成当前截图": {
     "zh-TW": "畫面已停止變化, 可完成目前截圖",
-    "en": "The page has stopped changing. Finish this capture."
+    "en": "The page has stopped changing. Finish this capture.",
+    "ja": "画面の変化が止まりました. 撮影を完了できます.",
+    "ru": "Изображение перестало меняться. Можно завершить захват.",
+    "fr": "La page ne change plus. Vous pouvez terminer la capture.",
+    "es": "La página ha dejado de cambiar. Puedes terminar la captura.",
+    "pt": "A página parou de mudar. Você pode concluir a captura.",
+    "de": "Die Seite ändert sich nicht mehr. Du kannst die Aufnahme beenden.",
+    "ko": "화면 변화가 멈췄습니다. 캡처를 완료할 수 있습니다."
   },
   "画面未变化, 等待滚动": {
     "zh-TW": "畫面未變化, 等待捲動",
-    "en": "Waiting for the page to scroll"
+    "en": "Waiting for the page to scroll",
+    "ja": "ページのスクロールを待っています",
+    "ru": "Ожидание прокрутки страницы",
+    "fr": "En attente du défilement de la page",
+    "es": "Esperando el desplazamiento de la página",
+    "pt": "Aguardando a rolagem da página",
+    "de": "Warten auf Scrollen der Seite",
+    "ko": "페이지 스크롤을 기다리는 중"
   },
   "白色": {
     "zh-TW": "白色",
-    "en": "White"
+    "en": "White",
+    "ja": "白",
+    "ru": "Белый",
+    "fr": "Blanc",
+    "es": "Blanco",
+    "pt": "Branco",
+    "de": "Weiß",
+    "ko": "흰색"
   },
   "矩形 (R)": {
     "zh-TW": "矩形 (R)",
-    "en": "Rectangle (R)"
+    "en": "Rectangle (R)",
+    "ja": "四角形 (R)",
+    "ru": "Прямоугольник (R)",
+    "fr": "Rectangle (R)",
+    "es": "Rectángulo (R)",
+    "pt": "Retângulo (R)",
+    "de": "Rechteck (R)",
+    "ko": "사각형 (R)"
   },
   "稍后": {
     "zh-TW": "稍後",
-    "en": "Later"
+    "en": "Later",
+    "ja": "後で",
+    "ru": "Позже",
+    "fr": "Plus tard",
+    "es": "Más tarde",
+    "pt": "Mais tarde",
+    "de": "Später",
+    "ko": "나중에"
   },
   "箭头 (A)": {
     "zh-TW": "箭頭 (A)",
-    "en": "Arrow (A)"
+    "en": "Arrow (A)",
+    "ja": "矢印 (A)",
+    "ru": "Стрелка (A)",
+    "fr": "Flèche (A)",
+    "es": "Flecha (A)",
+    "pt": "Seta (A)",
+    "de": "Pfeil (A)",
+    "ko": "화살표 (A)"
   },
   "粗线": {
     "zh-TW": "粗線",
-    "en": "Thick stroke"
+    "en": "Thick stroke",
+    "ja": "太い線",
+    "ru": "Толстая линия",
+    "fr": "Trait épais",
+    "es": "Trazo grueso",
+    "pt": "Traço grosso",
+    "de": "Dicke Linie",
+    "ko": "굵은 선"
   },
   "红色": {
     "zh-TW": "紅色",
-    "en": "Red"
+    "en": "Red",
+    "ja": "赤",
+    "ru": "Красный",
+    "fr": "Rouge",
+    "es": "Rojo",
+    "pt": "Vermelho",
+    "de": "Rot",
+    "ko": "빨간색"
   },
   "细线": {
     "zh-TW": "細線",
-    "en": "Thin stroke"
+    "en": "Thin stroke",
+    "ja": "細い線",
+    "ru": "Тонкая линия",
+    "fr": "Trait fin",
+    "es": "Trazo fino",
+    "pt": "Traço fino",
+    "de": "Dünne Linie",
+    "ko": "가는 선"
   },
   "绿色": {
     "zh-TW": "綠色",
-    "en": "Green"
+    "en": "Green",
+    "ja": "緑",
+    "ru": "Зелёный",
+    "fr": "Vert",
+    "es": "Verde",
+    "pt": "Verde",
+    "de": "Grün",
+    "ko": "초록색"
   },
   "缓慢滚动页面, 右侧预览会实时更新": {
     "zh-TW": "緩慢捲動頁面, 預覽會即時更新",
-    "en": "Scroll slowly. The preview updates as you scroll."
+    "en": "Scroll slowly. The preview updates as you scroll.",
+    "ja": "ゆっくりスクロールしてください. プレビューが随時更新されます.",
+    "ru": "Прокручивайте медленно. Предпросмотр обновляется при прокрутке.",
+    "fr": "Faites défiler lentement. L'aperçu se met à jour pendant le défilement.",
+    "es": "Desplázate despacio. La vista previa se actualiza al desplazarte.",
+    "pt": "Role devagar. A prévia é atualizada durante a rolagem.",
+    "de": "Scrolle langsam. Die Vorschau wird beim Scrollen aktualisiert.",
+    "ko": "천천히 스크롤하세요. 스크롤하면서 미리보기가 갱신됩니다."
   },
   "自动滚动": {
     "zh-TW": "自動捲動",
-    "en": "Auto scroll"
+    "en": "Auto scroll",
+    "ja": "自動スクロール",
+    "ru": "Автопрокрутка",
+    "fr": "Défilement auto",
+    "es": "Desplaz. auto",
+    "pt": "Rolagem automática",
+    "de": "Auto-Scroll",
+    "ko": "자동 스크롤"
   },
   "自动滚动已停止, 可继续手动滚动": {
     "zh-TW": "自動捲動已停止, 可繼續手動捲動",
-    "en": "Auto scroll stopped. You can scroll manually."
+    "en": "Auto scroll stopped. You can scroll manually.",
+    "ja": "自動スクロールを停止しました. 手動で続けられます.",
+    "ru": "Автопрокрутка остановлена. Можно прокручивать вручную.",
+    "fr": "Défilement automatique arrêté. Vous pouvez continuer manuellement.",
+    "es": "Desplazamiento automático detenido. Puedes continuar manualmente.",
+    "pt": "Rolagem automática interrompida. Você pode continuar manualmente.",
+    "de": "Automatisches Scrollen gestoppt. Du kannst manuell weiter scrollen.",
+    "ko": "자동 스크롤을 중지했습니다. 수동으로 계속할 수 있습니다."
   },
   "自动滚动需要辅助功能权限": {
     "zh-TW": "自動捲動需要輔助使用權限",
-    "en": "Auto scroll needs Accessibility permission"
+    "en": "Auto scroll needs Accessibility permission",
+    "ja": "自動スクロールにはアクセシビリティのアクセス権が必要です",
+    "ru": "Для автопрокрутки нужен доступ к Универсальному доступу",
+    "fr": "Le défilement automatique nécessite l'autorisation Accessibilité",
+    "es": "El desplazamiento automático requiere permiso de Accesibilidad",
+    "pt": "A rolagem automática requer permissão de Acessibilidade",
+    "de": "Automatisches Scrollen erfordert die Bedienungshilfen-Berechtigung",
+    "ko": "자동 스크롤에는 손쉬운 사용 권한이 필요합니다"
   },
   "蓝色": {
     "zh-TW": "藍色",
-    "en": "Blue"
+    "en": "Blue",
+    "ja": "青",
+    "ru": "Синий",
+    "fr": "Bleu",
+    "es": "Azul",
+    "pt": "Azul",
+    "de": "Blau",
+    "ko": "파란색"
   },
   "解锁": {
     "zh-TW": "解除鎖定",
-    "en": "Unlock"
+    "en": "Unlock",
+    "ja": "ロックを解除",
+    "ru": "Разблокировать",
+    "fr": "Déverrouiller",
+    "es": "Desbloquear",
+    "pt": "Desbloquear",
+    "de": "Entsperren",
+    "ko": "잠금 해제"
   },
   "设置...": {
     "zh-TW": "設定...",
-    "en": "Settings..."
+    "en": "Settings...",
+    "ja": "設定...",
+    "ru": "Настройки...",
+    "fr": "Réglages...",
+    "es": "Ajustes...",
+    "pt": "Ajustes...",
+    "de": "Einstellungen...",
+    "ko": "설정..."
   },
   "设置已保存": {
     "zh-TW": "設定已儲存",
-    "en": "Settings saved"
+    "en": "Settings saved",
+    "ja": "設定を保存しました",
+    "ru": "Настройки сохранены",
+    "fr": "Réglages enregistrés",
+    "es": "Ajustes guardados",
+    "pt": "Ajustes salvos",
+    "de": "Einstellungen gesichert",
+    "ko": "설정을 저장했습니다"
   },
   "请先选择滚动区域": {
     "zh-TW": "請先選擇捲動區域",
-    "en": "Select a scrolling region first."
+    "en": "Select a scrolling region first.",
+    "ja": "先にスクロール範囲を選択してください.",
+    "ru": "Сначала выберите область прокрутки.",
+    "fr": "Sélectionnez d'abord une zone de défilement.",
+    "es": "Selecciona primero una zona de desplazamiento.",
+    "pt": "Selecione primeiro uma área de rolagem.",
+    "de": "Wähle zuerst einen Scroll-Bereich.",
+    "ko": "먼저 스크롤 영역을 선택하세요."
   },
   "请在系统设置中允许 flytoSnap 录制屏幕, 然后重新打开应用.": {
     "zh-TW": "請在系統設定中允許 flytoSnap 錄製螢幕, 然後重新開啟應用程式.",
-    "en": "Allow flytoSnap in Screen Recording in System Settings, then reopen the app."
+    "en": "Allow flytoSnap in Screen Recording in System Settings, then reopen the app.",
+    "ja": "システム設定の画面収録で flytoSnap を許可し, アプリを開き直してください.",
+    "ru": "Разрешите запись экрана для flytoSnap в Системных настройках и перезапустите приложение.",
+    "fr": "Autorisez flytoSnap à enregistrer l'écran dans Réglages Système, puis rouvrez l'application.",
+    "es": "Autoriza a flytoSnap en Grabación de pantalla en Ajustes del Sistema y vuelve a abrir la app.",
+    "pt": "Autorize o flytoSnap em Gravação da Tela nos Ajustes do Sistema e reabra o app.",
+    "de": "Erlaube flytoSnap die Bildschirmaufnahme in den Systemeinstellungen und öffne die App erneut.",
+    "ko": "시스템 설정의 화면 기록에서 flytoSnap을 허용한 뒤 앱을 다시 여세요."
   },
   "请在系统设置的辅助功能中允许 flytoSnap 控制滚动. 手动滚动无需此权限.": {
     "zh-TW": "請在系統設定的輔助使用中允許 flytoSnap 控制捲動. 手動捲動不需此權限.",
-    "en": "Allow flytoSnap in Accessibility in System Settings for auto scroll. Manual scrolling does not need it."
+    "en": "Allow flytoSnap in Accessibility in System Settings for auto scroll. Manual scrolling does not need it.",
+    "ja": "自動スクロールにはシステム設定のアクセシビリティで flytoSnap を許可してください. 手動スクロールには不要です.",
+    "ru": "Разрешите flytoSnap управление в разделе Универсальный доступ для автопрокрутки. Для ручной прокрутки это не требуется.",
+    "fr": "Autorisez flytoSnap dans Accessibilité pour le défilement automatique. Ce n'est pas nécessaire pour défiler manuellement.",
+    "es": "Autoriza a flytoSnap en Accesibilidad para el desplazamiento automático. El desplazamiento manual no lo necesita.",
+    "pt": "Autorize o flytoSnap em Acessibilidade para a rolagem automática. A rolagem manual não exige essa permissão.",
+    "de": "Erlaube flytoSnap unter Bedienungshilfen für automatisches Scrollen. Manuelles Scrollen benötigt diese Berechtigung nicht.",
+    "ko": "자동 스크롤을 사용하려면 시스템 설정의 손쉬운 사용에서 flytoSnap을 허용하세요. 수동 스크롤에는 필요하지 않습니다."
   },
   "贴图已关闭": {
     "zh-TW": "貼圖已關閉",
-    "en": "Pinned image closed"
+    "en": "Pinned image closed",
+    "ja": "固定画像を閉じました",
+    "ru": "Закреплённое изображение закрыто",
+    "fr": "Image épinglée fermée",
+    "es": "Imagen fijada cerrada",
+    "pt": "Imagem fixada fechada",
+    "de": "Angeheftetes Bild geschlossen",
+    "ko": "고정 이미지를 닫았습니다"
   },
   "贴图已解锁": {
     "zh-TW": "貼圖已解除鎖定",
-    "en": "Pinned image unlocked"
+    "en": "Pinned image unlocked",
+    "ja": "固定画像のロックを解除しました",
+    "ru": "Закреплённое изображение разблокировано",
+    "fr": "Image épinglée déverrouillée",
+    "es": "Imagen fijada desbloqueada",
+    "pt": "Imagem fixada desbloqueada",
+    "de": "Angeheftetes Bild entsperrt",
+    "ko": "고정 이미지의 잠금을 해제했습니다"
   },
   "贴图已锁定": {
     "zh-TW": "貼圖已鎖定",
-    "en": "Pinned image locked"
+    "en": "Pinned image locked",
+    "ja": "固定画像をロックしました",
+    "ru": "Закреплённое изображение заблокировано",
+    "fr": "Image épinglée verrouillée",
+    "es": "Imagen fijada bloqueada",
+    "pt": "Imagem fixada bloqueada",
+    "de": "Angeheftetes Bild gesperrt",
+    "ko": "고정 이미지를 잠갔습니다"
   },
   "输入文字, 点击选区其他位置完成": {
     "zh-TW": "輸入文字, 點選選取區域其他位置完成",
-    "en": "Enter text, then click elsewhere to finish."
+    "en": "Enter text, then click elsewhere to finish.",
+    "ja": "文字を入力し, 別の場所をクリックして完了してください.",
+    "ru": "Введите текст и щёлкните в другом месте для завершения.",
+    "fr": "Saisissez le texte, puis cliquez ailleurs pour terminer.",
+    "es": "Escribe el texto y haz clic en otro lugar para terminar.",
+    "pt": "Digite o texto e clique em outro local para concluir.",
+    "de": "Gib Text ein und klicke zum Abschließen an eine andere Stelle.",
+    "ko": "텍스트를 입력한 뒤 다른 곳을 클릭하여 완료하세요."
   },
   "还没有保存过图片": {
     "zh-TW": "尚未儲存圖片",
-    "en": "No image has been saved yet."
+    "en": "No image has been saved yet.",
+    "ja": "保存した画像はまだありません.",
+    "ru": "Сохранённых изображений пока нет.",
+    "fr": "Aucune image enregistrée pour le moment.",
+    "es": "Aún no se ha guardado ninguna imagen.",
+    "pt": "Nenhuma imagem foi salva ainda.",
+    "de": "Es wurde noch kein Bild gesichert.",
+    "ko": "아직 저장한 이미지가 없습니다."
   },
   "还没有固定的图片": {
     "zh-TW": "尚未固定圖片",
-    "en": "No pinned images yet."
+    "en": "No pinned images yet.",
+    "ja": "固定画像はまだありません.",
+    "ru": "Закреплённых изображений пока нет.",
+    "fr": "Aucune image épinglée pour le moment.",
+    "es": "Aún no hay imágenes fijadas.",
+    "pt": "Nenhuma imagem fixada ainda.",
+    "de": "Noch keine angehefteten Bilder vorhanden.",
+    "ko": "아직 고정 이미지가 없습니다."
   },
   "退出": {
     "zh-TW": "結束",
-    "en": "Quit"
+    "en": "Quit",
+    "ja": "終了",
+    "ru": "Выйти",
+    "fr": "Quitter",
+    "es": "Salir",
+    "pt": "Sair",
+    "de": "Beenden",
+    "ko": "종료"
   },
   "退出 flytoSnap": {
     "zh-TW": "結束 flytoSnap",
-    "en": "Quit flytoSnap"
+    "en": "Quit flytoSnap",
+    "ja": "flytoSnap を終了",
+    "ru": "Выйти из flytoSnap",
+    "fr": "Quitter flytoSnap",
+    "es": "Salir de flytoSnap",
+    "pt": "Sair do flytoSnap",
+    "de": "flytoSnap beenden",
+    "ko": "flytoSnap 종료"
   },
   "选区下方是编辑工具栏": {
     "zh-TW": "選取區域下方為編輯工具列",
-    "en": "The annotation toolbar sits below the selection."
+    "en": "The annotation toolbar sits below the selection.",
+    "ja": "選択範囲の下に注釈ツールバーがあります.",
+    "ru": "Панель пометок находится под выделенной областью.",
+    "fr": "La barre d'annotation se trouve sous la sélection.",
+    "es": "La barra de anotaciones está debajo de la selección.",
+    "pt": "A barra de anotações fica abaixo da seleção.",
+    "de": "Die Beschriftungsleiste befindet sich unter der Auswahl.",
+    "ko": "선택 영역 아래에 주석 도구 모음이 있습니다."
   },
   "选区后可直接标注. Enter 复制, Esc 取消.": {
     "zh-TW": "選取後可直接標註. Enter 複製, Esc 取消.",
-    "en": "Annotate after selecting. Enter to copy, Esc to cancel."
+    "en": "Annotate after selecting. Enter to copy, Esc to cancel.",
+    "ja": "範囲選択後に注釈を追加できます. Enter でコピー, Esc でキャンセル.",
+    "ru": "После выделения добавьте пометки. Enter - копировать, Esc - отмена.",
+    "fr": "Annotez après la sélection. Entrée pour copier, Esc pour annuler.",
+    "es": "Anota tras seleccionar. Intro para copiar, Esc para cancelar.",
+    "pt": "Anote após selecionar. Enter para copiar, Esc para cancelar.",
+    "de": "Nach der Auswahl beschriften. Enter zum Kopieren, Esc zum Abbrechen.",
+    "ko": "영역 선택 후 주석을 추가하세요. Enter 복사, Esc 취소."
   },
   "选择并调整标注 (V)": {
     "zh-TW": "選擇並調整標註 (V)",
-    "en": "Select and adjust annotations (V)"
+    "en": "Select and adjust annotations (V)",
+    "ja": "注釈の選択と調整 (V)",
+    "ru": "Выбрать и изменить пометки (V)",
+    "fr": "Sélectionner et ajuster les annotations (V)",
+    "es": "Seleccionar y ajustar anotaciones (V)",
+    "pt": "Selecionar e ajustar anotações (V)",
+    "de": "Beschriftungen auswählen und anpassen (V)",
+    "ko": "주석 선택 및 조정 (V)"
   },
   "透明度 {}%": {
     "zh-TW": "透明度 {}%",
-    "en": "Opacity {}%"
+    "en": "Opacity {}%",
+    "ja": "不透明度 {}%",
+    "ru": "Непрозрачность {}%",
+    "fr": "Opacité {}%",
+    "es": "Opacidad {}%",
+    "pt": "Opacidade {}%",
+    "de": "Deckkraft {}%",
+    "ko": "불투명도 {}%"
   },
   "重做 (⌘⇧Z)": {
     "zh-TW": "重做 (⌘⇧Z)",
-    "en": "Redo (⌘⇧Z)"
+    "en": "Redo (⌘⇧Z)",
+    "ja": "やり直す (⌘⇧Z)",
+    "ru": "Повторить (⌘⇧Z)",
+    "fr": "Rétablir (⌘⇧Z)",
+    "es": "Rehacer (⌘⇧Z)",
+    "pt": "Refazer (⌘⇧Z)",
+    "de": "Wiederholen (⌘⇧Z)",
+    "ko": "다시 실행 (⌘⇧Z)"
   },
   "锁定": {
     "zh-TW": "鎖定",
-    "en": "Lock"
+    "en": "Lock",
+    "ja": "ロック",
+    "ru": "Заблокировать",
+    "fr": "Verrouiller",
+    "es": "Bloquear",
+    "pt": "Bloquear",
+    "de": "Sperren",
+    "ko": "잠금"
   },
   "长截图已完成, 可以继续标注": {
     "zh-TW": "長截圖已完成, 可繼續標註",
-    "en": "Long capture finished. You can annotate it now."
+    "en": "Long capture finished. You can annotate it now.",
+    "ja": "長い画像の撮影が完了しました. 注釈を追加できます.",
+    "ru": "Длинный снимок готов. Можно добавить пометки.",
+    "fr": "Capture longue terminée. Vous pouvez maintenant l'annoter.",
+    "es": "Captura larga terminada. Ya puedes anotarla.",
+    "pt": "Captura longa concluída. Você já pode anotá-la.",
+    "de": "Lange Aufnahme abgeschlossen. Du kannst sie jetzt beschriften.",
+    "ko": "긴 캡처를 완료했습니다. 이제 주석을 추가할 수 있습니다."
   },
   "隐藏 / 显示全部贴图": {
     "zh-TW": "隱藏 / 顯示全部貼圖",
-    "en": "Hide / show all pinned images"
+    "en": "Hide / show all pinned images",
+    "ja": "すべての固定画像を表示 / 非表示",
+    "ru": "Скрыть / показать закреплённые изображения",
+    "fr": "Masquer / afficher les images épinglées",
+    "es": "Ocultar / mostrar imágenes fijadas",
+    "pt": "Ocultar / mostrar imagens fixadas",
+    "de": "Angeheftete Bilder ein- / ausblenden",
+    "ko": "모든 고정 이미지 숨기기 / 표시"
   },
   "项目进度": {
     "zh-TW": "專案進度",
-    "en": "Project progress"
+    "en": "Project progress",
+    "ja": "プロジェクトの進捗",
+    "ru": "Ход проекта",
+    "fr": "Avancement du projet",
+    "es": "Progreso del proyecto",
+    "pt": "Progresso do projeto",
+    "de": "Projektfortschritt",
+    "ko": "프로젝트 진행 상황"
   },
   "首次截图时, 请允许屏幕录制权限": {
     "zh-TW": "首次截圖時, 請允許螢幕錄製權限",
-    "en": "Allow Screen Recording when you capture for the first time."
+    "en": "Allow Screen Recording when you capture for the first time.",
+    "ja": "初回撮影時に画面収録のアクセス権を許可してください.",
+    "ru": "При первом захвате разрешите запись экрана.",
+    "fr": "Autorisez l'enregistrement de l'écran lors de la première capture.",
+    "es": "Autoriza la grabación de pantalla al realizar la primera captura.",
+    "pt": "Autorize a gravação da tela na primeira captura.",
+    "de": "Erlaube bei der ersten Aufnahme den Bildschirmzugriff.",
+    "ko": "처음 캡처할 때 화면 기록 권한을 허용하세요."
   },
   "马赛克 (M)": {
     "zh-TW": "馬賽克 (M)",
-    "en": "Mosaic (M)"
+    "en": "Mosaic (M)",
+    "ja": "モザイク (M)",
+    "ru": "Мозаика (M)",
+    "fr": "Mosaïque (M)",
+    "es": "Mosaico (M)",
+    "pt": "Mosaico (M)",
+    "de": "Mosaik (M)",
+    "ko": "모자이크 (M)"
   },
   "高亮 (H)": {
     "zh-TW": "螢光標記 (H)",
-    "en": "Highlight (H)"
+    "en": "Highlight (H)",
+    "ja": "ハイライト (H)",
+    "ru": "Маркер (H)",
+    "fr": "Surligneur (H)",
+    "es": "Resaltador (H)",
+    "pt": "Marca-texto (H)",
+    "de": "Textmarker (H)",
+    "ko": "형광펜 (H)"
   },
   "黄色": {
     "zh-TW": "黃色",
-    "en": "Yellow"
+    "en": "Yellow",
+    "ja": "黄",
+    "ru": "Жёлтый",
+    "fr": "Jaune",
+    "es": "Amarillo",
+    "pt": "Amarelo",
+    "de": "Gelb",
+    "ko": "노란색"
   },
   "黑色": {
     "zh-TW": "黑色",
-    "en": "Black"
+    "en": "Black",
+    "ja": "黒",
+    "ru": "Чёрный",
+    "fr": "Noir",
+    "es": "Negro",
+    "pt": "Preto",
+    "de": "Schwarz",
+    "ko": "검은색"
   },
   "请先选择截图区域": {
     "zh-TW": "請先選擇截圖區域",
-    "en": "Select a region first."
+    "en": "Select a region first.",
+    "ja": "先に範囲を選択してください.",
+    "ru": "Сначала выделите область.",
+    "fr": "Sélectionnez d'abord une zone.",
+    "es": "Selecciona primero una zona.",
+    "pt": "Selecione uma área primeiro.",
+    "de": "Wähle zuerst einen Bereich.",
+    "ko": "먼저 영역을 선택하세요."
   },
   "无法创建截图画布": {
     "zh-TW": "無法建立截圖畫布",
-    "en": "Could not create the image canvas."
+    "en": "Could not create the image canvas.",
+    "ja": "画像キャンバスを作成できませんでした.",
+    "ru": "Не удалось создать холст изображения.",
+    "fr": "Impossible de créer le canevas de l'image.",
+    "es": "No se pudo crear el lienzo de la imagen.",
+    "pt": "Não foi possível criar a tela de desenho da imagem.",
+    "de": "Die Bildfläche konnte nicht erstellt werden.",
+    "ko": "이미지 캔버스를 만들지 못했습니다."
   },
   "无法创建绘图上下文": {
     "zh-TW": "無法建立繪圖環境",
-    "en": "Could not create the drawing context."
+    "en": "Could not create the drawing context.",
+    "ja": "描画コンテキストを作成できませんでした.",
+    "ru": "Не удалось создать контекст рисования.",
+    "fr": "Impossible de créer le contexte de dessin.",
+    "es": "No se pudo crear el contexto de dibujo.",
+    "pt": "Não foi possível criar o contexto de desenho.",
+    "de": "Der Zeichenkontext konnte nicht erstellt werden.",
+    "ko": "그리기 컨텍스트를 만들지 못했습니다."
   },
   "无法导出截图": {
     "zh-TW": "無法匯出截圖",
-    "en": "Could not export the screenshot."
+    "en": "Could not export the screenshot.",
+    "ja": "スクリーンショットを書き出せませんでした.",
+    "ru": "Не удалось экспортировать снимок.",
+    "fr": "Impossible d'exporter la capture.",
+    "es": "No se pudo exportar la captura.",
+    "pt": "Não foi possível exportar a captura.",
+    "de": "Das Bildschirmfoto konnte nicht exportiert werden.",
+    "ko": "스크린샷을 내보내지 못했습니다."
   },
   "选区超过 8000 万像素, 请缩小选区": {
     "zh-TW": "選取區域超過 8000 萬像素, 請縮小選取區域",
-    "en": "The selection exceeds 80 million pixels. Select a smaller region."
+    "en": "The selection exceeds 80 million pixels. Select a smaller region.",
+    "ja": "選択範囲が8000万画素を超えています. 範囲を狭めてください.",
+    "ru": "Выделение превышает 80 миллионов пикселей. Уменьшите область.",
+    "fr": "La sélection dépasse 80 millions de pixels. Réduisez la zone.",
+    "es": "La selección supera los 80 millones de píxeles. Redúcela.",
+    "pt": "A seleção ultrapassa 80 milhões de pixels. Selecione uma área menor.",
+    "de": "Die Auswahl überschreitet 80 Millionen Pixel. Wähle einen kleineren Bereich.",
+    "ko": "선택 영역이 8천만 픽셀을 초과합니다. 더 작게 선택하세요."
   },
   "界面语言": {
     "zh-TW": "介面語言",
-    "en": "Interface language"
+    "en": "Interface language",
+    "ja": "表示言語",
+    "ru": "Язык интерфейса",
+    "fr": "Langue de l'interface",
+    "es": "Idioma de la interfaz",
+    "pt": "Idioma da interface",
+    "de": "Sprache der Oberfläche",
+    "ko": "인터페이스 언어"
   },
   "自动 (跟随系统)": {
     "zh-TW": "自動 (跟隨系統)",
-    "en": "Automatic (system language)"
+    "en": "Automatic (system language)",
+    "ja": "自動 (システムの言語)",
+    "ru": "Автоматически (язык системы)",
+    "fr": "Automatique (langue du système)",
+    "es": "Automático (idioma del sistema)",
+    "pt": "Automático (idioma do sistema)",
+    "de": "Automatisch (Systemsprache)",
+    "ko": "자동 (시스템 언어)"
   },
   "简体中文": {
     "zh-TW": "简体中文",
-    "en": "简体中文"
+    "en": "简体中文",
+    "ja": "简体中文",
+    "ru": "简体中文",
+    "fr": "简体中文",
+    "es": "简体中文",
+    "pt": "简体中文",
+    "de": "简体中文",
+    "ko": "简体中文"
   },
   "繁體中文": {
     "zh-TW": "繁體中文",
-    "en": "繁體中文"
+    "en": "繁體中文",
+    "ja": "繁體中文",
+    "ru": "繁體中文",
+    "fr": "繁體中文",
+    "es": "繁體中文",
+    "pt": "繁體中文",
+    "de": "繁體中文",
+    "ko": "繁體中文"
   },
   "语言已切换": {
     "zh-TW": "語言已切換",
-    "en": "Language changed"
+    "en": "Language changed",
+    "ja": "言語を変更しました",
+    "ru": "Язык изменён",
+    "fr": "Langue modifiée",
+    "es": "Idioma cambiado",
+    "pt": "Idioma alterado",
+    "de": "Sprache geändert",
+    "ko": "언어를 변경했습니다"
   },
   "正在识别文字...": {
     "zh-TW": "正在辨識文字...",
-    "en": "Recognizing text..."
+    "en": "Recognizing text...",
+    "ja": "テキストを認識中...",
+    "ru": "Распознавание текста...",
+    "fr": "Reconnaissance du texte...",
+    "es": "Reconociendo texto...",
+    "pt": "Reconhecendo texto...",
+    "de": "Text wird erkannt...",
+    "ko": "텍스트 인식 중..."
   },
   "未发现文字, 请重选区域": {
     "zh-TW": "未找到文字, 請重新選取區域",
-    "en": "No text found. Select another region."
+    "en": "No text found. Select another region.",
+    "ja": "テキストが見つかりません. 別の範囲を選択してください.",
+    "ru": "Текст не найден. Выберите другую область.",
+    "fr": "Aucun texte trouvé. Sélectionnez une autre zone.",
+    "es": "No se encontró texto. Selecciona otra zona.",
+    "pt": "Nenhum texto encontrado. Selecione outra área.",
+    "de": "Kein Text gefunden. Wähle einen anderen Bereich.",
+    "ko": "텍스트를 찾지 못했습니다. 다른 영역을 선택하세요."
   },
   "文字识别失败: {}": {
     "zh-TW": "文字辨識失敗: {}",
-    "en": "Text recognition failed: {}"
+    "en": "Text recognition failed: {}",
+    "ja": "テキスト認識に失敗しました: {}",
+    "ru": "Ошибка распознавания текста: {}",
+    "fr": "Échec de la reconnaissance du texte: {}",
+    "es": "Error al reconocer texto: {}",
+    "pt": "Falha no reconhecimento de texto: {}",
+    "de": "Texterkennung fehlgeschlagen: {}",
+    "ko": "텍스트 인식 실패: {}"
   },
   "已复制文字": {
     "zh-TW": "已複製文字",
-    "en": "Text copied"
+    "en": "Text copied",
+    "ja": "テキストをコピーしました",
+    "ru": "Текст скопирован",
+    "fr": "Texte copié",
+    "es": "Texto copiado",
+    "pt": "Texto copiado",
+    "de": "Text kopiert",
+    "ko": "텍스트를 복사했습니다"
   },
   "复制文字": {
     "zh-TW": "複製文字",
-    "en": "Copy text"
+    "en": "Copy text",
+    "ja": "テキストをコピー",
+    "ru": "Копировать текст",
+    "fr": "Copier le texte",
+    "es": "Copiar texto",
+    "pt": "Copiar texto",
+    "de": "Text kopieren",
+    "ko": "텍스트 복사"
   },
   "重新选择": {
     "zh-TW": "重新選擇",
-    "en": "Select again"
+    "en": "Select again",
+    "ja": "選び直す",
+    "ru": "Выбрать заново",
+    "fr": "Resélectionner",
+    "es": "Seleccionar de nuevo",
+    "pt": "Selecionar novamente",
+    "de": "Neu auswählen",
+    "ko": "다시 선택"
   },
   "识别结果可直接编辑": {
     "zh-TW": "辨識結果可直接編輯",
-    "en": "You can edit the recognized text."
+    "en": "You can edit the recognized text.",
+    "ja": "認識結果は直接編集できます.",
+    "ru": "Распознанный текст можно редактировать.",
+    "fr": "Vous pouvez modifier le texte reconnu.",
+    "es": "Puedes editar el texto reconocido.",
+    "pt": "Você pode editar o texto reconhecido.",
+    "de": "Du kannst den erkannten Text bearbeiten.",
+    "ko": "인식한 텍스트를 직접 편집할 수 있습니다."
   },
   "已识别 {} 个字符, 可直接编辑": {
     "zh-TW": "已辨識 {} 個字元, 可直接編輯",
-    "en": "Recognized {} characters. You can edit the text."
+    "en": "Recognized {} characters. You can edit the text.",
+    "ja": "{} 文字を認識しました. 直接編集できます.",
+    "ru": "Распознано символов: {}. Текст можно редактировать.",
+    "fr": "{} caractères reconnus. Vous pouvez modifier le texte.",
+    "es": "Se han reconocido {} caracteres. Puedes editar el texto.",
+    "pt": "{} caracteres reconhecidos. Você pode editar o texto.",
+    "de": "{} Zeichen erkannt. Du kannst den Text bearbeiten.",
+    "ko": "{}자를 인식했습니다. 직접 편집할 수 있습니다."
   },
   "没有可复制的文字": {
     "zh-TW": "沒有可複製的文字",
-    "en": "There is no text to copy."
+    "en": "There is no text to copy.",
+    "ja": "コピーするテキストがありません.",
+    "ru": "Нет текста для копирования.",
+    "fr": "Aucun texte à copier.",
+    "es": "No hay texto para copiar.",
+    "pt": "Não há texto para copiar.",
+    "de": "Kein Text zum Kopieren vorhanden.",
+    "ko": "복사할 텍스트가 없습니다."
   },
   "录屏设置": {
     "zh-TW": "錄影設定",
-    "en": "Recording settings"
+    "en": "Recording settings",
+    "ja": "録画設定",
+    "ru": "Настройки записи",
+    "fr": "Réglages d'enregistrement",
+    "es": "Ajustes de grabación",
+    "pt": "Ajustes de gravação",
+    "de": "Aufnahmeeinstellungen",
+    "ko": "녹화 설정"
   },
   "格式": {
     "zh-TW": "格式",
-    "en": "Format"
+    "en": "Format",
+    "ja": "形式",
+    "ru": "Формат",
+    "fr": "Format",
+    "es": "Formato",
+    "pt": "Formato",
+    "de": "Format",
+    "ko": "형식"
   },
   "显示鼠标": {
     "zh-TW": "顯示游標",
-    "en": "Show cursor"
+    "en": "Show cursor",
+    "ja": "カーソルを表示",
+    "ru": "Показывать курсор",
+    "fr": "Afficher le curseur",
+    "es": "Mostrar cursor",
+    "pt": "Mostrar cursor",
+    "de": "Mauszeiger zeigen",
+    "ko": "마우스 커서 표시"
   },
   "开始录制": {
     "zh-TW": "開始錄製",
-    "en": "Start recording"
+    "en": "Start recording",
+    "ja": "録画を開始",
+    "ru": "Начать запись",
+    "fr": "Démarrer",
+    "es": "Iniciar grabación",
+    "pt": "Iniciar gravação",
+    "de": "Aufnahme starten",
+    "ko": "녹화 시작"
   },
   "停止录制": {
     "zh-TW": "停止錄製",
-    "en": "Stop recording"
+    "en": "Stop recording",
+    "ja": "録画を停止",
+    "ru": "Остановить запись",
+    "fr": "Arrêter",
+    "es": "Detener grabación",
+    "pt": "Parar gravação",
+    "de": "Aufnahme stoppen",
+    "ko": "녹화 중지"
   },
   "正在开始录屏...": {
     "zh-TW": "正在開始錄影...",
-    "en": "Starting recording..."
+    "en": "Starting recording...",
+    "ja": "録画を開始中...",
+    "ru": "Запуск записи...",
+    "fr": "Démarrage de l'enregistrement...",
+    "es": "Iniciando grabación...",
+    "pt": "Iniciando gravação...",
+    "de": "Aufnahme wird gestartet...",
+    "ko": "녹화를 시작하는 중..."
   },
   "正在录制 {}": {
     "zh-TW": "正在錄製 {}",
-    "en": "Recording {}"
+    "en": "Recording {}",
+    "ja": "録画中 {}",
+    "ru": "Запись {}",
+    "fr": "Enregistrement {}",
+    "es": "Grabando {}",
+    "pt": "Gravando {}",
+    "de": "Aufnahme {}",
+    "ko": "녹화 중 {}"
   },
   "正在完成录屏...": {
     "zh-TW": "正在完成錄影...",
-    "en": "Finishing recording..."
+    "en": "Finishing recording...",
+    "ja": "録画を終了中...",
+    "ru": "Завершение записи...",
+    "fr": "Finalisation de l'enregistrement...",
+    "es": "Finalizando grabación...",
+    "pt": "Finalizando gravação...",
+    "de": "Aufnahme wird abgeschlossen...",
+    "ko": "녹화를 마무리하는 중..."
   },
   "录屏完成": {
     "zh-TW": "錄影完成",
-    "en": "Recording finished"
+    "en": "Recording finished",
+    "ja": "録画が完了しました",
+    "ru": "Запись завершена",
+    "fr": "Enregistrement terminé",
+    "es": "Grabación terminada",
+    "pt": "Gravação concluída",
+    "de": "Aufnahme abgeschlossen",
+    "ko": "녹화 완료"
   },
   "录屏失败: {}": {
     "zh-TW": "錄影失敗: {}",
-    "en": "Recording failed: {}"
+    "en": "Recording failed: {}",
+    "ja": "録画に失敗しました: {}",
+    "ru": "Ошибка записи: {}",
+    "fr": "Échec de l'enregistrement: {}",
+    "es": "Error de grabación: {}",
+    "pt": "Falha na gravação: {}",
+    "de": "Aufnahme fehlgeschlagen: {}",
+    "ko": "녹화 실패: {}"
   },
   "录屏已取消": {
     "zh-TW": "錄影已取消",
-    "en": "Recording cancelled"
+    "en": "Recording cancelled",
+    "ja": "録画をキャンセルしました",
+    "ru": "Запись отменена",
+    "fr": "Enregistrement annulé",
+    "es": "Grabación cancelada",
+    "pt": "Gravação cancelada",
+    "de": "Aufnahme abgebrochen",
+    "ko": "녹화를 취소했습니다"
   },
   "保存录屏...": {
     "zh-TW": "儲存錄影...",
-    "en": "Save recording..."
+    "en": "Save recording...",
+    "ja": "録画を保存...",
+    "ru": "Сохранить запись...",
+    "fr": "Enregistrer la vidéo...",
+    "es": "Guardar grabación...",
+    "pt": "Salvar gravação...",
+    "de": "Aufnahme sichern...",
+    "ko": "녹화 저장..."
   },
   "复制录屏": {
     "zh-TW": "複製錄影",
-    "en": "Copy recording"
+    "en": "Copy recording",
+    "ja": "録画をコピー",
+    "ru": "Копировать запись",
+    "fr": "Copier la vidéo",
+    "es": "Copiar grabación",
+    "pt": "Copiar gravação",
+    "de": "Aufnahme kopieren",
+    "ko": "녹화 복사"
   },
   "已复制录屏, 可粘贴到支持文件的应用": {
     "zh-TW": "已複製錄影, 可貼到支援檔案的應用程式",
-    "en": "Recording copied. Paste it into an app that accepts files."
+    "en": "Recording copied. Paste it into an app that accepts files.",
+    "ja": "録画をコピーしました. ファイルを受け付けるアプリにペーストできます.",
+    "ru": "Запись скопирована. Вставьте её в приложение, принимающее файлы.",
+    "fr": "Vidéo copiée. Collez-la dans une application acceptant les fichiers.",
+    "es": "Grabación copiada. Pégala en una app que acepte archivos.",
+    "pt": "Gravação copiada. Cole-a em um app que aceite arquivos.",
+    "de": "Aufnahme kopiert. Füge sie in eine App ein, die Dateien akzeptiert.",
+    "ko": "녹화를 복사했습니다. 파일을 지원하는 앱에 붙여넣으세요."
   },
   "播放预览": {
     "zh-TW": "播放預覽",
-    "en": "Play preview"
+    "en": "Play preview",
+    "ja": "プレビューを再生",
+    "ru": "Воспроизвести",
+    "fr": "Lire l'aperçu",
+    "es": "Reproducir vista previa",
+    "pt": "Reproduzir prévia",
+    "de": "Vorschau abspielen",
+    "ko": "미리보기 재생"
   },
   "请先选择录屏区域": {
     "zh-TW": "請先選擇錄影區域",
-    "en": "Select a recording region first."
+    "en": "Select a recording region first.",
+    "ja": "先に録画範囲を選択してください.",
+    "ru": "Сначала выберите область записи.",
+    "fr": "Sélectionnez d'abord une zone à enregistrer.",
+    "es": "Selecciona primero una zona de grabación.",
+    "pt": "Selecione primeiro uma área de gravação.",
+    "de": "Wähle zuerst einen Aufnahmebereich.",
+    "ko": "먼저 녹화 영역을 선택하세요."
   },
   "区域过小, 请扩大选区": {
     "zh-TW": "區域太小, 請擴大選取區域",
-    "en": "The region is too small. Select a larger area."
+    "en": "The region is too small. Select a larger area.",
+    "ja": "範囲が小さすぎます. 範囲を広げてください.",
+    "ru": "Область слишком мала. Увеличьте её.",
+    "fr": "La zone est trop petite. Sélectionnez une zone plus grande.",
+    "es": "La zona es demasiado pequeña. Amplíala.",
+    "pt": "A área é pequena demais. Selecione uma área maior.",
+    "de": "Der Bereich ist zu klein. Wähle einen größeren Bereich.",
+    "ko": "영역이 너무 작습니다. 더 넓게 선택하세요."
   },
   "正在录屏, 请先停止当前录制": {
     "zh-TW": "正在錄影, 請先停止目前錄製",
-    "en": "Stop the current recording before starting another capture."
+    "en": "Stop the current recording before starting another capture.",
+    "ja": "先に現在の録画を停止してください.",
+    "ru": "Сначала остановите текущую запись.",
+    "fr": "Arrêtez d'abord l'enregistrement en cours.",
+    "es": "Detén primero la grabación actual.",
+    "pt": "Pare a gravação atual primeiro.",
+    "de": "Stoppe zuerst die laufende Aufnahme.",
+    "ko": "먼저 현재 녹화를 중지하세요."
   },
   "录屏完成后可退出应用": {
     "zh-TW": "錄影完成後可結束應用程式",
-    "en": "Finish recording before quitting the app."
+    "en": "Finish recording before quitting the app.",
+    "ja": "アプリを終了する前に録画を完了してください.",
+    "ru": "Завершите запись перед выходом из приложения.",
+    "fr": "Terminez l'enregistrement avant de quitter l'application.",
+    "es": "Termina la grabación antes de salir de la app.",
+    "pt": "Conclua a gravação antes de sair do app.",
+    "de": "Beende die Aufnahme, bevor du die App schließt.",
+    "ko": "앱을 종료하기 전에 녹화를 마무리하세요."
   },
   "仅录制屏幕画面": {
     "zh-TW": "僅錄製螢幕畫面",
-    "en": "Records the screen only"
+    "en": "Records the screen only",
+    "ja": "画面映像のみを録画",
+    "ru": "Записывается только изображение экрана",
+    "fr": "Enregistre uniquement l'image de l'écran",
+    "es": "Solo graba la imagen de la pantalla",
+    "pt": "Grava apenas a imagem da tela",
+    "de": "Nur der Bildschirminhalt wird aufgenommen",
+    "ko": "화면 영상만 녹화합니다"
   },
   "调整选区": {
     "zh-TW": "調整選取區域",
-    "en": "Resize selection"
+    "en": "Resize selection",
+    "ja": "選択範囲のサイズを変更",
+    "ru": "Изменить размер области",
+    "fr": "Redimensionner la sélection",
+    "es": "Redimensionar selección",
+    "pt": "Redimensionar seleção",
+    "de": "Auswahlgröße ändern",
+    "ko": "선택 영역 크기 조절"
   },
   "移动选区": {
     "zh-TW": "移動選取區域",
-    "en": "Move selection"
+    "en": "Move selection",
+    "ja": "選択範囲を移動",
+    "ru": "Переместить область",
+    "fr": "Déplacer la sélection",
+    "es": "Mover selección",
+    "pt": "Mover seleção",
+    "de": "Auswahl verschieben",
+    "ko": "선택 영역 이동"
   },
   "移动工具栏": {
     "zh-TW": "移動工具列",
-    "en": "Move toolbar"
+    "en": "Move toolbar",
+    "ja": "ツールバーを移動",
+    "ru": "Переместить панель",
+    "fr": "Déplacer la barre d'outils",
+    "es": "Mover barra de herramientas",
+    "pt": "Mover barra de ferramentas",
+    "de": "Werkzeugleiste verschieben",
+    "ko": "도구 모음 이동"
   },
   "模式切换": {
     "zh-TW": "模式切換",
-    "en": "Change capture mode"
+    "en": "Change capture mode",
+    "ja": "撮影モードを切り替え",
+    "ru": "Изменить режим захвата",
+    "fr": "Changer de mode de capture",
+    "es": "Cambiar modo de captura",
+    "pt": "Alterar modo de captura",
+    "de": "Aufnahmemodus wechseln",
+    "ko": "캡처 모드 변경"
   },
   "无法打开录屏预览": {
     "zh-TW": "無法開啟錄影預覽",
-    "en": "Could not open the recording preview."
+    "en": "Could not open the recording preview.",
+    "ja": "録画のプレビューを開けませんでした.",
+    "ru": "Не удалось открыть предпросмотр записи.",
+    "fr": "Impossible d'ouvrir l'aperçu de la vidéo.",
+    "es": "No se pudo abrir la vista previa de la grabación.",
+    "pt": "Não foi possível abrir a prévia da gravação.",
+    "de": "Die Aufnahmevorschau konnte nicht geöffnet werden.",
+    "ko": "녹화 미리보기를 열지 못했습니다."
   },
   "已取消保存录屏": {
     "zh-TW": "已取消儲存錄影",
-    "en": "Saving recording cancelled."
+    "en": "Saving recording cancelled.",
+    "ja": "録画の保存をキャンセルしました.",
+    "ru": "Сохранение записи отменено.",
+    "fr": "Enregistrement de la vidéo annulé.",
+    "es": "Guardado de grabación cancelado.",
+    "pt": "Salvamento da gravação cancelado.",
+    "de": "Sichern der Aufnahme abgebrochen.",
+    "ko": "녹화 저장을 취소했습니다."
   },
   "系统尚未允许当前版本截取屏幕": {
     "zh-TW": "系統尚未允許目前版本擷取螢幕",
-    "en": "Screen access is not enabled for this version"
+    "en": "Screen access is not enabled for this version",
+    "ja": "このバージョンには画面へのアクセスが許可されていません",
+    "ru": "Доступ к экрану для этой версии не разрешён",
+    "fr": "L'accès à l'écran n'est pas autorisé pour cette version",
+    "es": "El acceso a la pantalla no está autorizado para esta versión",
+    "pt": "O acesso à tela não está autorizado para esta versão",
+    "de": "Bildschirmzugriff ist für diese Version nicht erlaubt",
+    "ko": "현재 버전의 화면 접근이 허용되지 않았습니다"
   },
   "1. 打开系统设置, 在屏幕与系统音频录制中允许 flytoSnap.": {
     "zh-TW": "1. 開啟系統設定, 在螢幕與系統音訊錄製中允許 flytoSnap.",
-    "en": "1. Open System Settings and allow flytoSnap under Screen & System Audio Recording."
+    "en": "1. Open System Settings and allow flytoSnap under Screen & System Audio Recording.",
+    "ja": "1. システム設定の画面収録とシステムオーディオ録音で flytoSnap を許可してください.",
+    "ru": "1. В Системных настройках разрешите flytoSnap запись экрана и системного звука.",
+    "fr": "1. Ouvrez Réglages Système et autorisez flytoSnap dans Enregistrement de l'écran et de l'audio système.",
+    "es": "1. Abre Ajustes del Sistema y autoriza a flytoSnap en Grabación de pantalla y del audio del sistema.",
+    "pt": "1. Abra Ajustes do Sistema e autorize o flytoSnap em Gravação da Tela e Áudio do Sistema.",
+    "de": "1. Öffne die Systemeinstellungen und erlaube flytoSnap unter Bildschirm- und Systemaudioaufnahme.",
+    "ko": "1. 시스템 설정의 화면 및 시스템 오디오 기록에서 flytoSnap을 허용하세요."
   },
   "2. 若开关已打开但仍失败, 移除旧条目, 再添加当前应用.": {
     "zh-TW": "2. 若開關已開啟但仍失敗, 移除舊項目, 再加入目前的應用程式.",
-    "en": "2. If already enabled but capture fails, remove the old entry and add this app again."
+    "en": "2. If already enabled but capture fails, remove the old entry and add this app again.",
+    "ja": "2. 許可済みでも撮影できない場合は古い項目を削除し, 現在のアプリを追加してください.",
+    "ru": "2. Если доступ уже разрешён, но захват не работает, удалите старую запись и добавьте это приложение снова.",
+    "fr": "2. Si la capture échoue malgré l'autorisation, supprimez l'ancienne entrée et ajoutez cette application.",
+    "es": "2. Si la captura falla aunque esté autorizada, elimina la entrada antigua y añade esta app.",
+    "pt": "2. Se a captura falhar mesmo com a permissão, remova a entrada antiga e adicione este app novamente.",
+    "de": "2. Wenn die Aufnahme trotz Berechtigung fehlschlägt, entferne den alten Eintrag und füge diese App erneut hinzu.",
+    "ko": "2. 이미 허용했는데 캡처가 실패하면 이전 항목을 삭제하고 현재 앱을 다시 추가하세요."
   },
   "3. 完全退出 flytoSnap 后重新打开, 或点击重新检测.": {
     "zh-TW": "3. 完全結束 flytoSnap 後重新開啟, 或按一下重新檢查.",
-    "en": "3. Quit flytoSnap completely and reopen it, or click Check Again."
+    "en": "3. Quit flytoSnap completely and reopen it, or click Check Again.",
+    "ja": "3. flytoSnap を完全に終了して開き直すか, 再確認をクリックしてください.",
+    "ru": "3. Полностью закройте и снова откройте flytoSnap или нажмите Проверить снова.",
+    "fr": "3. Quittez complètement flytoSnap et rouvrez-la, ou cliquez sur Vérifier à nouveau.",
+    "es": "3. Sal completamente de flytoSnap y vuelve a abrirla, o pulsa Comprobar de nuevo.",
+    "pt": "3. Encerre o flytoSnap e reabra-o ou clique em Verificar novamente.",
+    "de": "3. Beende flytoSnap vollständig und öffne die App erneut oder klicke auf Erneut prüfen.",
+    "ko": "3. flytoSnap을 완전히 종료한 후 다시 열거나 다시 확인을 누르세요."
   },
   "升级旧测试版可能需要重新授权. 应用不会自动重置权限.": {
     "zh-TW": "升級舊測試版可能需要重新授權. 應用程式不會自動重設權限.",
-    "en": "Upgrading an older test build may require permission again. The app will not reset permissions."
+    "en": "Upgrading an older test build may require permission again. The app will not reset permissions.",
+    "ja": "古いテスト版からの更新では再許可が必要な場合があります. 権限は自動でリセットしません.",
+    "ru": "После обновления старой тестовой версии может потребоваться новое разрешение. Приложение не сбрасывает разрешения.",
+    "fr": "La mise à niveau d'une ancienne version de test peut nécessiter une nouvelle autorisation. L'application ne réinitialise pas les autorisations.",
+    "es": "Actualizar una versión de prueba antigua puede requerir otra autorización. La app no restablece los permisos.",
+    "pt": "Atualizar uma versão de teste antiga pode exigir nova autorização. O app não redefine permissões.",
+    "de": "Nach einem Update einer älteren Testversion kann eine neue Berechtigung nötig sein. Die App setzt keine Berechtigungen zurück.",
+    "ko": "이전 테스트 버전에서 업그레이드하면 재승인이 필요할 수 있습니다. 앱은 권한을 자동으로 초기화하지 않습니다."
   },
   "显示当前应用": {
     "zh-TW": "顯示目前的應用程式",
-    "en": "Show This App"
+    "en": "Show This App",
+    "ja": "現在のアプリを表示",
+    "ru": "Показать это приложение",
+    "fr": "Afficher cette application",
+    "es": "Mostrar esta app",
+    "pt": "Mostrar este app",
+    "de": "Diese App zeigen",
+    "ko": "현재 앱 표시"
   },
   "重新检测": {
     "zh-TW": "重新檢查",
-    "en": "Check Again"
+    "en": "Check Again",
+    "ja": "再確認",
+    "ru": "Проверить снова",
+    "fr": "Vérifier à nouveau",
+    "es": "Comprobar de nuevo",
+    "pt": "Verificar novamente",
+    "de": "Erneut prüfen",
+    "ko": "다시 확인"
   },
   "已取消截图, 可从菜单栏重新开始": {
     "zh-TW": "已取消截圖, 可從選單列重新開始",
-    "en": "Capture canceled. Start again from the menu bar."
+    "en": "Capture canceled. Start again from the menu bar.",
+    "ja": "撮影をキャンセルしました. メニューバーから再開できます.",
+    "ru": "Захват отменён. Начните заново из строки меню.",
+    "fr": "Capture annulée. Recommencez depuis la barre des menus.",
+    "es": "Captura cancelada. Reiníciala desde la barra de menús.",
+    "pt": "Captura cancelada. Reinicie pela barra de menus.",
+    "de": "Aufnahme abgebrochen. Starte erneut über die Menüleiste.",
+    "ko": "캡처를 취소했습니다. 메뉴 막대에서 다시 시작하세요."
   },
   "系统设置已打开, 更改权限后请重新检测或重启应用": {
     "zh-TW": "系統設定已開啟, 更改權限後請重新檢查或重新啟動",
-    "en": "Settings opened. After allowing access, check again or restart."
+    "en": "Settings opened. After allowing access, check again or restart.",
+    "ja": "設定を開きました. 許可後に再確認するか再起動してください.",
+    "ru": "Настройки открыты. После разрешения доступа проверьте снова или перезапустите приложение.",
+    "fr": "Réglages ouverts. Après autorisation, vérifiez à nouveau ou redémarrez.",
+    "es": "Ajustes abiertos. Tras autorizar el acceso, comprueba de nuevo o reinicia.",
+    "pt": "Ajustes abertos. Após autorizar o acesso, verifique novamente ou reinicie.",
+    "de": "Einstellungen geöffnet. Prüfe nach der Freigabe erneut oder starte neu.",
+    "ko": "설정을 열었습니다. 권한을 허용한 뒤 다시 확인하거나 재시작하세요."
   },
   "无法打开系统设置, 请从苹果菜单手动打开": {
     "zh-TW": "無法開啟系統設定, 請從蘋果選單手動開啟",
-    "en": "Could not open Settings. Open it from the Apple menu."
+    "en": "Could not open Settings. Open it from the Apple menu.",
+    "ja": "設定を開けませんでした. Apple メニューから開いてください.",
+    "ru": "Не удалось открыть настройки. Откройте их через меню Apple.",
+    "fr": "Impossible d'ouvrir les réglages. Ouvrez-les depuis le menu Apple.",
+    "es": "No se pudieron abrir los ajustes. Ábrelos desde el menú Apple.",
+    "pt": "Não foi possível abrir os ajustes. Abra-os pelo menu Apple.",
+    "de": "Die Einstellungen konnten nicht geöffnet werden. Öffne sie über das Apple-Menü.",
+    "ko": "설정을 열지 못했습니다. Apple 메뉴에서 직접 여세요."
   },
   "已在 Finder 中显示当前应用, 请将它添加到权限列表": {
     "zh-TW": "已在 Finder 中顯示目前的應用程式, 請將它加入權限列表",
-    "en": "This app is shown in Finder. Add it to the permission list."
+    "en": "This app is shown in Finder. Add it to the permission list.",
+    "ja": "Finder に現在のアプリを表示しました. 権限の一覧に追加してください.",
+    "ru": "Приложение показано в Finder. Добавьте его в список разрешений.",
+    "fr": "Cette application est affichée dans le Finder. Ajoutez-la à la liste des autorisations.",
+    "es": "La app se muestra en Finder. Añádela a la lista de permisos.",
+    "pt": "Este app está visível no Finder. Adicione-o à lista de permissões.",
+    "de": "Diese App wird im Finder gezeigt. Füge sie zur Berechtigungsliste hinzu.",
+    "ko": "Finder에서 현재 앱을 표시했습니다. 권한 목록에 추가하세요."
   },
   "权限仍未生效, 请移除旧条目并重新添加, 然后退出再打开": {
     "zh-TW": "權限仍未生效, 請移除舊項目並重新加入, 然後結束再開啟",
-    "en": "Access is still unavailable. Remove and re-add this app, then quit and reopen."
+    "en": "Access is still unavailable. Remove and re-add this app, then quit and reopen.",
+    "ja": "アクセス権はまだ有効になっていません. アプリを削除して再追加し, 開き直してください.",
+    "ru": "Доступ по-прежнему недоступен. Удалите и добавьте приложение снова, затем перезапустите его.",
+    "fr": "L'accès reste indisponible. Supprimez et ajoutez l'application, puis rouvrez-la.",
+    "es": "El acceso sigue sin estar disponible. Elimina y añade la app y vuelve a abrirla.",
+    "pt": "O acesso continua indisponível. Remova e adicione o app, depois reabra-o.",
+    "de": "Zugriff weiterhin nicht verfügbar. Entferne die App, füge sie erneut hinzu und öffne sie wieder.",
+    "ko": "아직 접근할 수 없습니다. 앱을 삭제 후 다시 추가하고 다시 여세요."
   },
   "开始滚动截图": {
     "zh-TW": "開始捲動截圖",
-    "en": "Start Scrolling Capture"
+    "en": "Start Scrolling Capture",
+    "ja": "スクロール撮影を開始",
+    "ru": "Начать снимок с прокруткой",
+    "fr": "Démarrer la capture défilante",
+    "es": "Iniciar captura larga",
+    "pt": "Iniciar captura longa",
+    "de": "Scroll-Aufnahme starten",
+    "ko": "스크롤 캡처 시작"
   },
   "取消当前截图": {
     "zh-TW": "取消目前截圖",
-    "en": "Cancel Current Capture"
+    "en": "Cancel Current Capture",
+    "ja": "現在の撮影をキャンセル",
+    "ru": "Отменить текущий захват",
+    "fr": "Annuler la capture en cours",
+    "es": "Cancelar captura actual",
+    "pt": "Cancelar captura atual",
+    "de": "Aktuelle Aufnahme abbrechen",
+    "ko": "현재 캡처 취소"
   },
   "Esc 退出 / Enter 开始": {
     "zh-TW": "Esc 離開 / Enter 開始",
-    "en": "Esc Cancel / Enter Start"
+    "en": "Esc Cancel / Enter Start",
+    "ja": "Esc でキャンセル / Enter で開始",
+    "ru": "Esc - отмена / Enter - начать",
+    "fr": "Esc pour annuler / Entrée pour démarrer",
+    "es": "Esc para cancelar / Intro para iniciar",
+    "pt": "Esc para cancelar / Enter para iniciar",
+    "de": "Esc zum Abbrechen / Enter zum Starten",
+    "ko": "Esc 취소 / Enter 시작"
   },
   "长截图预览": {
     "zh-TW": "長截圖預覽",
-    "en": "Scrolling Capture Preview"
+    "en": "Scrolling Capture Preview",
+    "ja": "スクロール撮影のプレビュー",
+    "ru": "Предпросмотр длинного снимка",
+    "fr": "Aperçu de la capture défilante",
+    "es": "Vista previa de captura larga",
+    "pt": "Prévia da captura longa",
+    "de": "Vorschau der Scroll-Aufnahme",
+    "ko": "스크롤 캡처 미리보기"
   },
   "保存长截图": {
     "zh-TW": "儲存長截圖",
-    "en": "Save Scrolling Capture"
+    "en": "Save Scrolling Capture",
+    "ja": "長い画像を保存",
+    "ru": "Сохранить длинный снимок",
+    "fr": "Enregistrer la capture longue",
+    "es": "Guardar captura larga",
+    "pt": "Salvar captura longa",
+    "de": "Lange Aufnahme sichern",
+    "ko": "긴 캡처 저장"
   },
   "复制长截图": {
     "zh-TW": "複製長截圖",
-    "en": "Copy Scrolling Capture"
+    "en": "Copy Scrolling Capture",
+    "ja": "長い画像をコピー",
+    "ru": "Копировать длинный снимок",
+    "fr": "Copier la capture longue",
+    "es": "Copiar captura larga",
+    "pt": "Copiar captura longa",
+    "de": "Lange Aufnahme kopieren",
+    "ko": "긴 캡처 복사"
   },
   "flytoSnap 已就绪, 按 ⌘⇧A 开始截图": {
     "zh-TW": "flytoSnap 已就緒, 按 ⌘⇧A 開始截圖",
-    "en": "flytoSnap is ready. Press ⌘⇧A to capture."
+    "en": "flytoSnap is ready. Press ⌘⇧A to capture.",
+    "ja": "flytoSnap の準備ができました. ⌘⇧A で撮影します.",
+    "ru": "flytoSnap готов. Нажмите ⌘⇧A для захвата.",
+    "fr": "flytoSnap est prêt. Appuyez sur ⌘⇧A pour capturer.",
+    "es": "flytoSnap está listo. Pulsa ⌘⇧A para capturar.",
+    "pt": "O flytoSnap está pronto. Pressione ⌘⇧A para capturar.",
+    "de": "flytoSnap ist bereit. Drücke ⌘⇧A für eine Aufnahme.",
+    "ko": "flytoSnap이 준비되었습니다. ⌘⇧A로 캡처하세요."
   },
   "flytoSnap - 截图与录屏": {
     "zh-TW": "flytoSnap - 截圖與錄影",
-    "en": "flytoSnap - Capture and Record"
+    "en": "flytoSnap - Capture and Record",
+    "ja": "flytoSnap - 撮影と録画",
+    "ru": "flytoSnap - Снимки и запись экрана",
+    "fr": "flytoSnap - Capture et enregistrement",
+    "es": "flytoSnap - Captura y grabación",
+    "pt": "flytoSnap - Captura e gravação",
+    "de": "flytoSnap - Bildschirmfoto und Aufnahme",
+    "ko": "flytoSnap - 캡처 및 녹화"
   },
   "Esc 快捷键不可用, 可从菜单栏取消当前截图": {
     "zh-TW": "Esc 快捷鍵無法使用, 可從選單列取消目前截圖",
-    "en": "Esc is unavailable. Cancel the capture from the menu bar."
+    "en": "Esc is unavailable. Cancel the capture from the menu bar.",
+    "ja": "Esc を使用できません. メニューバーから撮影をキャンセルしてください.",
+    "ru": "Esc недоступна. Отмените захват из строки меню.",
+    "fr": "Esc indisponible. Annulez la capture depuis la barre des menus.",
+    "es": "Esc no está disponible. Cancela la captura desde la barra de menús.",
+    "pt": "Esc indisponível. Cancele a captura pela barra de menus.",
+    "de": "Esc ist nicht verfügbar. Brich die Aufnahme über die Menüleiste ab.",
+    "ko": "Esc를 사용할 수 없습니다. 메뉴 막대에서 캡처를 취소하세요."
   },
   "框选滚动区域, 然后点击开始滚动截图. Esc 取消": {
     "zh-TW": "框選捲動區域, 然後按一下開始捲動截圖. Esc 取消",
-    "en": "Select a scrolling area, then click Start Scrolling Capture. Esc cancels."
+    "en": "Select a scrolling area, then click Start Scrolling Capture. Esc cancels.",
+    "ja": "スクロール範囲を選択して撮影を開始してください. Esc でキャンセル.",
+    "ru": "Выберите область и нажмите Начать снимок с прокруткой. Esc - отмена.",
+    "fr": "Sélectionnez une zone puis démarrez la capture défilante. Esc pour annuler.",
+    "es": "Selecciona una zona e inicia la captura larga. Esc para cancelar.",
+    "pt": "Selecione uma área e inicie a captura longa. Esc para cancelar.",
+    "de": "Wähle einen Scroll-Bereich und starte die Scroll-Aufnahme. Esc zum Abbrechen.",
+    "ko": "스크롤 영역을 선택한 뒤 스크롤 캡처를 시작하세요. Esc 취소."
   },
   "框选录屏区域, 松开后选择 MP4 或 GIF. Esc 取消": {
     "zh-TW": "框選錄影區域, 放開後選擇 MP4 或 GIF. Esc 取消",
-    "en": "Select a recording area, then choose MP4 or GIF. Esc cancels."
+    "en": "Select a recording area, then choose MP4 or GIF. Esc cancels.",
+    "ja": "録画範囲を選択し, MP4 または GIF を選んでください. Esc でキャンセル.",
+    "ru": "Выберите область записи, затем MP4 или GIF. Esc - отмена.",
+    "fr": "Sélectionnez une zone, puis MP4 ou GIF. Esc pour annuler.",
+    "es": "Selecciona una zona y elige MP4 o GIF. Esc para cancelar.",
+    "pt": "Selecione uma área e escolha MP4 ou GIF. Esc para cancelar.",
+    "de": "Wähle einen Aufnahmebereich und dann MP4 oder GIF. Esc zum Abbrechen.",
+    "ko": "녹화 영역을 선택한 뒤 MP4 또는 GIF를 고르세요. Esc 취소."
   },
   "框选需要提取文字的区域. Esc 取消": {
     "zh-TW": "框選需要擷取文字的區域. Esc 取消",
-    "en": "Select an area to extract text. Esc cancels."
+    "en": "Select an area to extract text. Esc cancels.",
+    "ja": "テキストを抽出する範囲を選択してください. Esc でキャンセル.",
+    "ru": "Выделите область для распознавания текста. Esc - отмена.",
+    "fr": "Sélectionnez une zone pour extraire le texte. Esc pour annuler.",
+    "es": "Selecciona una zona para extraer texto. Esc para cancelar.",
+    "pt": "Selecione uma área para extrair texto. Esc para cancelar.",
+    "de": "Wähle einen Bereich zur Texterkennung. Esc zum Abbrechen.",
+    "ko": "텍스트를 추출할 영역을 선택하세요. Esc 취소."
   },
   "Esc 退出 / Enter 录制": {
     "zh-TW": "Esc 離開 / Enter 錄影",
-    "en": "Esc Cancel / Enter Record"
+    "en": "Esc Cancel / Enter Record",
+    "ja": "Esc でキャンセル / Enter で録画",
+    "ru": "Esc - отмена / Enter - запись",
+    "fr": "Esc pour annuler / Entrée pour enregistrer",
+    "es": "Esc para cancelar / Intro para grabar",
+    "pt": "Esc para cancelar / Enter para gravar",
+    "de": "Esc zum Abbrechen / Enter zum Aufnehmen",
+    "ko": "Esc 취소 / Enter 녹화"
   },
   "Esc 退出 / Enter 复制文字": {
     "zh-TW": "Esc 離開 / Enter 複製文字",
-    "en": "Esc Cancel / Enter Copy Text"
+    "en": "Esc Cancel / Enter Copy Text",
+    "ja": "Esc でキャンセル / Enter でテキストをコピー",
+    "ru": "Esc - отмена / Enter - копировать текст",
+    "fr": "Esc pour annuler / Entrée pour copier le texte",
+    "es": "Esc para cancelar / Intro para copiar texto",
+    "pt": "Esc para cancelar / Enter para copiar texto",
+    "de": "Esc zum Abbrechen / Enter zum Textkopieren",
+    "ko": "Esc 취소 / Enter 텍스트 복사"
   },
   "可预览, 复制或保存": {
     "zh-TW": "可預覽, 複製或儲存",
-    "en": "Preview, copy, or save your recording."
+    "en": "Preview, copy, or save your recording.",
+    "ja": "録画をプレビュー, コピー, 保存できます.",
+    "ru": "Запись можно просмотреть, скопировать или сохранить.",
+    "fr": "Prévisualisez, copiez ou enregistrez votre vidéo.",
+    "es": "Previsualiza, copia o guarda tu grabación.",
+    "pt": "Visualize, copie ou salve sua gravação.",
+    "de": "Aufnahme ansehen, kopieren oder sichern.",
+    "ko": "녹화를 미리 보고 복사하거나 저장하세요."
   },
   "录屏已保存": {
     "zh-TW": "錄影已儲存",
-    "en": "Recording saved."
+    "en": "Recording saved.",
+    "ja": "録画を保存しました.",
+    "ru": "Запись сохранена.",
+    "fr": "Vidéo enregistrée.",
+    "es": "Grabación guardada.",
+    "pt": "Gravação salva.",
+    "de": "Aufnahme gesichert.",
+    "ko": "녹화를 저장했습니다."
   },
   "检查更新...": {
     "zh-TW": "檢查更新...",
-    "en": "Check for Updates..."
+    "en": "Check for Updates...",
+    "ja": "アップデートを確認...",
+    "ru": "Проверить обновления...",
+    "fr": "Rechercher des mises à jour...",
+    "es": "Buscar actualizaciones...",
+    "pt": "Buscar atualizações...",
+    "de": "Nach Updates suchen...",
+    "ko": "업데이트 확인..."
   },
   "自动下载并安装更新": {
     "zh-TW": "自動下載並安裝更新",
-    "en": "Download and install updates automatically"
+    "en": "Download and install updates automatically",
+    "ja": "アップデートを自動ダウンロードしてインストール",
+    "ru": "Автоматически загружать и устанавливать обновления",
+    "fr": "Télécharger et installer les mises à jour automatiquement",
+    "es": "Descargar e instalar actualizaciones automáticamente",
+    "pt": "Baixar e instalar atualizações automaticamente",
+    "de": "Updates automatisch laden und installieren",
+    "ko": "업데이트 자동 다운로드 및 설치"
   },
   "请先结束当前截图或录屏, 再检查更新": {
     "zh-TW": "請先結束目前的截圖或錄影, 再檢查更新",
-    "en": "Finish the current capture or recording before checking for updates."
+    "en": "Finish the current capture or recording before checking for updates.",
+    "ja": "アップデートを確認する前に撮影や録画を終了してください.",
+    "ru": "Завершите захват или запись перед проверкой обновлений.",
+    "fr": "Terminez la capture ou l'enregistrement avant de rechercher des mises à jour.",
+    "es": "Termina la captura o grabación antes de buscar actualizaciones.",
+    "pt": "Conclua a captura ou gravação antes de buscar atualizações.",
+    "de": "Beende die Bildschirmaufnahme, bevor du nach Updates suchst.",
+    "ko": "업데이트를 확인하기 전에 캡처나 녹화를 종료하세요."
   },
   "正在检查或下载更新, 请稍候": {
     "zh-TW": "正在檢查或下載更新, 請稍候",
-    "en": "An update check or download is already in progress."
+    "en": "An update check or download is already in progress.",
+    "ja": "アップデートの確認またはダウンロードを実行中です.",
+    "ru": "Уже выполняется проверка или загрузка обновления.",
+    "fr": "Une recherche ou un téléchargement de mise à jour est déjà en cours.",
+    "es": "Ya hay una búsqueda o descarga de actualización en curso.",
+    "pt": "Já há uma busca ou download de atualização em andamento.",
+    "de": "Es wird bereits nach einem Update gesucht oder ein Update geladen.",
+    "ko": "업데이트 확인 또는 다운로드가 이미 진행 중입니다."
   },
   "更新组件不可用, 请从 GitHub Releases 下载完整安装包": {
     "zh-TW": "更新元件無法使用, 請從 GitHub Releases 下載完整安裝包",
-    "en": "Updates are unavailable. Download the complete app from GitHub Releases."
+    "en": "Updates are unavailable. Download the complete app from GitHub Releases.",
+    "ja": "更新機能を利用できません. GitHub Releases から完全なアプリをダウンロードしてください.",
+    "ru": "Обновление недоступно. Загрузите полное приложение из GitHub Releases.",
+    "fr": "Mises à jour indisponibles. Téléchargez l'application complète depuis GitHub Releases.",
+    "es": "Las actualizaciones no están disponibles. Descarga la app completa de GitHub Releases.",
+    "pt": "Atualizações indisponíveis. Baixe o app completo no GitHub Releases.",
+    "de": "Updates sind nicht verfügbar. Lade die vollständige App von GitHub Releases.",
+    "ko": "업데이트를 사용할 수 없습니다. GitHub Releases에서 전체 앱을 다운로드하세요."
   },
   "自动更新已开启": {
     "zh-TW": "自動更新已開啟",
-    "en": "Automatic updates enabled"
+    "en": "Automatic updates enabled",
+    "ja": "自動アップデートを有効にしました",
+    "ru": "Автоматические обновления включены",
+    "fr": "Mises à jour automatiques activées",
+    "es": "Actualizaciones automáticas activadas",
+    "pt": "Atualizações automáticas ativadas",
+    "de": "Automatische Updates aktiviert",
+    "ko": "자동 업데이트를 켰습니다"
   },
   "自动更新已关闭": {
     "zh-TW": "自動更新已關閉",
-    "en": "Automatic updates disabled"
+    "en": "Automatic updates disabled",
+    "ja": "自動アップデートを無効にしました",
+    "ru": "Автоматические обновления выключены",
+    "fr": "Mises à jour automatiques désactivées",
+    "es": "Actualizaciones automáticas desactivadas",
+    "pt": "Atualizações automáticas desativadas",
+    "de": "Automatische Updates deaktiviert",
+    "ko": "자동 업데이트를 껐습니다"
+  },
+  "关于 flytoSnap": {
+    "zh-TW": "關於 flytoSnap",
+    "en": "About flytoSnap",
+    "ja": "flytoSnap について",
+    "ru": "О flytoSnap",
+    "fr": "À propos de flytoSnap",
+    "es": "Acerca de flytoSnap",
+    "pt": "Sobre o flytoSnap",
+    "de": "Über flytoSnap",
+    "ko": "flytoSnap 정보"
+  },
+  "版本 {} (构建 {})": {
+    "zh-TW": "版本 {} (組建 {})",
+    "en": "Version {} (build {})",
+    "ja": "バージョン {} (ビルド {})",
+    "ru": "Версия {} (сборка {})",
+    "fr": "Version {} (build {})",
+    "es": "Versión {} (compilación {})",
+    "pt": "Versão {} (compilação {})",
+    "de": "Version {} (Build {})",
+    "ko": "버전 {} (빌드 {})"
+  },
+  "作者: {}": {
+    "zh-TW": "作者: {}",
+    "en": "Author: {}",
+    "ja": "作者: {}",
+    "ru": "Автор: {}",
+    "fr": "Auteur: {}",
+    "es": "Autor: {}",
+    "pt": "Autor: {}",
+    "de": "Autor: {}",
+    "ko": "제작자: {}"
+  },
+  "项目地址": {
+    "zh-TW": "專案網址",
+    "en": "Project website",
+    "ja": "プロジェクトのサイト",
+    "ru": "Сайт проекта",
+    "fr": "Site du projet",
+    "es": "Sitio del proyecto",
+    "pt": "Site do projeto",
+    "de": "Projektseite",
+    "ko": "프로젝트 주소"
+  },
+  "开源许可证: MIT": {
+    "zh-TW": "開源授權: MIT",
+    "en": "Open source license: MIT",
+    "ja": "オープンソースライセンス: MIT",
+    "ru": "Открытая лицензия: MIT",
+    "fr": "Licence libre: MIT",
+    "es": "Licencia de código abierto: MIT",
+    "pt": "Licença de código aberto: MIT",
+    "de": "Open-Source-Lizenz: MIT",
+    "ko": "오픈 소스 라이선스: MIT"
+  },
+  "关闭": {
+    "zh-TW": "關閉",
+    "en": "Close",
+    "ja": "閉じる",
+    "ru": "Закрыть",
+    "fr": "Fermer",
+    "es": "Cerrar",
+    "pt": "Fechar",
+    "de": "Schließen",
+    "ko": "닫기"
+  },
+  "无法打开项目地址": {
+    "zh-TW": "無法開啟專案網址",
+    "en": "Could not open the project website.",
+    "ja": "プロジェクトのサイトを開けませんでした.",
+    "ru": "Не удалось открыть сайт проекта.",
+    "fr": "Impossible d’ouvrir le site du projet.",
+    "es": "No se pudo abrir el sitio del proyecto.",
+    "pt": "Não foi possível abrir o site do projeto.",
+    "de": "Die Projektseite konnte nicht geöffnet werden.",
+    "ko": "프로젝트 주소를 열지 못했습니다."
+  },
+  "MIT 许可证": {
+    "zh-TW": "MIT 授權條款",
+    "en": "MIT License",
+    "ja": "MIT ライセンス",
+    "ru": "Лицензия MIT",
+    "fr": "Licence MIT",
+    "es": "Licencia MIT",
+    "pt": "Licença MIT",
+    "de": "MIT-Lizenz",
+    "ko": "MIT 라이선스"
   }
 }

@@ -21,6 +21,10 @@ define_class!(
     struct UpdateDelegate;
     unsafe impl NSObjectProtocol for UpdateDelegate {}
     impl UpdateDelegate {
+        #[unsafe(method(localizeUpdateWindow:))]
+        fn localize_window(&self,notification:&objc2_foundation::NSNotification) {
+            if let Some(window)=notification.object().and_then(|object|object.downcast::<objc2_app_kit::NSWindow>().ok()){super::update_localization::localize_window(&window);}
+        }
         #[unsafe(method(updater:mayPerformUpdateCheck:error:))]
         fn may_check(&self,_updater:&AnyObject,_kind:isize,error:*mut *mut NSError)->bool {
             let busy=super::app::update_busy();
@@ -58,11 +62,21 @@ impl Updater {
         let framework = NSBundle::bundleWithPath(&path).ok_or("Sparkle.framework is missing")?;
         unsafe { framework.loadAndReturnError() }
             .map_err(|e| e.localizedDescription().to_string())?;
+        super::update_localization::initialize(&framework)?;
         let class = AnyClass::get(c"SPUStandardUpdaterController")
             .ok_or("Sparkle updater class is unavailable")?;
         let mtm = MainThreadMarker::new().expect("updater must run on main thread");
         let this = UpdateDelegate::alloc(mtm).set_ivars(DelegateState::default());
         let delegate: Retained<UpdateDelegate> = unsafe { msg_send![super(this), init] };
+        unsafe {
+            objc2_foundation::NSNotificationCenter::defaultCenter()
+                .addObserver_selector_name_object(
+                    &delegate,
+                    objc2::sel!(localizeUpdateWindow:),
+                    Some(objc2_app_kit::NSWindowDidBecomeKeyNotification),
+                    None,
+                );
+        }
         let allocated: Allocated<AnyObject> = unsafe { msg_send![class, alloc] };
         let controller: Retained<AnyObject> = unsafe {
             msg_send![allocated,initWithStartingUpdater:false,updaterDelegate:&*delegate,userDriverDelegate:Option::<&AnyObject>::None]
@@ -95,6 +109,7 @@ impl Updater {
         unsafe {
             let _: () = msg_send![&*self.controller,checkForUpdates:Option::<&AnyObject>::None];
         }
+        super::update_localization::localize_windows();
     }
     pub fn automatic(&self) -> bool {
         unsafe { msg_send![&*self.updater, automaticallyDownloadsUpdates] }
@@ -113,6 +128,7 @@ impl Updater {
 pub fn verify() -> Result<(), String> {
     let updater = Updater::load()?;
     updater.start()?;
+    super::update_localization::verify()?;
     let bundle = NSBundle::mainBundle();
     for key in ["SUFeedURL", "SUPublicEDKey"] {
         if bundle

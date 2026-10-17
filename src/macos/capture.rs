@@ -27,7 +27,12 @@ pub struct CaptureMessage {
     pub windows: Vec<Rect>,
 }
 
-pub fn capture(screens: Vec<ScreenRequest>, generation: u64, tx: Sender<CaptureMessage>) {
+pub fn capture(
+    screens: Vec<ScreenRequest>,
+    generation: u64,
+    excluded_window_ids: Vec<u32>,
+    tx: Sender<CaptureMessage>,
+) {
     let handler = RcBlock::new(
         move |content: *mut SCShareableContent, error: *mut NSError| {
             autoreleasepool(|_| unsafe {
@@ -47,9 +52,9 @@ pub fn capture(screens: Vec<ScreenRequest>, generation: u64, tx: Sender<CaptureM
                     return;
                 };
                 let excluded: Vec<_> = content
-                    .applications()
+                    .windows()
                     .iter()
-                    .filter(|a| a.processID() == std::process::id() as i32)
+                    .filter(|window| excluded_window_ids.contains(&window.windowID()))
                     .collect();
                 let excluded = NSArray::from_retained_slice(&excluded);
                 let displays = content.displays();
@@ -63,13 +68,11 @@ pub fn capture(screens: Vec<ScreenRequest>, generation: u64, tx: Sender<CaptureM
                         });
                         continue;
                     };
-                    let filter =
-                        SCContentFilter::initWithDisplay_excludingApplications_exceptingWindows(
-                            SCContentFilter::alloc(),
-                            &display,
-                            &excluded,
-                            &NSArray::new(),
-                        );
+                    let filter = SCContentFilter::initWithDisplay_excludingWindows(
+                        SCContentFilter::alloc(),
+                        &display,
+                        &excluded,
+                    );
                     let config = SCStreamConfiguration::new();
                     config.setWidth(screen.width);
                     config.setHeight(screen.height);
@@ -77,7 +80,7 @@ pub fn capture(screens: Vec<ScreenRequest>, generation: u64, tx: Sender<CaptureM
                     config.setColorSpaceName(objc2_core_graphics::kCGColorSpaceSRGB);
                     let tx = tx.clone();
                     let id = screen.id;
-                    let windows = window_frames(display.frame());
+                    let windows = window_frames(display.frame(), &excluded_window_ids);
                     let complete = RcBlock::new(move |image: *mut CGImage, error: *mut NSError| {
                         let pixels = autoreleasepool(|_| {
                             let Some(image) = image.as_ref() else {
@@ -119,7 +122,7 @@ pub fn capture(screens: Vec<ScreenRequest>, generation: u64, tx: Sender<CaptureM
     }
 }
 
-fn window_frames(display: objc2_core_foundation::CGRect) -> Vec<Rect> {
+fn window_frames(display: objc2_core_foundation::CGRect, excluded: &[u32]) -> Vec<Rect> {
     use objc2_core_foundation::CFRetained;
     use objc2_core_graphics::{CGWindowListCopyWindowInfo, CGWindowListOption};
     let Some(info) = CGWindowListCopyWindowInfo(
@@ -139,8 +142,10 @@ fn window_frames(display: objc2_core_foundation::CGRect) -> Vec<Rect> {
     array
         .iter()
         .filter_map(|window| {
-            if number(&window, ns_string!("kCGWindowLayer"))? != 0.0
-                || number(&window, ns_string!("kCGWindowOwnerPID"))? == std::process::id() as f64
+            let own_window =
+                number(&window, ns_string!("kCGWindowOwnerPID"))? == std::process::id() as f64;
+            if excluded.contains(&(number(&window, ns_string!("kCGWindowNumber"))? as u32))
+                || (!own_window && number(&window, ns_string!("kCGWindowLayer"))? != 0.0)
             {
                 return None;
             }
@@ -162,7 +167,7 @@ fn window_frames(display: objc2_core_foundation::CGRect) -> Vec<Rect> {
 
 pub fn verify_window_metadata() -> Result<usize, String> {
     let display = objc2_core_graphics::CGDisplayBounds(objc2_core_graphics::CGMainDisplayID());
-    let windows = window_frames(display);
+    let windows = window_frames(display, &[]);
     if windows.iter().any(|r| {
         ![r.x, r.y, r.w, r.h].iter().all(|v| v.is_finite())
             || r.x < 0.0

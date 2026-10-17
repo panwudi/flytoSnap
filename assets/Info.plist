@@ -2,27 +2,62 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleName</key><string>flytoSnap</string>
-    <key>CFBundleDisplayName</key><string>flytoSnap</string>
-    <key>CFBundleIdentifier</key><string>com.flyto.snap</string>
-    <key>CFBundleVersion</key><string>10</string>
-    <key>CFBundleShortVersionString</key><string>0.3.2</string>
-    <key>CFBundleIconFile</key><string>AppIcon</string>
-    <key>CFBundleExecutable</key><string>flytosnap</string>
-    <key>CFBundlePackageType</key><string>APPL</string>
-    <key>LSMinimumSystemVersion</key><string>14.0</string>
-    <key>LSUIElement</key><true/>
-    <key>NSHighResolutionCapable</key><true/>
-    <key>NSScreenCaptureUsageDescription</key><string>flytoSnap captures selected screen regions for screenshots, scrolling capture, recording, and text extraction.</string>
-    <key>NSPrincipalClass</key><string>NSApplication</string>
-    <key>SUFeedURL</key><string>https://raw.githubusercontent.com/panwudi/flytoSnap/main/appcast.xml</string>
-    <key>SUPublicEDKey</key><string>xE7s4bqgEF9yMONxzVoBMDB85TldyUHEKoT7LQEcuTk=</string>
-    <key>SUEnableAutomaticChecks</key><true/>
-    <key>SUAutomaticallyUpdate</key><true/>
-    <key>SUVerifyUpdateBeforeExtraction</key><true/>
-    <key>SURequireSignedFeed</key><true/>
-    <key>SUEnableSystemProfiling</key><false/>
-    <key>SUScheduledCheckInterval</key><integer>86400</integer>
-    <key>CFBundleLocalizations</key><array><string>en</string><string>zh-Hans</string><string>zh-Hant</string></array>
+	<key>CFBundleName</key>
+	<string>flytoSnap</string>
+	<key>CFBundleDisplayName</key>
+	<string>flytoSnap</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.flyto.snap</string>
+	<key>CFBundleVersion</key>
+	<string>11</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.4.0</string>
+	<key>CFBundleIconFile</key>
+	<string>AppIcon</string>
+	<key>CFBundleExecutable</key>
+	<string>flytosnap</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>14.0</string>
+	<key>LSUIElement</key>
+	<true/>
+	<key>NSHighResolutionCapable</key>
+	<true/>
+	<key>NSScreenCaptureUsageDescription</key>
+	<string>flytoSnap captures selected screen regions for screenshots, scrolling capture, recording, and text extraction.</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>SUFeedURL</key>
+	<string>https://raw.githubusercontent.com/panwudi/flytoSnap/main/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>xE7s4bqgEF9yMONxzVoBMDB85TldyUHEKoT7LQEcuTk=</string>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUAutomaticallyUpdate</key>
+	<true/>
+	<key>SUVerifyUpdateBeforeExtraction</key>
+	<true/>
+	<key>SURequireSignedFeed</key>
+	<true/>
+	<key>SUEnableSystemProfiling</key>
+	<false/>
+	<key>SUScheduledCheckInterval</key>
+	<integer>86400</integer>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>zh-Hans</string>
+		<string>zh-Hant</string>
+		<string>ja</string>
+		<string>ru</string>
+		<string>fr</string>
+		<string>es</string>
+		<string>pt</string>
+		<string>de</string>
+		<string>ko</string>
+	</array>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright © 2026 panwudi. MIT License.</string>
 </dict>
 </plist>

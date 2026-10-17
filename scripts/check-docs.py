@@ -4,11 +4,9 @@ from pathlib import Path
 import re
 
 root = Path(__file__).resolve().parent.parent
-for name, language in [
-    ("README.zh-CN.md", "zh-CN"),
-    ("README.zh-TW.md", "zh-TW"),
-    ("README.en.md", "en"),
-]:
+languages = ["zh-CN", "zh-TW", "en", "ja", "ru", "fr", "es", "pt", "de", "ko"]
+for language in languages:
+    name = f"README.{language}.md"
     text = (root / name).read_text()
     for target in re.findall(r"\]\(([^)]+)\)", text):
         if target.startswith(("https://", "http://", "#")):
@@ -19,10 +17,10 @@ for name, language in [
             assert path.endswith(f"-{language}.png"), f"Wrong screenshot language in {name}: {path}"
     assert "releases/latest" in text, f"Missing download link in {name}"
     assert f"ocr-{language}.png" in text, f"Missing localized OCR screenshot in {name}"
-    for readme in ["README.zh-CN.md", "README.zh-TW.md", "README.en.md"]:
+    for readme in [f"README.{code}.md" for code in languages]:
         assert readme in text, f"Missing language navigation in {name}"
 overview = (root / "README.md").read_text()
-for language in ["zh-CN", "zh-TW", "en"]:
+for language in languages:
     assert f"README.{language}.md" in overview
     assert f"screenshot-{language}.png" in overview
 print("Documentation check passed: language navigation, downloads, local links, and matching screenshots.")

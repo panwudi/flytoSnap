@@ -2,13 +2,13 @@
 
 # flytoSnap
 
-**[简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | [English](README.en.md)**
+**[简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | [English](README.en.md) | [日本語](README.ja.md) | [Русский](README.ru.md) | [Français](README.fr.md) | [Español](README.es.md) | [Português](README.pt.md) | [Deutsch](README.de.md) | [한국어](README.ko.md)**
 
 [Home / 首页 / 首頁](README.md)
 
 A native macOS screenshot and recording tool written in Rust. One shortcut opens a mode selector for screenshots, scrolling capture, recording, and text extraction.
 
-Requires macOS 14+. The interface supports Simplified Chinese, Traditional Chinese, and English, following the system language by default. The app starts in the menu bar without opening a main window.
+Requires macOS 14+. The interface supports Simplified Chinese, Traditional Chinese, English, Japanese, Russian, French, Spanish, Portuguese, German, and Korean, following the system language by default. The app starts in the menu bar without opening a main window.
 
 ![Screenshot selection, mask, toolbar, and hover labels](docs/images/screenshot-en.png)
 
@@ -107,3 +107,7 @@ Recording currently captures screen video only, without audio or webcam. Scrolli
 Interaction follows the [Feishu screenshot](https://www.feishu.cn/hc/zh-CN/articles/319286513754) and [scrolling capture](https://www.feishu.cn/hc/zh-CN/articles/145659580677) workflows. Native framework access uses [objc2](https://github.com/madsmtm/objc2).
 
 MIT. See [LICENSE](LICENSE). The icon uses FLYTO's slate blue, orange, and opposing frame mark, with a camera element.
+
+Choose the interface language in Settings. Update dialogs follow that selection. Open About from the menu bar for the version, build, author, copyright, and project links. You can capture flytoSnap's own Settings, About, and pinned-image windows.
+
+![About flytoSnap](docs/images/about-en.png)

@@ -8,11 +8,17 @@ pub fn recognize(png: &[u8]) -> Result<String, String> {
         request.setRecognitionLevel(VNRequestTextRecognitionLevel::Accurate);
         request.setUsesLanguageCorrection(true);
         request.setAutomaticallyDetectsLanguage(true);
-        request.setRecognitionLanguages(&NSArray::from_retained_slice(&[
-            NSString::from_str("zh-Hans"),
-            NSString::from_str("zh-Hant"),
-            NSString::from_str("en-US"),
-        ]));
+        let supported = unsafe { request.supportedRecognitionLanguagesAndReturnError() }
+            .map_err(|e| e.localizedDescription().to_string())?;
+        let languages = [
+            "zh-Hans", "zh-Hant", "en-US", "ja-JP", "ru-RU", "fr-FR", "es-ES", "pt-BR", "de-DE",
+            "ko-KR",
+        ]
+        .into_iter()
+        .filter(|language| supported.iter().any(|item| item.to_string() == *language))
+        .map(NSString::from_str)
+        .collect::<Vec<_>>();
+        request.setRecognitionLanguages(&NSArray::from_retained_slice(&languages));
         request.setCustomWords(&NSArray::from_retained_slice(&[
             NSString::from_str("flytoSnap"),
             NSString::from_str("FLYTO"),

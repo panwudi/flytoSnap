@@ -55,7 +55,7 @@ define_class!(
     }
 );
 
-fn panel(title: &str, width: f64, height: f64) -> Retained<NSPanel> {
+pub(super) fn panel(title: &str, width: f64, height: f64) -> Retained<NSPanel> {
     let panel = new_panel(
         width,
         height,
@@ -135,6 +135,63 @@ fn control(root: &NSView, title: &str, tag: isize, frame: NSRect) -> Retained<NS
     set_caption(&b, title, Color(0.14, 0.16, 0.2), 13.0);
     root.addSubview(&b);
     b
+}
+
+pub(super) fn show_about() {
+    if let Some(window) = state(|a| a.about.clone()) {
+        present(&window);
+        return;
+    }
+    let window = panel("关于 flytoSnap", 560.0, 340.0);
+    if state(|a| a.headless) {
+        window.setFrameOrigin(NSPoint::new(-20_000.0, -20_000.0));
+    }
+    let root = window.contentView().unwrap();
+    let build = NSBundle::mainBundle()
+        .objectForInfoDictionaryKey(ns_string!("CFBundleVersion"))
+        .and_then(|o| o.downcast::<NSString>().ok())
+        .map(|v| v.to_string())
+        .unwrap_or_else(|| "dev".into());
+    for (text, y, size) in [
+        ("flytoSnap".into(), 268.0, 30.0),
+        (
+            format!("版本 {} (构建 {})", env!("CARGO_PKG_VERSION"), build),
+            223.0,
+            14.0,
+        ),
+        ("作者: panwudi".into(), 187.0, 14.0),
+        ("© 2026 panwudi".into(), 153.0, 13.0),
+        ("https://github.com/panwudi/flytoSnap".into(), 119.0, 13.0),
+        ("开源许可证: MIT".into(), 85.0, 13.0),
+    ] {
+        let label = label(
+            &text,
+            NSRect::new(NSPoint::new(20.0, y), NSSize::new(520.0, 40.0)),
+            size,
+        );
+        label.setAlignment(NSTextAlignment::Center);
+        root.addSubview(&label);
+    }
+    control(
+        &root,
+        "项目地址",
+        901,
+        NSRect::new(NSPoint::new(28.0, 22.0), NSSize::new(170.0, 34.0)),
+    );
+    control(
+        &root,
+        "MIT 许可证",
+        902,
+        NSRect::new(NSPoint::new(210.0, 22.0), NSSize::new(150.0, 34.0)),
+    );
+    control(
+        &root,
+        "关闭",
+        903,
+        NSRect::new(NSPoint::new(400.0, 22.0), NSSize::new(130.0, 34.0)),
+    );
+    state(|a| a.about = Some(window.clone()));
+    present(&window);
 }
 
 pub(super) fn dismiss_permission_help() {

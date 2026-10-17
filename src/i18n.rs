@@ -17,14 +17,60 @@ pub enum Language {
     Traditional,
     #[serde(rename = "en")]
     English,
+    #[serde(rename = "ja")]
+    Japanese,
+    #[serde(rename = "ru")]
+    Russian,
+    #[serde(rename = "fr")]
+    French,
+    #[serde(rename = "es")]
+    Spanish,
+    #[serde(rename = "pt")]
+    Portuguese,
+    #[serde(rename = "de")]
+    German,
+    #[serde(rename = "ko")]
+    Korean,
+}
+impl Language {
+    pub const ALL: [Self; 10] = [
+        Self::Simplified,
+        Self::Traditional,
+        Self::English,
+        Self::Japanese,
+        Self::Russian,
+        Self::French,
+        Self::Spanish,
+        Self::Portuguese,
+        Self::German,
+        Self::Korean,
+    ];
+    pub fn code(self) -> &'static str {
+        [
+            "zh-CN", "zh-TW", "en", "ja", "ru", "fr", "es", "pt", "de", "ko",
+        ][self as usize]
+    }
+    pub fn native_name(self) -> &'static str {
+        [
+            "简体中文",
+            "繁體中文",
+            "English",
+            "日本語",
+            "Русский",
+            "Français",
+            "Español",
+            "Português",
+            "Deutsch",
+            "한국어",
+        ][self as usize]
+    }
 }
 static LANGUAGE: AtomicU8 = AtomicU8::new(0);
 pub fn current() -> Language {
-    match LANGUAGE.load(Ordering::Relaxed) {
-        1 => Language::Traditional,
-        2 => Language::English,
-        _ => Language::Simplified,
-    }
+    Language::ALL
+        .get(LANGUAGE.load(Ordering::Relaxed) as usize)
+        .copied()
+        .unwrap_or_default()
 }
 pub fn set(language: Language) {
     LANGUAGE.store(language as u8, Ordering::Relaxed);
@@ -38,16 +84,17 @@ pub fn detected(name: &str) -> Language {
             Language::Simplified
         }
     } else {
-        Language::English
+        Language::ALL
+            .into_iter()
+            .find(|language| s.split(['-', '_']).next() == Some(language.code()))
+            .unwrap_or(Language::English)
     }
 }
 pub fn preference(name: &str, system: &str) -> Language {
-    match name {
-        "zh-CN" => Language::Simplified,
-        "zh-TW" => Language::Traditional,
-        "en" => Language::English,
-        _ => detected(system),
-    }
+    Language::ALL
+        .into_iter()
+        .find(|language| language.code() == name)
+        .unwrap_or_else(|| detected(system))
 }
 
 type Catalog = BTreeMap<String, BTreeMap<String, String>>;
@@ -75,10 +122,13 @@ static TEMPLATES: LazyLock<Vec<Template>> = LazyLock::new(|| {
     result
 });
 fn translated<'a>(source: &'a str, entry: &'a BTreeMap<String, String>) -> &'a str {
-    match current() {
-        Language::Simplified => source,
-        Language::Traditional => entry.get("zh-TW").map(String::as_str).unwrap_or(source),
-        Language::English => entry.get("en").map(String::as_str).unwrap_or(source),
+    if current() == Language::Simplified {
+        source
+    } else {
+        entry
+            .get(current().code())
+            .map(String::as_str)
+            .unwrap_or(source)
     }
 }
 pub fn tr(text: &str) -> String {
@@ -108,15 +158,15 @@ pub fn tr(text: &str) -> String {
     text.into()
 }
 pub fn language_name(language: Language) -> &'static str {
-    match language {
-        Language::Simplified => "简体中文",
-        Language::Traditional => "繁體中文",
-        Language::English => "English",
-    }
+    language.native_name()
 }
 pub fn verify_catalog() -> Result<usize, String> {
     for (source, entry) in CATALOG.iter() {
-        for key in ["zh-TW", "en"] {
+        for key in Language::ALL
+            .into_iter()
+            .filter(|l| *l != Language::Simplified)
+            .map(Language::code)
+        {
             let value = entry
                 .get(key)
                 .ok_or_else(|| format!("Missing {key}: {source}"))?;
@@ -136,6 +186,18 @@ mod tests {
         assert_eq!(detected("zh-Hant-HK"), Language::Traditional);
         assert_eq!(detected("zh-Hans-CN"), Language::Simplified);
         assert_eq!(detected("en-US"), Language::English);
+        for (name, language) in [
+            ("ja-JP", Language::Japanese),
+            ("ru-RU", Language::Russian),
+            ("fr-CA", Language::French),
+            ("es-MX", Language::Spanish),
+            ("pt-BR", Language::Portuguese),
+            ("de-DE", Language::German),
+            ("ko-KR", Language::Korean),
+        ] {
+            assert_eq!(detected(name), language);
+            assert_eq!(preference(language.code(), "en-US"), language);
+        }
         assert!(verify_catalog().unwrap() > 100);
     }
 }

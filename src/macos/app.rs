@@ -138,6 +138,7 @@ struct App {
     pins: Vec<Retained<NSPanel>>,
     scroll: Option<ScrollSession>,
     preferences: Option<Preferences>,
+    about: Option<Retained<NSPanel>>,
     manager: GlobalHotKeyManager,
     hotkey: HotKey,
     settings: Settings,
@@ -211,6 +212,7 @@ define_class!(
                     return;
                 }
                 let record=state(|a|{
+                    if a.about.as_ref().is_some_and(|panel|panel.as_super()==window.as_ref()){a.about=None;}
                     if a.record_setup.as_ref().is_some_and(|s|s.window.as_super()==window.as_ref()){a.record_setup=None;}
                     if a.media_result.as_ref().is_some_and(|s|s.window.as_super()==window.as_ref()){a.media_result=None;}
                     a.recording.as_ref().is_some_and(|s|s.window.as_super()==window.as_ref())
@@ -519,11 +521,7 @@ fn set_caption(button: &NSButton, title: &str, color: Color, size: f64) {
 }
 fn mode_layout(s: &Session) -> (Rect, [Rect; 4]) {
     let visible = s.view.visibleRect();
-    let widths = if i18n::current() == i18n::Language::English {
-        [110.0, 170.0, 120.0, 170.0]
-    } else {
-        [96.0, 130.0, 96.0, 130.0]
-    };
+    let widths = CaptureMode::ALL.map(|mode| (ui_text_width(mode.title(), 16.0) + 28.0).max(96.0));
     let width = widths.iter().sum::<f64>() + 16.0;
     let bar = Rect::new(
         visible.origin.x + (visible.size.width - width) / 2.0,
@@ -644,7 +642,32 @@ fn label(s: &str, frame: NSRect, size: f64) -> Retained<NSTextField> {
     let v = NSTextField::labelWithString(&ns_ui(s), mtm());
     v.setFrame(frame);
     v.setFont(Some(&NSFont::systemFontOfSize(size)));
+    if frame.size.height >= 36.0 {
+        v.setLineBreakMode(NSLineBreakMode::ByWordWrapping);
+        v.setMaximumNumberOfLines(0);
+    }
     v
+}
+
+fn scroll_action_rect(bounds: Rect, selection: Rect) -> Rect {
+    let base = scroll_start_rect(bounds, selection);
+    let width = (ui_text_width("开始滚动截图", 14.0) + 76.0)
+        .max(base.w)
+        .min(bounds.w - 16.0);
+    Rect::new(
+        (selection.x + (selection.w - width) / 2.0)
+            .clamp(bounds.x + 8.0, bounds.x + bounds.w - width - 8.0),
+        base.y,
+        width,
+        base.h,
+    )
+}
+
+fn ui_text_width(text: &str, size: f64) -> f64 {
+    let font = NSFont::systemFontOfSize(size);
+    let attributes =
+        NSDictionary::from_slices(&[unsafe { NSFontAttributeName }], &[&*font as &AnyObject]);
+    unsafe { ns_ui(text).sizeWithAttributes(Some(&attributes)).width }
 }
 
 fn relocalize_view(view: &NSView) {
@@ -676,6 +699,9 @@ fn relocalize_all() {
         let mut windows = vec![a.home.clone()];
         if let Some(p) = &a.preferences {
             windows.push(p.window.clone());
+        }
+        if let Some(window) = &a.about {
+            windows.push(window.as_super().retain());
         }
         if let Some(p) = &a.ocr_panel {
             windows.push(p.window.as_super().retain());
@@ -710,6 +736,7 @@ fn relocalize_all() {
     for index in 0..count {
         refresh(index);
     }
+    super::update_localization::localize_windows();
 }
 fn settings_path() -> PathBuf {
     PathBuf::from(std::env::var("HOME").unwrap_or_else(|_| ".".into()))
@@ -748,7 +775,7 @@ fn initialize(delegate: &Delegate) {
     } else {
         NSApplicationActivationPolicy::Accessory
     });
-    let settings = load_settings();
+    let mut settings = load_settings();
     let system = NSLocale::preferredLanguages()
         .firstObject()
         .map(|s| s.to_string())
@@ -758,6 +785,9 @@ fn initialize(delegate: &Delegate) {
         .nth(1)
         .unwrap_or_else(|| settings.language.clone());
     i18n::set(i18n::preference(&requested, &system));
+    if headless {
+        settings.language = requested;
+    }
     let main_menu = NSMenu::new(mtm());
     let app_menu = NSMenu::new(mtm());
     let app_item = unsafe {
@@ -770,6 +800,20 @@ fn initialize(delegate: &Delegate) {
     };
     app_item.setSubmenu(Some(&app_menu));
     main_menu.addItem(&app_item);
+    let about = unsafe {
+        NSMenuItem::initWithTitle_action_keyEquivalent(
+            NSMenuItem::alloc(mtm()),
+            &ns_ui("关于 flytoSnap"),
+            Some(sel!(menuAction:)),
+            ns_string!(""),
+        )
+    };
+    about.setTag(14);
+    unsafe {
+        about.setTarget(Some(&*delegate));
+    }
+    app_menu.addItem(&about);
+    app_menu.addItem(&NSMenuItem::separatorItem(mtm()));
     let quit = unsafe {
         NSMenuItem::initWithTitle_action_keyEquivalent(
             NSMenuItem::alloc(mtm()),
@@ -793,6 +837,17 @@ fn initialize(delegate: &Delegate) {
     };
     let menu = NSMenu::new(mtm());
     menu.setDelegate(Some(ProtocolObject::from_ref(&*delegate)));
+    let version = unsafe {
+        NSMenuItem::initWithTitle_action_keyEquivalent(
+            NSMenuItem::alloc(mtm()),
+            &NSString::from_str(&format!("flytoSnap {}", env!("CARGO_PKG_VERSION"))),
+            None,
+            ns_string!(""),
+        )
+    };
+    version.setEnabled(false);
+    menu.addItem(&version);
+    menu.addItem(&NSMenuItem::separatorItem(mtm()));
     for (title, tag) in [
         ("开始截图", 1),
         ("打开图片...", 2),
@@ -807,6 +862,7 @@ fn initialize(delegate: &Delegate) {
         ("自动下载并安装更新", 13),
         ("打开最近保存的位置", 6),
         ("显示主窗口", 7),
+        ("关于 flytoSnap", 14),
         ("退出 flytoSnap", 9),
     ] {
         let item = unsafe {
@@ -943,6 +999,7 @@ fn initialize(delegate: &Delegate) {
             pins: vec![],
             scroll: None,
             preferences: None,
+            about: None,
             manager,
             hotkey,
             settings,
@@ -1162,7 +1219,6 @@ fn start_capture(prefer_scroll: bool) {
         return;
     }
     let (generation, tx) = state(|a| {
-        a.home.orderOut(None);
         a.prefer_scroll = prefer_scroll;
         a.generation += 1;
         a.pending = requests.len();
@@ -1171,7 +1227,27 @@ fn start_capture(prefer_scroll: bool) {
         (a.generation, a.tx.clone())
     });
     set_capture_active(true);
-    capture::capture(requests, generation, tx);
+    capture::capture(requests, generation, capture_control_windows(), tx);
+}
+
+fn capture_control_windows() -> Vec<u32> {
+    state(|a| {
+        let mut windows = a
+            .sessions
+            .iter()
+            .map(|s| s.window.windowNumber() as u32)
+            .collect::<Vec<_>>();
+        if let Some(scroll) = &a.scroll {
+            windows.extend([
+                scroll.panel.windowNumber() as u32,
+                scroll.preview_panel.windowNumber() as u32,
+            ]);
+        }
+        if let Some(toast) = &a.toast_window {
+            windows.push(toast.windowNumber() as u32);
+        }
+        windows
+    })
 }
 
 fn create_session(screen: Screen, pixels: RgbaImage, demo: bool, windows: Vec<Rect>) {
@@ -1463,7 +1539,7 @@ fn refresh(index: usize) {
         let start = s
             .editor
             .selection
-            .map(|r| scroll_start_rect(s.editor.bounds, r));
+            .map(|r| scroll_action_rect(s.editor.bounds, r));
         for (i, button) in s.scroll_actions.iter().enumerate() {
             button.setHidden(
                 start.is_none()
@@ -1624,10 +1700,11 @@ fn draw_canvas(index: usize) {
                     s.text_input.as_ref().map(|(_, i)| *i),
                 );
                 let visible = s.view.visibleRect();
+                let hint_width = (ui_text_width(a.mode.confirm_hint(), 11.0) + 18.0).max(150.0);
                 let hint = Rect::new(
-                    visible.origin.x + visible.size.width - 160.0,
+                    visible.origin.x + visible.size.width - hint_width - 10.0,
                     visible.origin.y + 10.0,
-                    150.0,
+                    hint_width,
                     28.0,
                 );
                 render::rounded(hint, 5.0, Color(0.12, 0.14, 0.18), 0.88);
@@ -1645,7 +1722,7 @@ fn draw_canvas(index: usize) {
                 }
             }
             if a.mode == CaptureMode::Scroll && !scrolling && !recording {
-                let start = scroll_start_rect(bounds, r);
+                let start = scroll_action_rect(bounds, r);
                 render::rounded(start, 7.0, Color(0.73, 0.75, 0.78), 1.0);
                 render::rounded(start.inset(0.8), 6.2, Color(1.0, 1.0, 1.0), 0.98);
             }
@@ -2079,6 +2156,29 @@ fn handle_action(tag: isize, window: Option<Retained<NSWindow>>) {
         return;
     }
     match tag {
+        14 => {
+            show_about();
+            return;
+        }
+        901 | 902 => {
+            let url = if tag == 901 {
+                "https://github.com/panwudi/flytoSnap"
+            } else {
+                "https://github.com/panwudi/flytoSnap/blob/main/LICENSE"
+            };
+            if let Some(url) = NSURL::URLWithString(&NSString::from_str(url)) {
+                if !NSWorkspace::sharedWorkspace().openURL(&url) {
+                    toast("无法打开项目地址");
+                }
+            }
+            return;
+        }
+        903 => {
+            if let Some(window) = state(|a| a.about.as_ref().cloned()) {
+                window.close();
+            }
+            return;
+        }
         12 => {
             if update_busy() {
                 toast("请先结束当前截图或录屏, 再检查更新");
@@ -2740,80 +2840,69 @@ fn open_demo() {
 
 fn show_preferences() {
     if let Some(window) = state(|a| a.preferences.as_ref().map(|p| p.window.clone())) {
-        window.makeKeyAndOrderFront(None);
+        if !state(|a| a.headless) {
+            window.makeKeyAndOrderFront(None);
+        }
         return;
     }
     let (settings, delegate) = state(|a| (a.settings.clone(), a.delegate.clone()));
-    let window = unsafe {
-        NSWindow::initWithContentRect_styleMask_backing_defer(
-            NSWindow::alloc(mtm()),
-            NSRect::new(NSPoint::ZERO, NSSize::new(580.0, 360.0)),
-            NSWindowStyleMask::Titled | NSWindowStyleMask::Closable,
-            NSBackingStoreType::Buffered,
-            false,
-        )
-    };
-    unsafe {
-        window.setReleasedWhenClosed(false);
+    let window = panel("flytoSnap 设置", 640.0, 420.0).into_super();
+    if state(|a| a.headless) {
+        window.setFrameOrigin(NSPoint::new(-20_000.0, -20_000.0));
     }
-    window.setTitle(&ns_ui("flytoSnap 设置"));
-    window.setLevel(26);
-    window.center();
     let root = window.contentView().unwrap();
     root.addSubview(&label(
         "截图快捷键",
-        NSRect::new(NSPoint::new(26.0, 235.0), NSSize::new(120.0, 26.0)),
+        NSRect::new(NSPoint::new(26.0, 335.0), NSSize::new(180.0, 26.0)),
         14.0,
     ));
     let shortcut = NSTextField::initWithFrame(
         NSTextField::alloc(mtm()),
-        NSRect::new(NSPoint::new(152.0, 231.0), NSSize::new(398.0, 30.0)),
+        NSRect::new(NSPoint::new(214.0, 331.0), NSSize::new(398.0, 30.0)),
     );
     shortcut.setStringValue(&ns_ui(&crate::model::shortcut_display(&settings.shortcut)));
     root.addSubview(&shortcut);
     root.addSubview(&label(
         "例如 Command+Shift+A, 或 Control+Option+S",
-        NSRect::new(NSPoint::new(152.0, 195.0), NSSize::new(410.0, 24.0)),
+        NSRect::new(NSPoint::new(214.0, 290.0), NSSize::new(398.0, 36.0)),
         11.0,
     ));
     root.addSubview(&label(
         "保存目录",
-        NSRect::new(NSPoint::new(26.0, 151.0), NSSize::new(120.0, 26.0)),
+        NSRect::new(NSPoint::new(26.0, 239.0), NSSize::new(180.0, 26.0)),
         14.0,
     ));
     let directory = NSTextField::initWithFrame(
         NSTextField::alloc(mtm()),
-        NSRect::new(NSPoint::new(152.0, 147.0), NSSize::new(398.0, 30.0)),
+        NSRect::new(NSPoint::new(214.0, 235.0), NSSize::new(398.0, 30.0)),
     );
     directory.setStringValue(&NSString::from_str(&settings.save_directory));
     root.addSubview(&directory);
-    for view in root.subviews() {
-        let frame = view.frame();
-        view.setFrameOrigin(NSPoint::new(frame.origin.x, frame.origin.y + 60.0));
-    }
     root.addSubview(&label(
         "界面语言",
-        NSRect::new(NSPoint::new(26.0, 149.0), NSSize::new(120.0, 26.0)),
+        NSRect::new(NSPoint::new(26.0, 175.0), NSSize::new(180.0, 26.0)),
         14.0,
     ));
     let language = NSPopUpButton::initWithFrame_pullsDown(
         NSPopUpButton::alloc(mtm()),
-        NSRect::new(NSPoint::new(152.0, 145.0), NSSize::new(398.0, 32.0)),
+        NSRect::new(NSPoint::new(214.0, 171.0), NSSize::new(398.0, 32.0)),
         false,
     );
-    for title in ["自动 (跟随系统)", "简体中文", "繁體中文", "English"] {
-        language.addItemWithTitle(&ns_ui(title));
+    language.addItemWithTitle(&ns_ui("自动 (跟随系统)"));
+    for option in i18n::Language::ALL {
+        language.addItemWithTitle(&NSString::from_str(option.native_name()));
     }
-    language.selectItemAtIndex(match settings.language.as_str() {
-        "zh-CN" => 1,
-        "zh-TW" => 2,
-        "en" => 3,
-        _ => 0,
-    });
+    language.selectItemAtIndex(
+        i18n::Language::ALL
+            .iter()
+            .position(|option| option.code() == settings.language)
+            .map(|i| i as isize + 1)
+            .unwrap_or(0),
+    );
     root.addSubview(&language);
     let status = label(
         "快捷键冲突时可以在这里更换",
-        NSRect::new(NSPoint::new(26.0, 82.0), NSSize::new(526.0, 46.0)),
+        NSRect::new(NSPoint::new(26.0, 100.0), NSSize::new(588.0, 56.0)),
         12.0,
     );
     root.addSubview(&status);
@@ -2821,10 +2910,21 @@ fn show_preferences() {
     apply.setBordered(true);
     apply.setBezelStyle(NSBezelStyle::Push);
     apply.setFrame(NSRect::new(
-        NSPoint::new(435.0, 26.0),
-        NSSize::new(115.0, 34.0),
+        NSPoint::new(404.0, 26.0),
+        NSSize::new(210.0, 34.0),
     ));
     root.addSubview(&apply);
+    let about = button("关于 flytoSnap", None, 14, &delegate);
+    about.setFrame(NSRect::new(
+        NSPoint::new(26.0, 46.0),
+        NSSize::new(220.0, 28.0),
+    ));
+    root.addSubview(&about);
+    root.addSubview(&label(
+        &format!("flytoSnap {}  ·  © 2026 panwudi", env!("CARGO_PKG_VERSION")),
+        NSRect::new(NSPoint::new(26.0, 13.0), NSSize::new(400.0, 24.0)),
+        11.0,
+    ));
     state(|a| {
         a.preferences = Some(Preferences {
             window: window.clone(),
@@ -2834,7 +2934,9 @@ fn show_preferences() {
             language,
         })
     });
-    window.makeKeyAndOrderFront(None);
+    if !state(|a| a.headless) {
+        window.makeKeyAndOrderFront(None);
+    }
 }
 fn apply_preferences() {
     let result: Result<(), String> = state(|a| {
@@ -2852,8 +2954,14 @@ fn apply_preferences() {
         let settings = Settings {
             shortcut,
             save_directory: directory,
-            language: ["auto", "zh-CN", "zh-TW", "en"]
-                [p.language.indexOfSelectedItem().clamp(0, 3) as usize]
+            language: p
+                .language
+                .indexOfSelectedItem()
+                .checked_sub(1)
+                .and_then(|i| usize::try_from(i).ok())
+                .and_then(|i| i18n::Language::ALL.get(i))
+                .map(|l| l.code())
+                .unwrap_or("auto")
                 .into(),
         };
         let save = (|| {
@@ -2945,11 +3053,13 @@ fn start_scroll(index: usize) {
     let status = label(
         "缓慢滚动页面, 右侧预览会实时更新",
         NSRect::new(
-            NSPoint::new(12.0, 46.0),
-            NSSize::new(toolbar_rect.w - 24.0, 22.0),
+            NSPoint::new(12.0, 42.0),
+            NSSize::new(toolbar_rect.w - 24.0, 34.0),
         ),
         11.0,
     );
+    status.setLineBreakMode(NSLineBreakMode::ByWordWrapping);
+    status.setMaximumNumberOfLines(2);
     root.addSubview(&status);
     let delegate = state(|a| a.delegate.clone());
     let auto_button = button("自动滚动", None, 301, &delegate);
@@ -3085,6 +3195,7 @@ fn finish_scroll_output(tag: isize) {
     }
 }
 fn tick() {
+    super::update_localization::localize_windows();
     feature_tick();
     if !update_busy() {
         let install = state(|a| a.updater.as_ref().and_then(|u| u.deferred_install()));
@@ -3204,7 +3315,7 @@ fn tick() {
         ))
     });
     if let Some((request, generation, tx)) = request {
-        capture::capture(vec![request], generation, tx);
+        capture::capture(vec![request], generation, capture_control_windows(), tx);
     }
 }
 fn dispatch_hotkey(event: GlobalHotKeyEvent) {
@@ -3348,7 +3459,10 @@ pub fn run() {
             super::ocr::verify()?;
             super::media::verify(&path)?;
             let count = i18n::verify_catalog()?;
-            println!("Localization check passed: {count} entries across three languages.");
+            println!(
+                "Localization check passed: {count} entries across {} languages.",
+                i18n::Language::ALL.len()
+            );
             Ok::<(), String>(())
         })();
         if let Err(error) = result {
@@ -3568,6 +3682,53 @@ fn verify_button_cursors(view: &NSView) -> Result<usize, String> {
 }
 fn ui_snapshot(directory: &std::path::Path) -> Result<(), String> {
     std::fs::create_dir_all(directory).map_err(|e| e.to_string())?;
+    show_preferences();
+    show_about();
+    let (preferences, about) = state(|a| {
+        (
+            a.preferences.as_ref().unwrap().window.clone(),
+            a.about.as_ref().unwrap().clone(),
+        )
+    });
+    snapshot_view(
+        &preferences.contentView().unwrap(),
+        &directory.join("settings.png"),
+    )?;
+    snapshot_view(&about.contentView().unwrap(), &directory.join("about.png"))?;
+    if state(|a| a.preferences.as_ref().unwrap().language.numberOfItems()) != 11 {
+        return Err("Settings language selector does not contain Auto and ten languages".into());
+    }
+    fn field_text(view: &NSView, output: &mut Vec<String>) {
+        for child in view.subviews() {
+            if let Ok(field) = child.clone().downcast::<NSTextField>() {
+                output.push(field.stringValue().to_string());
+            }
+            field_text(&child, output);
+        }
+    }
+    let mut metadata = vec![];
+    field_text(&about.contentView().unwrap(), &mut metadata);
+    for expected in [
+        env!("CARGO_PKG_VERSION"),
+        "panwudi",
+        "© 2026",
+        "https://github.com/panwudi/flytoSnap",
+        "MIT",
+    ] {
+        if !metadata.iter().any(|text| text.contains(expected)) {
+            return Err(format!("About metadata is missing: {expected}"));
+        }
+    }
+    let excluded = capture_control_windows();
+    if excluded.contains(&(preferences.windowNumber() as u32))
+        || excluded.contains(&(about.windowNumber() as u32))
+    {
+        return Err("Settings or About was excluded from self capture".into());
+    }
+    handle_action(903, None);
+    if state(|a| a.about.is_some()) {
+        return Err("About close did not dispose of the window".into());
+    }
     verify_recording_result(directory)?;
     let pixels = demo_image();
     let screen = Screen {
@@ -3579,6 +3740,10 @@ fn ui_snapshot(directory: &std::path::Path) -> Result<(), String> {
         scale: 1.0,
     };
     create_session(screen, pixels, false, vec![]);
+    let overlay_id = state(|a| a.sessions[0].window.windowNumber() as u32);
+    if !capture_control_windows().contains(&overlay_id) {
+        return Err("Capture overlay was not excluded from self capture".into());
+    }
     if state(|a| {
         a.sessions[0]
             .mode_buttons

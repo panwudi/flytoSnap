@@ -9,7 +9,7 @@ Use objc2 bindings for AppKit, Core Graphics, and ScreenCaptureKit.
 - Every action must show a visible result or an actionable error.
 - Capture, scrolling capture, recording, and OCR share one mode selector.
 - OCR uses on-device Apple Vision. Record GIF and MP4 through native capture and encoding APIs.
-- Support Simplified Chinese, Traditional Chinese, and English. Keep translations complete.
+- Support Simplified Chinese, Traditional Chinese, English, Japanese, Russian, French, Spanish, Portuguese, German, and Korean. Keep translations complete.
 - Use flyto brand colors and the frame mark for app and menu bar icons.
 - Start in the menu bar without showing the main window.
 - Use English half-width punctuation in comments and documentation.

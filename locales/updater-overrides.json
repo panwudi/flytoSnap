@@ -1,0 +1,274 @@
+{
+  "Your Mac is too old": {
+    "zh-CN": "你的 Mac 机型过旧",
+    "zh-TW": "你的 Mac 機型過舊",
+    "ja": "この Mac は対応していません",
+    "ru": "Ваш Mac слишком старый",
+    "fr": "Votre Mac est trop ancien",
+    "es": "Tu Mac es demasiado antiguo",
+    "pt": "Seu Mac é antigo demais",
+    "de": "Dein Mac ist zu alt",
+    "ko": "이 Mac은 지원되지 않습니다"
+  },
+  "%1$@ %2$@ is available but this update requires a new Apple silicon Mac.": {
+    "zh-CN": "%1$@ %2$@ 已发布, 但需要更新的 Apple Silicon Mac.",
+    "zh-TW": "%1$@ %2$@ 已推出, 但需要較新的 Apple Silicon Mac.",
+    "ja": "%1$@ %2$@ を利用できますが, 新しい Apple Silicon Mac が必要です.",
+    "ru": "Доступна %1$@ %2$@, но требуется новый Mac с Apple Silicon.",
+    "fr": "%1$@ %2$@ est disponible, mais nécessite un Mac Apple Silicon plus récent.",
+    "es": "%1$@ %2$@ está disponible, pero requiere un Mac con Apple Silicon más reciente.",
+    "pt": "%1$@ %2$@ está disponível, mas exige um Mac com Apple Silicon mais recente.",
+    "de": "%1$@ %2$@ ist verfügbar, erfordert aber einen neueren Mac mit Apple Silicon.",
+    "ko": "%1$@ %2$@ 업데이트에는 더 새로운 Apple Silicon Mac이 필요합니다."
+  },
+  "An error occurred while downloading the release notes.": {
+    "zh-CN": "下载更新说明时出错.",
+    "zh-TW": "下載更新說明時發生錯誤.",
+    "ja": "リリースノートのダウンロード中にエラーが発生しました.",
+    "ru": "Ошибка загрузки описания выпуска.",
+    "fr": "Erreur lors du téléchargement des notes de version.",
+    "es": "Error al descargar las notas de la versión.",
+    "pt": "Erro ao baixar as notas da versão.",
+    "de": "Fehler beim Laden der Versionshinweise.",
+    "ko": "업데이트 설명을 다운로드하는 중 오류가 발생했습니다."
+  },
+  "The release notes is improperly signed and could not be validated. Please contact the app developer for more information.": {
+    "zh-CN": "更新说明签名无效, 无法验证. 请联系应用开发者.",
+    "zh-TW": "更新說明簽章無效, 無法驗證. 請聯絡應用程式開發者.",
+    "ja": "リリースノートの署名を検証できません. アプリの開発者にお問い合わせください.",
+    "ru": "Не удалось проверить подпись описания выпуска. Обратитесь к разработчику.",
+    "fr": "La signature des notes de version est invalide. Contactez le développeur.",
+    "es": "La firma de las notas de la versión no es válida. Contacta con el desarrollador.",
+    "pt": "A assinatura das notas da versão é inválida. Entre em contato com o desenvolvedor.",
+    "de": "Die Signatur der Versionshinweise ist ungültig. Wende dich an den Entwickler.",
+    "ko": "업데이트 설명의 서명을 확인할 수 없습니다. 앱 개발자에게 문의하세요."
+  },
+  "The update feed is improperly signed and could not be validated. Please try again later or contact the app developer.": {
+    "zh-CN": "更新源签名无效, 无法验证. 请稍后重试或联系应用开发者.",
+    "zh-TW": "更新來源簽章無效, 無法驗證. 請稍後重試或聯絡開發者.",
+    "ja": "更新フィードの署名を検証できません. 後で再試行するか, 開発者にお問い合わせください.",
+    "ru": "Не удалось проверить подпись источника обновлений. Повторите позже или обратитесь к разработчику.",
+    "fr": "La signature du flux de mises à jour est invalide. Réessayez plus tard ou contactez le développeur.",
+    "es": "La firma de la fuente de actualizaciones no es válida. Inténtalo más tarde o contacta con el desarrollador.",
+    "pt": "A assinatura da fonte de atualizações é inválida. Tente mais tarde ou contate o desenvolvedor.",
+    "de": "Die Signatur der Update-Quelle ist ungültig. Versuche es später erneut oder kontaktiere den Entwickler.",
+    "ko": "업데이트 피드의 서명을 확인할 수 없습니다. 나중에 다시 시도하거나 개발자에게 문의하세요."
+  },
+  "The updater failed to start. Please verify you have the latest version of %@ and contact the app developer if the issue still persists. Check the Console logs for more information.": {
+    "ja": "更新を開始できませんでした. %@ の最新版を確認し, 問題が続く場合は開発者にお問い合わせください. 詳細はコンソールのログをご覧ください.",
+    "ru": "Не удалось запустить обновление. Убедитесь, что установлена последняя версия %@. Если ошибка повторяется, обратитесь к разработчику. Подробности в Консоли.",
+    "fr": "Le programme de mise à jour n’a pas démarré. Vérifiez que %@ est à jour et contactez le développeur si le problème persiste. Consultez les journaux de Console.",
+    "es": "No se pudo iniciar el actualizador. Comprueba que tienes la última versión de %@ y contacta con el desarrollador si el problema persiste. Consulta los registros de Consola.",
+    "pt": "Não foi possível iniciar o atualizador. Confira se %@ está atualizado e contate o desenvolvedor se o problema persistir. Veja os registros do Console.",
+    "de": "Das Update konnte nicht gestartet werden. Prüfe, ob du die neueste Version von %@ hast, und kontaktiere bei weiteren Problemen den Entwickler. Details stehen in den Konsolenprotokollen.",
+    "ko": "업데이트 프로그램을 시작하지 못했습니다. %@의 최신 버전을 설치했는지 확인하고 문제가 계속되면 개발자에게 문의하세요. 자세한 내용은 콘솔 로그를 확인하세요."
+  },
+  "The installation failed due to not having permission to write the new update.": {
+    "ru": "Установка не выполнена: нет разрешения на запись обновления.",
+    "fr": "Installation impossible: l’écriture de la mise à jour n’est pas autorisée.",
+    "es": "La instalación falló porque no hay permiso para escribir la actualización.",
+    "pt": "A instalação falhou por falta de permissão para gravar a atualização.",
+    "ko": "업데이트를 기록할 권한이 없어 설치하지 못했습니다."
+  },
+  "You may need to allow modifications from %1$@ in System Settings under Privacy & Security and App Management to install future updates.": {
+    "ru": "Для будущих обновлений может потребоваться разрешить изменения для %1$@ в Системных настройках: Конфиденциальность и безопасность > Управление приложениями.",
+    "fr": "Pour les futures mises à jour, autorisez les modifications par %1$@ dans Réglages Système > Confidentialité et sécurité > Gestion des apps.",
+    "es": "Para futuras actualizaciones, puede que debas permitir cambios de %1$@ en Ajustes del Sistema > Privacidad y seguridad > Gestión de apps.",
+    "pt": "Para futuras atualizações, talvez seja necessário permitir alterações de %1$@ em Ajustes do Sistema > Privacidade e Segurança > Gerenciamento de Apps.",
+    "ko": "향후 업데이트를 설치하려면 시스템 설정 > 개인정보 보호 및 보안 > 앱 관리에서 %1$@의 변경을 허용해야 할 수 있습니다."
+  },
+  "Application Name": {
+    "ru": "Название приложения",
+    "fr": "Nom de l’application",
+    "es": "Nombre de la app",
+    "pt": "Nome do app",
+    "ko": "앱 이름"
+  },
+  "Application Version": {
+    "ru": "Версия приложения",
+    "fr": "Version de l’application",
+    "es": "Versión de la app",
+    "pt": "Versão do app",
+    "ko": "앱 버전"
+  },
+  "CPU Speed (MHz)": {
+    "ru": "Частота CPU (МГц)",
+    "fr": "Fréquence CPU (MHz)",
+    "es": "Frecuencia de CPU (MHz)",
+    "pt": "Frequência da CPU (MHz)",
+    "ko": "CPU 속도 (MHz)"
+  },
+  "CPU Subtype": {
+    "ru": "Подтип CPU",
+    "fr": "Sous-type du CPU",
+    "es": "Subtipo de CPU",
+    "pt": "Subtipo da CPU",
+    "ko": "CPU 하위 유형"
+  },
+  "CPU Type": {
+    "ru": "Тип CPU",
+    "fr": "Type de CPU",
+    "es": "Tipo de CPU",
+    "pt": "Tipo de CPU",
+    "ko": "CPU 유형"
+  },
+  "CPU is 64-Bit?": {
+    "ru": "64-битный CPU?",
+    "fr": "CPU 64 bits?",
+    "es": "¿CPU de 64 bits?",
+    "pt": "CPU de 64 bits?",
+    "ko": "64비트 CPU?"
+  },
+  "Mac Model": {
+    "ru": "Модель Mac",
+    "fr": "Modèle de Mac",
+    "es": "Modelo de Mac",
+    "pt": "Modelo do Mac",
+    "ko": "Mac 모델"
+  },
+  "Memory (MB)": {
+    "ru": "Память (МБ)",
+    "fr": "Mémoire (Mo)",
+    "es": "Memoria (MB)",
+    "pt": "Memória (MB)",
+    "ko": "메모리 (MB)"
+  },
+  "No": {
+    "ru": "Нет",
+    "fr": "Non",
+    "es": "No",
+    "pt": "Não",
+    "ko": "아니요"
+  },
+  "Yes": {
+    "ru": "Да",
+    "fr": "Oui",
+    "es": "Sí",
+    "pt": "Sim",
+    "ko": "예"
+  },
+  "Number of CPUs": {
+    "ru": "Количество CPU",
+    "fr": "Nombre de CPU",
+    "es": "Número de CPU",
+    "pt": "Número de CPUs",
+    "ko": "CPU 수"
+  },
+  "OS Version": {
+    "ru": "Версия ОС",
+    "fr": "Version du système",
+    "es": "Versión del sistema",
+    "pt": "Versão do sistema",
+    "ko": "운영체제 버전"
+  },
+  "Preferred Language": {
+    "ru": "Предпочитаемый язык",
+    "fr": "Langue préférée",
+    "es": "Idioma preferido",
+    "pt": "Idioma preferido",
+    "ko": "선호 언어"
+  },
+  "An error occurred while connecting to the installer. Please try again later.": {
+    "ru": "Ошибка подключения к установщику. Повторите попытку позже.",
+    "fr": "Erreur lors de la connexion au programme d’installation. Réessayez plus tard.",
+    "es": "Error al conectar con el instalador. Inténtalo más tarde."
+  },
+  "An error occurred while launching the installer. Please try again later.": {
+    "ru": "Ошибка запуска установщика. Повторите попытку позже.",
+    "fr": "Erreur lors du lancement du programme d’installation. Réessayez plus tard.",
+    "es": "Error al abrir el instalador. Inténtalo más tarde."
+  },
+  "An error occurred while starting the installer. Please try again later.": {
+    "ru": "Ошибка начала установки. Повторите попытку позже.",
+    "fr": "Erreur lors du démarrage du programme d’installation. Réessayez plus tard.",
+    "es": "Error al iniciar el instalador. Inténtalo más tarde."
+  },
+  "An error occurred while running the updater. Please try again later.": {
+    "ru": "Ошибка работы программы обновления. Повторите попытку позже.",
+    "fr": "Erreur du programme de mise à jour. Réessayez plus tard.",
+    "es": "Error al ejecutar el actualizador. Inténtalo más tarde."
+  },
+  "Failed to resume installing update.": {
+    "ru": "Не удалось продолжить установку обновления.",
+    "fr": "Impossible de reprendre l’installation de la mise à jour.",
+    "es": "No se pudo reanudar la instalación."
+  },
+  "Install on Quit": {
+    "ru": "Установить при выходе",
+    "fr": "Installer à la fermeture",
+    "es": "Instalar al salir"
+  },
+  "Unable to Check For Updates": {
+    "ru": "Не удалось проверить обновления",
+    "fr": "Recherche de mises à jour impossible",
+    "es": "No se pudieron buscar actualizaciones"
+  },
+  "Update Installed": {
+    "ru": "Обновление установлено",
+    "fr": "Mise à jour installée",
+    "es": "Actualización instalada"
+  },
+  "Your macOS version is too new": {
+    "ru": "Ваша версия macOS слишком новая",
+    "fr": "Votre version de macOS est trop récente",
+    "es": "Tu versión de macOS es demasiado reciente"
+  },
+  "Your macOS version is too old": {
+    "ru": "Ваша версия macOS слишком старая",
+    "fr": "Votre version de macOS est trop ancienne",
+    "es": "Tu versión de macOS es demasiado antigua"
+  },
+  "The update is improperly signed and could not be validated. Please try again later or contact the app developer.": {
+    "ru": "Не удалось проверить подпись обновления. Повторите позже или обратитесь к разработчику.",
+    "fr": "La signature de la mise à jour est invalide. Réessayez plus tard ou contactez le développeur.",
+    "es": "La firma de la actualización no es válida. Inténtalo más tarde o contacta con el desarrollador."
+  },
+  "%@ is now updated!": {
+    "ru": "%@ обновлено!",
+    "fr": "%@ a été mis à jour!",
+    "es": "%@ se ha actualizado."
+  },
+  "Version History": {
+    "ru": "История версий"
+  },
+  "%1$@ %2$@ is available but your macOS version is too new for this update. This update only supports up to macOS %3$@.": {
+    "ru": "Доступна %1$@ %2$@, но ваша macOS слишком новая. Поддерживаются версии до macOS %3$@.",
+    "fr": "%1$@ %2$@ est disponible, mais votre macOS est trop récent. Cette mise à jour prend en charge macOS jusqu’à %3$@.",
+    "es": "%1$@ %2$@ está disponible, pero tu macOS es demasiado reciente. Se admite hasta macOS %3$@."
+  },
+  "%1$@ %2$@ is available but your macOS version is too old to install it. At least macOS %3$@ is required.": {
+    "ru": "Доступна %1$@ %2$@, но требуется macOS %3$@ или новее.",
+    "fr": "%1$@ %2$@ est disponible, mais nécessite macOS %3$@ ou une version ultérieure.",
+    "es": "%1$@ %2$@ está disponible, pero requiere macOS %3$@ o posterior."
+  },
+  "%@ %@ is now available—you have %@. This is an important update; would you like to download it now?": {
+    "ru": "Доступна %1$@ %2$@, у вас %3$@. Это важное обновление. Загрузить сейчас?",
+    "fr": "%1$@ %2$@ est disponible, vous avez %3$@. Cette mise à jour est importante. La télécharger maintenant?",
+    "es": "%1$@ %2$@ está disponible; tienes %3$@. Es una actualización importante. ¿Descargar ahora?"
+  },
+  "%@ is now updated to version %@!": {
+    "ru": "%1$@ обновлено до версии %2$@!",
+    "fr": "%1$@ est à jour en version %2$@!",
+    "es": "%1$@ se ha actualizado a la versión %2$@."
+  },
+  "%1$@ can’t be updated if it’s running from the location it was downloaded to.": {
+    "ru": "Нельзя обновить %1$@ из папки загрузок.",
+    "es": "No se puede actualizar %1$@ mientras se ejecuta desde la carpeta de descarga."
+  },
+  "Quit %1$@, move it into your Applications folder, relaunch it from there and try again.": {
+    "ru": "Закройте %1$@, переместите в папку Программы, запустите оттуда и повторите попытку.",
+    "es": "Sal de %1$@, muévela a Aplicaciones, ábrela desde allí e inténtalo de nuevo."
+  },
+  "%1$@ %2$@ has been downloaded and is ready to use! This is an important update; would you like to install it and relaunch %1$@ now?": {
+    "ru": "%1$@ %2$@ загружено и готово к установке. Это важное обновление. Установить и перезапустить %1$@ сейчас?"
+  },
+  "%@ %@ is now available—you have %@. Would you like to learn more about this update on the web?": {
+    "ru": "Доступна %1$@ %2$@, у вас %3$@. Открыть сведения об обновлении в браузере?"
+  },
+  "An important update to %@ is ready to install": {
+    "ru": "Важное обновление %@ готово к установке"
+  },
+  "%@ %@ is currently the newest version available.\n(You are currently running version %@.)": {
+    "pt": "%1$@ %2$@ é a versão mais recente disponível.\n(Você está usando a versão %3$@.)"
+  }
+}
