@@ -1,43 +1,54 @@
-<?xml version="1.0" standalone="yes"?><!-- sparkle-sign-warning:
+<?xml version="1.0" standalone="yes"?>
+<!-- sparkle-sign-warning:
 IMPORTANT: This file was signed by Sparkle. Any modifications to this file requires re-signing this file with generate_appcast or sign_update! The signed signature will be embedded at the end of this file.
---><rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+-->
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
     <channel>
         <title>flytoSnap</title>
         <item>
-            <title>0.3.2</title>
-            <pubDate>Fri, 16 Oct 2026 16:27:30 -0700</pubDate>
-            <link>https://github.com/panwudi/flytoSnap/releases/tag/v0.3.2</link>
-            <sparkle:version>10</sparkle:version>
-            <sparkle:shortVersionString>0.3.2</sparkle:shortVersionString>
+            <title>0.4.0</title>
+            <pubDate>Fri, 16 Oct 2026 17:56:53 -0700</pubDate>
+            <link>https://github.com/panwudi/flytoSnap/releases/tag/v0.4.0</link>
+            <sparkle:version>11</sparkle:version>
+            <sparkle:shortVersionString>0.4.0</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
             <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[# flytoSnap 0.3.2
+            <description sparkle:format="markdown"><![CDATA[# flytoSnap 0.4.0
 
 ## 简体中文
 
-- 修复点击截图工具栏或菜单时, 临时失焦导致选区被自动取消的问题.
-- 打开状态栏菜单时保留选区; 确认切换到其他普通应用时仍会收起截图.
-- 增加全屏选区, 大窗口选区, 工具按钮, 颜色按钮和菜单焦点的原生回归检查.
+- 支持截取 flytoSnap 自身的设置, 关于和贴图窗口. 仅排除捕获遮罩和滚动控制条.
+- 新增日语, 俄语, 法语, 西班牙语, 葡萄牙语, 德语和韩语, 共十种界面语言.
+- 更新窗口跟随应用内语言设置, 补齐 Sparkle 缺少的翻译.
+- 新增关于窗口, 显示版本, 构建号, 作者, 版权和可打开的项目与许可证地址. 设置页与菜单也显示版本.
+- 根据实际文字宽度调整模式栏, 滚动启动按钮与快捷键提示, 改善长文案显示.
+- GitHub 增加七种语言的简明指南和对应界面截图.
 - 需要 Apple Silicon 和 macOS 14+. 使用 Developer ID 和 Ed25519 更新签名, 尚未通过 Apple 公证.
 
 ## 繁體中文
 
-- 修復按一下截圖工具列或選單時, 暫時失去焦點導致選取區域被自動取消的問題.
-- 開啟選單列選單時保留選取區域; 確認切換至其他一般應用程式時仍會收起截圖.
-- 新增全螢幕選取區域, 大視窗選取區域, 工具按鈕, 顏色按鈕與選單焦點的原生回歸檢查.
+- 支援擷取 flytoSnap 本身的設定, 關於和貼圖視窗. 僅排除擷取遮罩與捲動控制列.
+- 新增日語, 俄語, 法語, 西班牙語, 葡萄牙語, 德語和韓語, 共十種介面語言.
+- 更新視窗跟隨應用程式內的語言設定, 補齊 Sparkle 缺少的翻譯.
+- 新增關於視窗, 顯示版本, 建置編號, 作者, 版權及可開啟的專案與授權連結.
+- 改善長文案排版, 增加七種語言的 GitHub 簡明指南與對應介面截圖.
 - 需要 Apple Silicon 與 macOS 14+. 使用 Developer ID 與 Ed25519 更新簽章, 尚未通過 Apple 公證.
 
 ## English
 
-- Fixes capture selections being canceled when toolbar or menu interactions temporarily change focus.
-- Preserves the selection while the status menu is open, while still dismissing capture on a confirmed switch to another regular app.
-- Adds native regression checks for full-screen and large selections, tool and color buttons, and menu focus.
+- Capture flytoSnap's own Settings, About, and pinned-image windows. Only capture overlays and scrolling controls are excluded.
+- Add Japanese, Russian, French, Spanish, Portuguese, German, and Korean, bringing the interface to ten languages.
+- Make update dialogs follow the in-app language selection and fill missing Sparkle translations.
+- Add About with version, build, author, copyright, project, and license links. Show the version in Settings and the menu bar menu.
+- Size mode tabs, scrolling start controls, and shortcut hints to their translated text.
+- Add seven localized GitHub quick guides with matching native interface screenshots.
 - Requires Apple Silicon and macOS 14+. Developer ID signed with Ed25519 update signatures; not yet Apple notarized.
 ]]></description>
-            <enclosure url="https://github.com/panwudi/flytoSnap/releases/download/v0.3.2/flytoSnap-0.3.2-mac-arm64.zip" length="2754504" type="application/octet-stream" sparkle:edSignature="dMWmvEmUuxddFHOEfkSC1xY5ZrlPouFo/vS2quUoqZ7lo4C/uvmHlCyLWhDmx54fNY0RZxcFVhhNX+WsGZ+uAA=="></enclosure>
+            <enclosure url="https://github.com/panwudi/flytoSnap/releases/download/v0.4.0/flytoSnap-0.4.0-mac-arm64.zip" length="2819625" type="application/octet-stream" sparkle:edSignature="4f6kmj4cr90nbbkBYPk+Cvi66sWqJGn8/UzW02a5Y/MpNo+YSjHpeucWi91zrf0/10GsfSA77eI8B126BLazBw=="/>
         </item>
     </channel>
-</rss><!-- sparkle-signatures:
-edSignature: T/89Pxfbt3GsDjdslRhAunHCsM6wlmoUUAP1JI/NZsnRvD4+Q25s34/mkdhKmPqyCVUJJIbpVmnUH+Sj9aVKAw==
-length: 2671
+</rss>
+<!-- sparkle-signatures:
+edSignature: RTuCROKuht4XSn9DWXxxh0D4s8vnxqJ6pxNldlomuHPve7Zqh9bzaeBkmzg6+aIkFvSSrEQXPuNRXxX0VXmjAw==
+length: 3407
 -->
