@@ -4,46 +4,46 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
     <channel>
         <title>flytoSnap</title>
         <item>
-            <title>0.5.0</title>
-            <pubDate>Sun, 18 Oct 2026 14:06:35 -0700</pubDate>
-            <link>https://github.com/panwudi/flytoSnap/releases/tag/v0.5.0</link>
-            <sparkle:version>12</sparkle:version>
-            <sparkle:shortVersionString>0.5.0</sparkle:shortVersionString>
+            <title>0.5.1</title>
+            <pubDate>Sun, 18 Oct 2026 14:57:56 -0700</pubDate>
+            <link>https://github.com/panwudi/flytoSnap/releases/tag/v0.5.1</link>
+            <sparkle:version>13</sparkle:version>
+            <sparkle:shortVersionString>0.5.1</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
             <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[# flytoSnap 0.5.0
+            <description sparkle:format="markdown"><![CDATA[# flytoSnap 0.5.1
 
 ## 简体中文
 
-- 换用奶白珐琅取景器图标, 内含雾蓝底板, 奶白浮雕云和橙色实体按钮.
-- 统一截图工具栏, 模式栏, 设置, 关于, 录屏, 长截图和文字提取窗口的轻拟物风格.
-- 奶白面板, 深蓝灰模式栏和橙色主要按钮增加柔和边缘, 浅凹槽, 悬停与按压反馈.
-- 保留原生复选框, 文本编辑, 选区光标与十种语言支持. 标注色板保持独立, 避免界面材质覆盖颜色.
-- GitHub 各语言指南同步更新实际界面截图.
+- 状态栏换用彩色 B2 取景器图标, 与应用图标, 设置和关于页面保持一致. 菜单标题与截图顶部菜单也显示同一图标.
+- 顶部模式菜单可以拖动: 拖动图标旁的手柄, 或按住任意模式按钮移动. 轻点按钮仍正常切换模式.
+- 菜单拖动时保持选框, 切换模式后保持位置, 并限制在屏幕范围内. 独立的菜单视图避免与标注工具栏重叠时被遮挡.
+- 拖动手柄显示手形光标, 支持拖动过程中按 Esc 完整取消截图.
+- 新增原生拖动, 点击, 重叠层级和取消回归检查, 更新十种语言的实际界面截图.
 - 需要 Apple Silicon 和 macOS 14+. 使用 Developer ID 和 Ed25519 更新签名, 尚未通过 Apple 公证.
 
 ## 繁體中文
 
-- 換用奶白琺瑯取景器圖示, 內含霧藍底板, 奶白浮雕雲和橙色實體按鈕.
-- 統一截圖工具列, 模式列, 設定, 關於, 錄影, 捲動截圖與文字擷取視窗的輕擬物風格.
-- 奶白面板, 深藍灰模式列與橙色主要按鈕新增柔和邊緣, 淺凹槽, 懸停與按壓回饋.
-- 保留原生核取方塊, 文字編輯, 選取區域游標和十種語言支援. 標註色板維持獨立顯示.
-- GitHub 各語言指南同步更新實際介面截圖.
+- 選單列改用彩色 B2 取景器圖示, 與應用程式圖示, 設定和關於頁面一致. 選單標題與截圖頂部選單也顯示相同圖示.
+- 頂部模式選單可透過圖示旁的拖曳區域或任意模式按鈕移動. 輕點仍正常切換模式.
+- 拖曳時保留選取區域, 切換模式後保留位置, 並限制在螢幕範圍內. 獨立選單視圖避免與標註工具列重疊時被遮住.
+- 拖曳區域顯示手形游標, 拖曳過程中可按 Esc 完整取消截圖.
+- 新增原生互動回歸檢查, 更新十種語言的介面截圖.
 - 需要 Apple Silicon 與 macOS 14+. 使用 Developer ID 與 Ed25519 更新簽章, 尚未通過 Apple 公證.
 
 ## English
 
-- Introduces an ivory enamel viewfinder icon with a mist-blue panel, cream relief clouds, and an orange physical button.
-- Applies a restrained skeuomorphic style across capture toolbars, mode selection, Settings, About, recording, scrolling capture, and text extraction.
-- Adds cream surfaces, slate mode controls, orange primary actions, subtle edges, recessed inputs, and hover and press feedback.
-- Preserves native checkboxes, editable text, selection cursors, and ten interface languages. Annotation swatches remain independent of surface styling.
-- Updates localized GitHub guides with current interface screenshots.
+- Uses the color B2 viewfinder in the menu bar, matching the application icon, Settings, and About. The menu heading and capture mode menu show the same artwork.
+- Makes the top mode menu draggable from its handle or any mode button. A click still switches modes normally.
+- Preserves the selection and menu position across mode changes, constrains the menu to the screen, and keeps it above overlapping annotation controls.
+- Adds hand cursors for dragging and supports Escape cancellation while tracking a drag.
+- Adds native drag, click, overlap, and cancellation regression checks, and refreshes screenshots in all ten languages.
 - Requires Apple Silicon and macOS 14+. Developer ID signed with Ed25519 update signatures; not yet Apple notarized.
 ]]></description>
-            <enclosure url="https://github.com/panwudi/flytoSnap/releases/download/v0.5.0/flytoSnap-0.5.0-mac-arm64.zip" length="5128813" type="application/octet-stream" sparkle:edSignature="g/Wirb02/V4rlw821H6BjQ6gHDRcPs5zarzSIF7NqNzNeeA8Bqgtb2yEI1ZkC+t2iPW4/1OvXA9grMij8aFpBw=="></enclosure>
+            <enclosure url="https://github.com/panwudi/flytoSnap/releases/download/v0.5.1/flytoSnap-0.5.1-mac-arm64.zip" length="5145854" type="application/octet-stream" sparkle:edSignature="NpZoJBnz1WuXsZ+Hmlp80p1HwAgzys3kVvNHDXAx9Cf9wrfKNfeXGm/Cel1sIkLlZo3l+9shFXov1EaHU65ZAw=="></enclosure>
         </item>
     </channel>
 </rss><!-- sparkle-signatures:
-edSignature: kjKHZWuC+7eNWxO28AGE0dwFIMc7bZxumnJ1V0RZ6EbRiwRPlyP7ZJdVSR3zR3S8IIhmJbEccQL9c4mx27yrCQ==
-length: 3313
+edSignature: 8sB/5dkOseu4HcwRiGiOhxytnwHiUTwhYy2EAPsg1n6YNUn3J7c/Noko+MTE+FJLnnu5RZ2AKABZJ8P0VBPVAQ==
+length: 3521
 -->
