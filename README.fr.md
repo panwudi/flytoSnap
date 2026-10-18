@@ -1,4 +1,4 @@
-<img src="assets/app-icon.svg" width="96" alt="flytoSnap" />
+<img src="assets/app-icon.png" width="96" alt="flytoSnap" />
 
 # flytoSnap
 

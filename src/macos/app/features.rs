@@ -34,7 +34,7 @@ define_class!(
     struct PanelContent;
     impl PanelContent {
         #[unsafe(method(drawRect:))]
-        fn paint(&self,_rect:NSRect){render::rounded(Rect::new(0.0,0.0,self.bounds().size.width,self.bounds().size.height),0.0,Color(0.97,0.975,0.985),1.0);}
+        fn paint(&self,_rect:NSRect){appearance::panel_surface(Rect::new(0.0,0.0,self.bounds().size.width,self.bounds().size.height),false);}
     }
 );
 define_class!(
@@ -43,7 +43,7 @@ define_class!(
     struct FloatingPanelContent;
     impl FloatingPanelContent {
         #[unsafe(method(drawRect:))]
-        fn paint(&self,_rect:NSRect){render::rounded(Rect::new(0.0,0.0,self.bounds().size.width,self.bounds().size.height),0.0,Color(0.97,0.975,0.985),1.0);}
+        fn paint(&self,_rect:NSRect){appearance::panel_surface(Rect::new(0.0,0.0,self.bounds().size.width,self.bounds().size.height),true);}
         #[unsafe(method(resetCursorRects))]
         fn cursor_rects(&self) {self.addCursorRect_cursor(self.bounds(), &NSCursor::arrowCursor());}
         #[unsafe(method(cursorUpdate:))]
@@ -77,7 +77,8 @@ pub(super) fn panel(title: &str, width: f64, height: f64) -> Retained<NSPanel> {
     panel.center();
     let appearance = NSAppearance::appearanceNamed(unsafe { NSAppearanceNameAqua });
     panel.setAppearance(appearance.as_deref());
-    panel.setBackgroundColor(Some(NSColor::whiteColor().as_ref()));
+    panel.setBackgroundColor(Some(&render::color(appearance::SURFACE, 1.0)));
+    panel.setTitlebarAppearsTransparent(true);
     let root: Retained<PanelContent> = unsafe {
         msg_send![PanelContent::alloc(mtm()),initWithFrame:NSRect::new(NSPoint::ZERO,NSSize::new(width,height))]
     };
@@ -142,54 +143,67 @@ pub(super) fn show_about() {
         present(&window);
         return;
     }
-    let window = panel("关于 flytoSnap", 560.0, 340.0);
+    let window = panel("关于 flytoSnap", 560.0, 430.0);
     if state(|a| a.headless) {
         window.setFrameOrigin(NSPoint::new(-20_000.0, -20_000.0));
     }
     let root = window.contentView().unwrap();
+    appearance::icon(&root, Rect::new(234.0, 310.0, 92.0, 92.0));
+    appearance::surface(&root, Rect::new(24.0, 104.0, 512.0, 108.0));
     let build = NSBundle::mainBundle()
         .objectForInfoDictionaryKey(ns_string!("CFBundleVersion"))
         .and_then(|o| o.downcast::<NSString>().ok())
         .map(|v| v.to_string())
         .unwrap_or_else(|| "dev".into());
-    for (text, y, size) in [
-        ("flytoSnap".into(), 268.0, 30.0),
+    for (text, y, size, secondary) in [
+        ("flytoSnap".into(), 266.0, 28.0, false),
         (
             format!("版本 {} (构建 {})", env!("CARGO_PKG_VERSION"), build),
-            223.0,
-            14.0,
+            232.0,
+            13.0,
+            true,
         ),
-        ("作者: panwudi".into(), 187.0, 14.0),
-        ("© 2026 panwudi".into(), 153.0, 13.0),
-        ("https://github.com/panwudi/flytoSnap".into(), 119.0, 13.0),
-        ("开源许可证: MIT".into(), 85.0, 13.0),
+        ("作者: panwudi".into(), 174.0, 13.0, false),
+        ("© 2026 panwudi".into(), 145.0, 12.0, true),
+        ("开源许可证: MIT".into(), 116.0, 12.0, true),
+        (
+            "https://github.com/panwudi/flytoSnap".into(),
+            65.0,
+            12.0,
+            true,
+        ),
     ] {
-        let label = label(
+        let label = appearance::text(
+            &root,
             &text,
-            NSRect::new(NSPoint::new(20.0, y), NSSize::new(520.0, 40.0)),
+            Rect::new(24.0, y, 512.0, 32.0),
             size,
+            secondary,
         );
         label.setAlignment(NSTextAlignment::Center);
-        root.addSubview(&label);
+        if text == "flytoSnap" {
+            label.setFont(Some(&NSFont::boldSystemFontOfSize(size)));
+        }
     }
     control(
         &root,
         "项目地址",
         901,
-        NSRect::new(NSPoint::new(28.0, 22.0), NSSize::new(170.0, 34.0)),
+        NSRect::new(NSPoint::new(24.0, 22.0), NSSize::new(182.0, 34.0)),
     );
     control(
         &root,
         "MIT 许可证",
         902,
-        NSRect::new(NSPoint::new(210.0, 22.0), NSSize::new(150.0, 34.0)),
+        NSRect::new(NSPoint::new(218.0, 22.0), NSSize::new(152.0, 34.0)),
     );
-    control(
+    let close = control(
         &root,
         "关闭",
         903,
-        NSRect::new(NSPoint::new(400.0, 22.0), NSSize::new(130.0, 34.0)),
+        NSRect::new(NSPoint::new(382.0, 22.0), NSSize::new(154.0, 34.0)),
     );
+    appearance::primary(&close);
     state(|a| a.about = Some(window.clone()));
     present(&window);
 }

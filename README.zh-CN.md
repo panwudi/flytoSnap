@@ -1,4 +1,4 @@
-<img src="assets/app-icon.svg" width="96" alt="flytoSnap" />
+<img src="assets/app-icon.png" width="96" alt="flytoSnap" />
 
 # flytoSnap
 
@@ -106,7 +106,7 @@ dist/flytoSnap.app/Contents/MacOS/flytosnap --menubar-check
 
 交互参考 [飞书截图](https://www.feishu.cn/hc/zh-CN/articles/319286513754) 和 [滚动截图](https://www.feishu.cn/hc/zh-CN/articles/145659580677). 原生接口使用 [objc2](https://github.com/madsmtm/objc2).
 
-MIT, 见 [LICENSE](LICENSE). 图标沿用 FLYTO 蓝灰色, 橙色和对角框形品牌标记, 加入相机元素.
+MIT, 见 [LICENSE](LICENSE). 图标采用奶白取景器, 雾蓝底板, 浮雕云和 FLYTO 橙色按钮. 界面以奶白面板, 深蓝灰模式栏和柔和按压反馈延续轻拟物风格.
 
 设置页可选择界面语言. 更新窗口跟随此选择. 从菜单栏打开关于窗口, 查看版本, 构建号, 作者, 版权和项目地址. 支持截取 flytoSnap 自身的设置, 关于和贴图窗口.
 

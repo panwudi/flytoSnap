@@ -1,4 +1,4 @@
-<img src="assets/app-icon.svg" width="96" alt="flytoSnap" />
+<img src="assets/app-icon.png" width="96" alt="flytoSnap" />
 
 # flytoSnap
 
@@ -106,7 +106,7 @@ Recording currently captures screen video only, without audio or webcam. Scrolli
 
 Interaction follows the [Feishu screenshot](https://www.feishu.cn/hc/zh-CN/articles/319286513754) and [scrolling capture](https://www.feishu.cn/hc/zh-CN/articles/145659580677) workflows. Native framework access uses [objc2](https://github.com/madsmtm/objc2).
 
-MIT. See [LICENSE](LICENSE). The icon uses FLYTO's slate blue, orange, and opposing frame mark, with a camera element.
+MIT. See [LICENSE](LICENSE). The ivory viewfinder icon uses a mist-blue panel, relief clouds, and a FLYTO orange button. Cream panels, slate mode controls, and subtle press feedback extend the restrained skeuomorphic style across the interface.
 
 Choose the interface language in Settings. Update dialogs follow that selection. Open About from the menu bar for the version, build, author, copyright, and project links. You can capture flytoSnap's own Settings, About, and pinned-image windows.
 

@@ -24,78 +24,64 @@ pub fn bitmap(size: usize, draw: impl FnOnce(&CGContext)) -> Result<Vec<u8>, Str
     .map(|d| d.to_vec())
     .ok_or("Could not encode bitmap".into())
 }
-fn polygon(cg: &CGContext, points: &[(f64, f64)], color: Color) {
-    let ctx = Some(cg);
-    CGContext::set_rgb_fill_color(ctx, color.0, color.1, color.2, 1.0);
-    CGContext::begin_path(ctx);
-    if let Some(p) = points.first() {
-        CGContext::move_to_point(ctx, p.0, p.1);
-    }
-    for p in points.iter().skip(1) {
-        CGContext::add_line_to_point(ctx, p.0, p.1);
-    }
-    CGContext::close_path(ctx);
-    CGContext::fill_path(ctx);
-}
 pub fn export_icon(output: &Path) -> Result<(), String> {
+    if let Some(source) = objc2_foundation::NSBundle::mainBundle().pathForResource_ofType(
+        Some(objc2_foundation::ns_string!("AppIcon")),
+        Some(objc2_foundation::ns_string!("png")),
+    ) {
+        return std::fs::read(source.to_string())
+            .and_then(|bytes| std::fs::write(output, bytes))
+            .map_err(|e| e.to_string());
+    }
+    let source = Path::new(env!("CARGO_MANIFEST_DIR")).join("assets/app-icon-source.png");
+    let image = NSImage::initWithContentsOfFile(
+        NSImage::alloc(),
+        &objc2_foundation::NSString::from_str(&source.to_string_lossy()),
+    )
+    .ok_or("Could not load the application icon source")?;
     let png = bitmap(1024, |cg| {
-        render::rounded(
-            Rect::new(44.0, 44.0, 936.0, 936.0),
-            208.0,
-            Color(71.0 / 255.0, 79.0 / 255.0, 105.0 / 255.0),
-            1.0,
-        );
         CGContext::save_g_state(Some(cg));
-        CGContext::translate_ctm(Some(cg), 24.0, 24.0);
-        CGContext::scale_ctm(Some(cg), 5.0, 5.0);
-        polygon(
-            cg,
-            &[
-                (144.0, 29.0),
-                (163.0, 29.0),
-                (163.0, 49.0),
-                (144.0, 49.0),
-                (142.0, 51.0),
-                (142.0, 142.0),
-                (120.0, 120.0),
-                (120.0, 73.0),
-                (72.0, 72.0),
-                (50.0, 50.0),
-                (142.0, 50.0),
-                (144.0, 45.0),
-            ],
-            Color(239.0 / 255.0, 130.0 / 255.0, 0.0),
+        CGContext::scale_ctm(Some(cg), 0.8, 0.8);
+        // A vector silhouette keeps the production icon edge clean at every output size.
+        let edge = NSBezierPath::bezierPath();
+        edge.moveToPoint(NSPoint::new(220.0, 108.0));
+        edge.lineToPoint(NSPoint::new(1046.0, 108.0));
+        edge.curveToPoint_controlPoint1_controlPoint2(
+            NSPoint::new(1125.0, 190.0),
+            NSPoint::new(1098.0, 108.0),
+            NSPoint::new(1122.0, 140.0),
         );
-        polygon(
-            cg,
-            &[
-                (49.0, 50.0),
-                (72.0, 73.0),
-                (72.0, 119.0),
-                (119.0, 120.0),
-                (142.0, 143.0),
-                (49.0, 143.0),
-                (48.0, 164.0),
-                (29.0, 164.0),
-                (28.0, 145.0),
-                (49.0, 143.0),
-            ],
-            Color(244.0 / 255.0, 246.0 / 255.0, 250.0 / 255.0),
+        edge.lineToPoint(NSPoint::new(1162.0, 937.0));
+        edge.curveToPoint_controlPoint1_controlPoint2(
+            NSPoint::new(1147.0, 1047.0),
+            NSPoint::new(1164.0, 974.0),
+            NSPoint::new(1149.0, 1008.0),
         );
-        render::rounded(
-            Rect::new(80.0, 84.0, 34.0, 25.0),
-            5.0,
-            Color(244.0 / 255.0, 246.0 / 255.0, 250.0 / 255.0),
-            1.0,
+        edge.curveToPoint_controlPoint1_controlPoint2(
+            NSPoint::new(1073.0, 1116.0),
+            NSPoint::new(1145.0, 1091.0),
+            NSPoint::new(1115.0, 1116.0),
         );
-        render::rounded(
-            Rect::new(90.0, 80.0, 14.0, 8.0),
-            3.0,
-            Color(244.0 / 255.0, 246.0 / 255.0, 250.0 / 255.0),
-            1.0,
+        edge.lineToPoint(NSPoint::new(180.0, 1116.0));
+        edge.curveToPoint_controlPoint1_controlPoint2(
+            NSPoint::new(109.0, 1048.0),
+            NSPoint::new(138.0, 1116.0),
+            NSPoint::new(111.0, 1090.0),
         );
-        CGContext::set_rgb_fill_color(Some(cg), 71.0 / 255.0, 79.0 / 255.0, 105.0 / 255.0, 1.0);
-        CGContext::fill_ellipse_in_rect(Some(cg), render::nr(Rect::new(90.0, 89.0, 14.0, 14.0)));
+        edge.curveToPoint_controlPoint1_controlPoint2(
+            NSPoint::new(93.0, 937.0),
+            NSPoint::new(106.0, 1007.0),
+            NSPoint::new(90.0, 977.0),
+        );
+        edge.lineToPoint(NSPoint::new(131.0, 190.0));
+        edge.curveToPoint_controlPoint1_controlPoint2(
+            NSPoint::new(220.0, 108.0),
+            NSPoint::new(134.0, 139.0),
+            NSPoint::new(166.0, 108.0),
+        );
+        edge.closePath();
+        edge.addClip();
+        render::draw_image(&image, Rect::new(0.0, 0.0, 1280.0, 1280.0));
         CGContext::restore_g_state(Some(cg));
     })?;
     std::fs::write(output, png).map_err(|e| e.to_string())

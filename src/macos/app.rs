@@ -29,6 +29,7 @@ use std::{
     sync::mpsc::{self, Receiver, Sender},
     time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
+mod appearance;
 mod checks;
 mod features;
 use features::*;
@@ -313,11 +314,22 @@ define_class!(
     }
 );
 
+struct ActionButtonIvars {
+    hovered: Cell<bool>,
+}
+
 define_class!(
     #[unsafe(super(NSButton))]
     #[thread_kind=MainThreadOnly]
+    #[ivars=ActionButtonIvars]
     struct ActionButton;
     impl ActionButton {
+        #[unsafe(method(drawRect:))]
+        fn paint(&self,rect:NSRect) {
+            if !appearance::draw_button(self,self.ivars().hovered.get()) {
+                unsafe {let _: ()=msg_send![super(self),drawRect:rect];}
+            }
+        }
         #[unsafe(method(viewDidMoveToWindow))]
         fn moved_to_window(&self) {
             unsafe {let _: () = msg_send![super(self),viewDidMoveToWindow];}
@@ -328,11 +340,13 @@ define_class!(
         #[unsafe(method(cursorUpdate:))]
         fn cursor_update(&self,_event:&NSEvent) {button_hover(self);}
         #[unsafe(method(mouseEntered:))]
-        fn entered(&self,_event:&NSEvent) {button_hover(self);}
+        fn entered(&self,_event:&NSEvent) {self.ivars().hovered.set(true);NSView::setNeedsDisplay(self,true);button_hover(self);}
         #[unsafe(method(mouseMoved:))]
         fn moved(&self,_event:&NSEvent) {button_hover(self);}
         #[unsafe(method(mouseExited:))]
         fn exited(&self,event:&NSEvent) {
+            self.ivars().hovered.set(false);
+            NSView::setNeedsDisplay(self,true);
             if let Some(index)=button_session(self) {mouse_move(index,event);}
         }
     }
@@ -472,8 +486,11 @@ const TOOLS: [(isize, &str, &str); 17] = [
 ];
 
 fn button(title: &str, symbol: Option<&str>, tag: isize, target: &Delegate) -> Retained<NSButton> {
+    let allocated = ActionButton::alloc(mtm()).set_ivars(ActionButtonIvars {
+        hovered: Cell::new(false),
+    });
     let b: Retained<ActionButton> =
-        unsafe { msg_send![ActionButton::alloc(mtm()),initWithFrame:NSRect::ZERO] };
+        unsafe { msg_send![super(allocated),initWithFrame:NSRect::ZERO] };
     track_pointer(&b);
     b.setTitle(&ns_ui(title));
     b.setBordered(false);
@@ -642,6 +659,7 @@ fn label(s: &str, frame: NSRect, size: f64) -> Retained<NSTextField> {
     let v = NSTextField::labelWithString(&ns_ui(s), mtm());
     v.setFrame(frame);
     v.setFont(Some(&NSFont::systemFontOfSize(size)));
+    v.setTextColor(Some(&render::color(appearance::INK, 1.0)));
     if frame.size.height >= 36.0 {
         v.setLineBreakMode(NSLineBreakMode::ByWordWrapping);
         v.setMaximumNumberOfLines(0);
@@ -935,6 +953,9 @@ fn initialize(delegate: &Delegate) {
         home.setReleasedWhenClosed(false);
     }
     home.setTitle(ns_string!("flytoSnap"));
+    home.setBackgroundColor(Some(&render::color(appearance::SURFACE, 1.0)));
+    home.setTitlebarAppearsTransparent(true);
+    home.setAppearance(NSAppearance::appearanceNamed(unsafe { NSAppearanceNameAqua }).as_deref());
     home.center();
     let root = home.contentView().unwrap();
     root.addSubview(&label(
@@ -1523,6 +1544,7 @@ fn refresh(index: usize) {
         let (_, tabs) = mode_layout(s);
         for (i, b) in s.mode_buttons.iter().enumerate() {
             b.setFrame(nr(tabs[i]));
+            b.setState(if a.mode == CaptureMode::ALL[i] { 1 } else { 0 });
             b.setHidden(a.scroll.is_some() || a.recording.is_some());
             set_caption(
                 b,
@@ -1570,7 +1592,7 @@ fn refresh(index: usize) {
                     BLUE
                 } else {
                     if TOOLS[i].0 == 116 {
-                        Color(0.22, 0.68, 0.24)
+                        appearance::INK
                     } else if TOOLS[i].0 == 115 {
                         Color(0.94, 0.24, 0.20)
                     } else {
@@ -1723,8 +1745,7 @@ fn draw_canvas(index: usize) {
             }
             if a.mode == CaptureMode::Scroll && !scrolling && !recording {
                 let start = scroll_action_rect(bounds, r);
-                render::rounded(start, 7.0, Color(0.73, 0.75, 0.78), 1.0);
-                render::rounded(start.inset(0.8), 6.2, Color(1.0, 1.0, 1.0), 0.98);
+                appearance::enamel(start, 8.0, false);
             }
             let text = format!(
                 "{} × {}",
@@ -1746,7 +1767,7 @@ fn draw_canvas(index: usize) {
             );
             if !scrolling && !recording && a.mode == CaptureMode::Screenshot {
                 let b = bar(s);
-                render::rounded(b, 8.0, Color(1.0, 1.0, 1.0), 0.98);
+                appearance::enamel(b, 9.0, false);
                 for i in 0..6 {
                     render::rounded(
                         Rect::new(
@@ -1773,7 +1794,7 @@ fn draw_canvas(index: usize) {
                 }
                 if param_tool != Tool::Select {
                     let p = param_bar(s);
-                    render::rounded(p, 8.0, Color(1.0, 1.0, 1.0), 0.98);
+                    appearance::enamel(p, 9.0, false);
                     if !param_tool.is_text() {
                         for i in 0..3 {
                             let radius = 2.5 + i as f64 * 1.5;
@@ -1844,13 +1865,8 @@ fn draw_canvas(index: usize) {
             }
         }
         if !scrolling && !recording {
-            let (hud, tabs) = mode_layout(s);
-            render::rounded(hud, 8.0, Color(0.14, 0.16, 0.20), 0.94);
-            for (i, mode) in CaptureMode::ALL.into_iter().enumerate() {
-                if mode == a.mode {
-                    render::rounded(tabs[i].inset(3.0), 6.0, Color(1.0, 1.0, 1.0), 1.0);
-                }
-            }
+            let (hud, _) = mode_layout(s);
+            appearance::mode_shell(hud);
             draw_tooltip(s);
         }
     });
@@ -2846,46 +2862,57 @@ fn show_preferences() {
         return;
     }
     let (settings, delegate) = state(|a| (a.settings.clone(), a.delegate.clone()));
-    let window = panel("flytoSnap 设置", 640.0, 420.0).into_super();
+    let window = panel("flytoSnap 设置", 680.0, 480.0).into_super();
     if state(|a| a.headless) {
         window.setFrameOrigin(NSPoint::new(-20_000.0, -20_000.0));
     }
     let root = window.contentView().unwrap();
+    appearance::icon(&root, Rect::new(26.0, 388.0, 68.0, 68.0));
+    let heading = appearance::text(
+        &root,
+        "flytoSnap",
+        Rect::new(112.0, 418.0, 530.0, 34.0),
+        25.0,
+        false,
+    );
+    heading.setFont(Some(&NSFont::boldSystemFontOfSize(25.0)));
+    appearance::text(
+        &root,
+        "flytoSnap 设置",
+        Rect::new(112.0, 391.0, 530.0, 24.0),
+        13.0,
+        true,
+    );
+    appearance::surface(&root, Rect::new(24.0, 118.0, 632.0, 252.0));
     root.addSubview(&label(
         "截图快捷键",
-        NSRect::new(NSPoint::new(26.0, 335.0), NSSize::new(180.0, 26.0)),
+        NSRect::new(NSPoint::new(44.0, 322.0), NSSize::new(164.0, 26.0)),
         14.0,
     ));
-    let shortcut = NSTextField::initWithFrame(
-        NSTextField::alloc(mtm()),
-        NSRect::new(NSPoint::new(214.0, 331.0), NSSize::new(398.0, 30.0)),
-    );
+    let shortcut = appearance::input(&root, Rect::new(218.0, 315.0, 416.0, 34.0));
     shortcut.setStringValue(&ns_ui(&crate::model::shortcut_display(&settings.shortcut)));
     root.addSubview(&shortcut);
     root.addSubview(&label(
         "例如 Command+Shift+A, 或 Control+Option+S",
-        NSRect::new(NSPoint::new(214.0, 290.0), NSSize::new(398.0, 36.0)),
+        NSRect::new(NSPoint::new(218.0, 277.0), NSSize::new(416.0, 34.0)),
         11.0,
     ));
     root.addSubview(&label(
         "保存目录",
-        NSRect::new(NSPoint::new(26.0, 239.0), NSSize::new(180.0, 26.0)),
+        NSRect::new(NSPoint::new(44.0, 236.0), NSSize::new(164.0, 26.0)),
         14.0,
     ));
-    let directory = NSTextField::initWithFrame(
-        NSTextField::alloc(mtm()),
-        NSRect::new(NSPoint::new(214.0, 235.0), NSSize::new(398.0, 30.0)),
-    );
+    let directory = appearance::input(&root, Rect::new(218.0, 229.0, 416.0, 34.0));
     directory.setStringValue(&NSString::from_str(&settings.save_directory));
     root.addSubview(&directory);
     root.addSubview(&label(
         "界面语言",
-        NSRect::new(NSPoint::new(26.0, 175.0), NSSize::new(180.0, 26.0)),
+        NSRect::new(NSPoint::new(44.0, 168.0), NSSize::new(164.0, 26.0)),
         14.0,
     ));
     let language = NSPopUpButton::initWithFrame_pullsDown(
         NSPopUpButton::alloc(mtm()),
-        NSRect::new(NSPoint::new(214.0, 171.0), NSSize::new(398.0, 32.0)),
+        NSRect::new(NSPoint::new(218.0, 161.0), NSSize::new(416.0, 34.0)),
         false,
     );
     language.addItemWithTitle(&ns_ui("自动 (跟随系统)"));
@@ -2902,27 +2929,29 @@ fn show_preferences() {
     root.addSubview(&language);
     let status = label(
         "快捷键冲突时可以在这里更换",
-        NSRect::new(NSPoint::new(26.0, 100.0), NSSize::new(588.0, 56.0)),
+        NSRect::new(NSPoint::new(28.0, 72.0), NSSize::new(624.0, 34.0)),
         12.0,
     );
+    status.setTextColor(Some(&render::color(appearance::SECONDARY, 1.0)));
     root.addSubview(&status);
     let apply = button("保存设置", None, 30, &delegate);
     apply.setBordered(true);
     apply.setBezelStyle(NSBezelStyle::Push);
     apply.setFrame(NSRect::new(
-        NSPoint::new(404.0, 26.0),
+        NSPoint::new(442.0, 30.0),
         NSSize::new(210.0, 34.0),
     ));
+    appearance::primary(&apply);
     root.addSubview(&apply);
     let about = button("关于 flytoSnap", None, 14, &delegate);
     about.setFrame(NSRect::new(
-        NSPoint::new(26.0, 46.0),
+        NSPoint::new(28.0, 38.0),
         NSSize::new(220.0, 28.0),
     ));
     root.addSubview(&about);
     root.addSubview(&label(
         &format!("flytoSnap {}  ·  © 2026 panwudi", env!("CARGO_PKG_VERSION")),
-        NSRect::new(NSPoint::new(26.0, 13.0), NSSize::new(400.0, 24.0)),
+        NSRect::new(NSPoint::new(28.0, 8.0), NSSize::new(400.0, 24.0)),
         11.0,
     ));
     state(|a| {
@@ -3081,7 +3110,7 @@ fn start_scroll(index: usize) {
             b.setContentTintColor(Some(&render::color(Color(0.88, 0.23, 0.22), 1.0)));
         }
         if tag == 305 {
-            b.setContentTintColor(Some(&render::color(Color(0.22, 0.6, 0.28), 1.0)));
+            b.setContentTintColor(Some(&render::color(appearance::INK, 1.0)));
         }
         root.addSubview(&b);
     }
@@ -3663,6 +3692,10 @@ fn verify_arrow_events(view: &NSView) -> Result<(), String> {
         }
         Ok(())
     })();
+    if let Some(button) = view.downcast_ref::<ActionButton>() {
+        button.ivars().hovered.set(false);
+        NSView::setNeedsDisplay(button, true);
+    }
     original.set();
     result
 }
@@ -3761,11 +3794,38 @@ fn ui_snapshot(directory: &std::path::Path) -> Result<(), String> {
     refresh(0);
     let view = state(|a| a.sessions[0].view.clone());
     let mut cursor_checks = verify_button_cursors(&view)?;
+    state(|a| a.sessions[0].hovered = Some((116, Instant::now() - Duration::from_secs(1))));
     let image = snapshot_view(&view, &directory.join("screenshot.png"))?;
     let sx = image.width() as f64 / 1440.0;
     let sy = image.height() as f64 / 900.0;
     let outside = image.get_pixel((100.0 * sx) as u32, (600.0 * sy) as u32);
     let inside = image.get_pixel((1100.0 * sx) as u32, (550.0 * sy) as u32);
+    let swatches = state(|a| param_bar(&a.sessions[0]));
+    for index in 0..PALETTE.len() {
+        let pixel = image.get_pixel(
+            ((swatches.x + 126.0 + index as f64 * 28.0) * sx) as u32,
+            ((swatches.y + 15.0) * sy) as u32,
+        );
+        let [red, green, blue, _] = pixel.0.map(|channel| channel as f64);
+        // Check color identities after macOS display color conversion.
+        let visible = match index {
+            0 => red > green * 1.5 && red > blue * 1.5,
+            1 => red > blue * 1.5 && green > blue * 1.5,
+            2 => green > red * 1.4 && green > blue * 1.3,
+            3 => blue > red * 1.5 && blue > green * 1.2,
+            4 => red.max(green).max(blue) < 90.0,
+            5 => {
+                red.max(green).max(blue) - red.min(green).min(blue) < 35.0
+                    && (100.0..200.0).contains(&green)
+            }
+            _ => red.min(green).min(blue) > 220.0,
+        };
+        if !visible {
+            return Err(format!(
+                "Interface styling obscured annotation swatch {index}: {pixel:?}"
+            ));
+        }
+    }
     if outside[0] >= 190 || inside[0] <= 230 {
         return Err(format!(
             "Selection mask is incorrect: outside={outside:?}, inside={inside:?}"

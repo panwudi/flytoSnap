@@ -1,4 +1,4 @@
-<img src="assets/app-icon.svg" width="96" alt="flytoSnap" />
+<img src="assets/app-icon.png" width="96" alt="flytoSnap" />
 
 # flytoSnap
 
@@ -51,4 +51,4 @@ cargo clippy --all-targets -- -D warnings
 
 More build and verification instructions: [简体中文](README.zh-CN.md#构建和使用), [繁體中文](README.zh-TW.md#建置與使用), [English](README.en.md#build-and-use).
 
-MIT. See [LICENSE](LICENSE). Screenshot interactions follow Feishu; the icon uses the FLYTO brand colors and frame mark. The screenshots above use built-in example content.
+MIT. See [LICENSE](LICENSE). Screenshot interactions follow Feishu; the ivory viewfinder icon carries the FLYTO orange and slate colors. The screenshots above use built-in example content.
