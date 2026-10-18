@@ -303,12 +303,163 @@ fn check_large_selection_focus() -> Result<(), String> {
     Ok(())
 }
 
+fn drag_menu(
+    window: &NSWindow,
+    view: &NSView,
+    start: Point,
+    delta: Point,
+    tracked: bool,
+) -> Result<(), String> {
+    let event = |kind, point: Point| {
+        let location = view.convertPoint_toView(NSPoint::new(point.x, point.y), None);
+        NSEvent::mouseEventWithType_location_modifierFlags_timestamp_windowNumber_context_eventNumber_clickCount_pressure(kind,location,NSEventModifierFlags::empty(),0.0,window.windowNumber(),None,0,1,1.0).ok_or("Could not construct menu drag event")
+    };
+    let down = event(NSEventType::LeftMouseDown, start)?;
+    let end = Point::new(start.x + delta.x, start.y + delta.y);
+    let dragged = event(NSEventType::LeftMouseDragged, end)?;
+    let up = event(NSEventType::LeftMouseUp, end)?;
+    if tracked {
+        let app = NSApplication::sharedApplication(mtm());
+        app.postEvent_atStart(&dragged, false);
+        app.postEvent_atStart(&up, false);
+        window.sendEvent(&down);
+    } else {
+        window.sendEvent(&down);
+        window.sendEvent(&dragged);
+        window.sendEvent(&up);
+    }
+    pump();
+    Ok(())
+}
+
+fn check_mode_menu_drag() -> Result<(), String> {
+    let window = create_scene()?;
+    window.makeKeyWindow();
+    let view = state(|a| a.sessions[0].view.clone());
+    let selection = state(|a| {
+        let selection = a.sessions[0].editor.selection;
+        a.sessions[0].editor.selection = None;
+        selection
+    });
+    refresh(0);
+    let initial = state(|a| mode_layout(&a.sessions[0]).0);
+    drag_menu(
+        &window,
+        &view,
+        Point::new(initial.x + 17.0, initial.y + 22.0),
+        Point::new(110.0, 70.0),
+        false,
+    )?;
+    let moved = state(|a| mode_layout(&a.sessions[0]).0);
+    if moved == initial || state(|a| a.sessions[0].editor.selection.is_some()) {
+        return Err(format!(
+            "Mode grip failed: initial={initial:?}, moved={moved:?}, selection={:?}, drag={:?}, override={:?}",
+            state(|a| a.sessions[0].editor.selection),
+            state(|a| a.sessions[0].mode_drag),
+            state(|a| a.sessions[0].mode_override)
+        ));
+    }
+    state(|a| a.sessions[0].editor.selection = selection);
+    refresh(0);
+    let button = target(&window, 402)?;
+    let frame = button.convertRect_toView(button.bounds(), Some(&view));
+    drag_menu(
+        &window,
+        &view,
+        Point::new(
+            frame.origin.x + frame.size.width / 2.0,
+            frame.origin.y + 20.0,
+        ),
+        Point::new(-80.0, 50.0),
+        true,
+    )?;
+    if state(|a| {
+        a.mode != CaptureMode::Screenshot
+            || a.sessions[0].editor.selection != selection
+            || a.sessions[0].mode_drag.is_some()
+    }) {
+        return Err(
+            "Dragging a mode button activated its action or changed the capture selection".into(),
+        );
+    }
+    let before_click = state(|a| mode_layout(&a.sessions[0]).0);
+    click(&window, 402)?;
+    if state(|a| {
+        a.mode != CaptureMode::Scroll
+            || a.sessions[0].editor.selection != selection
+            || mode_layout(&a.sessions[0]).0 != before_click
+    }) {
+        return Err("A mode click after dragging lost its action or moved the menu".into());
+    }
+    click(&window, 401)?;
+    let (menu, editing_bar) = state(|a| (mode_layout(&a.sessions[0]).0, bar(&a.sessions[0])));
+    drag_menu(
+        &window,
+        &view,
+        Point::new(menu.x + 17.0, menu.y + 22.0),
+        Point::new(editing_bar.x - menu.x, editing_bar.y - menu.y),
+        false,
+    )?;
+    click(&window, 402)?;
+    click(&window, 401)?;
+    if state(|a| a.sessions[0].editor.selection != selection) {
+        return Err("An overlapping mode menu changed the selection".into());
+    }
+    for delta in [Point::new(-9000.0, -9000.0), Point::new(9000.0, 9000.0)] {
+        let menu = state(|a| mode_layout(&a.sessions[0]).0);
+        drag_menu(
+            &window,
+            &view,
+            Point::new(menu.x + 17.0, menu.y + 22.0),
+            delta,
+            false,
+        )?;
+        let menu = state(|a| mode_layout(&a.sessions[0]).0);
+        if menu.x < 8.0
+            || menu.y < 8.0
+            || menu.x + menu.w > 1440.0 - 8.0
+            || menu.y + menu.h > 900.0 - 8.0
+        {
+            return Err("The draggable mode menu escaped the screen".into());
+        }
+    }
+    let menu = state(|a| mode_layout(&a.sessions[0]).0);
+    let hover = pointer_event(
+        &view,
+        NSPoint::new(menu.x + 17.0, menu.y + 22.0),
+        NSEventType::MouseMoved,
+    )?;
+    mouse_move(0, &hover);
+    if NSCursor::currentCursor() != NSCursor::openHandCursor() {
+        return Err("The mode menu grip did not show a hand cursor".into());
+    }
+    // Exercise Escape while the native mode-button tracking loop owns the mouse.
+    let button = target(&window, 402)?;
+    let frame = button.convertRect_toView(button.bounds(), Some(&view));
+    let location = view.convertPoint_toView(
+        NSPoint::new(frame.origin.x + 20.0, frame.origin.y + 20.0),
+        None,
+    );
+    let escape=NSEvent::keyEventWithType_location_modifierFlags_timestamp_windowNumber_context_characters_charactersIgnoringModifiers_isARepeat_keyCode(NSEventType::KeyDown,NSPoint::ZERO,NSEventModifierFlags::empty(),0.0,window.windowNumber(),None,ns_string!("\u{1b}"),ns_string!("\u{1b}"),false,53).ok_or("Could not construct Escape event")?;
+    NSApplication::sharedApplication(mtm()).postEvent_atStart(&escape, false);
+    let down=NSEvent::mouseEventWithType_location_modifierFlags_timestamp_windowNumber_context_eventNumber_clickCount_pressure(NSEventType::LeftMouseDown,location,NSEventModifierFlags::empty(),0.0,window.windowNumber(),None,0,1,1.0).ok_or("Could not construct mode tracking event")?;
+    window.sendEvent(&down);
+    if window.isVisible() || state(|a| !a.sessions.is_empty()) {
+        return Err("Escape during a menu drag left the overlay alive".into());
+    }
+    println!(
+        "Mode menu check passed: grip and button drags, click threshold, selection preservation, screen boundaries, hand cursor, Escape during tracking."
+    );
+    Ok(())
+}
+
 pub(super) fn window_check() -> Result<(), String> {
     std::thread::spawn(|| {
         std::thread::sleep(Duration::from_secs(30));
         eprintln!("Window interaction check timed out");
         std::process::exit(1);
     });
+    check_mode_menu_drag()?;
     check_large_selection_focus()?;
     let overlay = create_scene()?;
     click(&overlay, 403)?;

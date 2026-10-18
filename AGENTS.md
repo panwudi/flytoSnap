@@ -10,7 +10,7 @@ Use objc2 bindings for AppKit, Core Graphics, and ScreenCaptureKit.
 - Capture, scrolling capture, recording, and OCR share one mode selector.
 - OCR uses on-device Apple Vision. Record GIF and MP4 through native capture and encoding APIs.
 - Support Simplified Chinese, Traditional Chinese, English, Japanese, Russian, French, Spanish, Portuguese, German, and Korean. Keep translations complete.
-- Use the approved B2 ivory viewfinder icon and a light skeuomorphic interface. Keep the menu bar icon a legible template frame mark.
+- Use the approved B2 ivory viewfinder icon and a light skeuomorphic interface. Use the same color viewfinder artwork in the menu bar and capture mode menu.
 - Start in the menu bar without showing the main window.
 - Use English half-width punctuation in comments and documentation.
 - Validate with cargo test, cargo clippy, and a bundled native UI smoke test.

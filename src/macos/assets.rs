@@ -1,5 +1,5 @@
 use super::render;
-use crate::model::{Color, Point, Rect};
+use crate::model::{Point, Rect};
 use objc2::{AnyThread, rc::Retained};
 use objc2_app_kit::*;
 use objc2_core_graphics::{CGContext, CGLineCap, CGLineJoin};
@@ -121,29 +121,22 @@ pub fn diagonal_cursor(up: bool) -> Retained<NSCursor> {
 }
 
 pub fn export_menu_icon(output: &Path) -> Result<(), String> {
-    let png = bitmap(64, |cg| {
-        let ctx = Some(cg);
-        CGContext::set_rgb_stroke_color(ctx, 0.0, 0.0, 0.0, 1.0);
-        CGContext::set_line_width(ctx, 6.0);
-        CGContext::set_line_cap(ctx, CGLineCap::Round);
-        CGContext::set_line_join(ctx, CGLineJoin::Round);
-        for points in [
-            [(12.0, 28.0), (12.0, 50.0), (36.0, 50.0)],
-            [(28.0, 12.0), (50.0, 12.0), (50.0, 36.0)],
-        ] {
-            CGContext::begin_path(ctx);
-            CGContext::move_to_point(ctx, points[0].0, points[0].1);
-            for p in points.iter().skip(1) {
-                CGContext::add_line_to_point(ctx, p.0, p.1);
-            }
-            CGContext::stroke_path(ctx);
-        }
-        render::rounded(
-            Rect::new(24.0, 25.0, 18.0, 14.0),
-            3.0,
-            Color(0.0, 0.0, 0.0),
-            1.0,
-        );
+    let source = objc2_foundation::NSBundle::mainBundle()
+        .pathForResource_ofType(
+            Some(objc2_foundation::ns_string!("AppIcon")),
+            Some(objc2_foundation::ns_string!("png")),
+        )
+        .unwrap_or_else(|| {
+            objc2_foundation::NSString::from_str(
+                &Path::new(env!("CARGO_MANIFEST_DIR"))
+                    .join("assets/app-icon.png")
+                    .to_string_lossy(),
+            )
+        });
+    let image = NSImage::initWithContentsOfFile(NSImage::alloc(), &source)
+        .ok_or("Could not load the menu bar icon source")?;
+    let png = bitmap(64, |_| {
+        render::draw_image(&image, Rect::new(0.0, 0.0, 64.0, 64.0))
     })?;
     std::fs::write(output, png).map_err(|e| e.to_string())
 }

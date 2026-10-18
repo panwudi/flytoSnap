@@ -7,7 +7,7 @@ The user approved the B2 ivory viewfinder direction on 2026-10-18. Its mist-blue
 - `app-icon-source.png`: transparent source artwork.
 - `app-icon.png`: production 1024px artwork, exported by `flytosnap --export-icon assets/app-icon.png`.
 - `src/macos/assets.rs`: native export and silhouette clipping. The source raster is a build input, not embedded in the executable.
-- The monochrome menu bar frame remains a template image for macOS light and dark menu bars.
+- The menu bar and capture mode menu use the same color viewfinder artwork.
 
 ## Extraction prompt
 

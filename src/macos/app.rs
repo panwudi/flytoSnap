@@ -5,7 +5,8 @@ use super::{
 use crate::{
     i18n::{self, tr},
     interaction::{
-        CaptureMode, CursorIntent, cursor_at, resize_cursor, scroll_panel_rects, scroll_start_rect,
+        CaptureMode, CursorIntent, cursor_at, mode_menu_rect, resize_cursor, scroll_panel_rects,
+        scroll_start_rect,
     },
 };
 use crate::{
@@ -62,6 +63,8 @@ struct Session {
     text_input: Option<(Retained<NSTextView>, usize)>,
     bar_override: Option<Point>,
     bar_drag: Option<(Point, Point)>,
+    mode_override: Option<Point>,
+    mode_drag: Option<(Point, Point)>,
     cursor: Point,
     demo: bool,
     last_visible: NSRect,
@@ -69,6 +72,7 @@ struct Session {
     hover: Option<Rect>,
     pressed_hover: Option<Rect>,
     mode_buttons: Vec<Retained<NSButton>>,
+    mode_view: Retained<ModeMenuView>,
     scroll_actions: Vec<Retained<NSButton>>,
     hovered: Option<(isize, Instant)>,
 }
@@ -132,6 +136,7 @@ struct PermissionHelp {
 struct App {
     delegate: Retained<Delegate>,
     home: Retained<NSWindow>,
+    brand_icon: Option<Retained<NSImage>>,
     home_status: Retained<NSTextField>,
     _status_item: Retained<NSStatusItem>,
     sessions: Vec<Session>,
@@ -314,6 +319,46 @@ define_class!(
     }
 );
 
+define_class!(
+    #[unsafe(super(NSView))]
+    #[thread_kind=MainThreadOnly]
+    #[ivars=CanvasIvars]
+    struct ModeMenuView;
+    impl ModeMenuView {
+        #[unsafe(method(isFlipped))]
+        fn flipped(&self)->bool {true}
+        #[unsafe(method(acceptsFirstMouse:))]
+        fn accepts_first(&self,_event:Option<&NSEvent>)->bool {true}
+        #[unsafe(method(drawRect:))]
+        fn draw(&self,_rect:NSRect) {
+            let bounds=self.bounds();
+            appearance::mode_shell(Rect::new(0.0,0.0,bounds.size.width,bounds.size.height));
+            APP.with(|app| {if let Some(app)=app.borrow().as_ref() {
+                if let Some(icon)=&app.brand_icon {render::draw_image(icon,Rect::new(6.0,9.0,28.0,28.0));}
+            }});
+            for row in 0..3 {for column in 0..2 {
+                render::rounded(Rect::new(36.0+column as f64*4.0,17.0+row as f64*5.0,2.0,2.0),1.0,Color(0.81,0.84,0.89),0.85);
+            }}
+        }
+        #[unsafe(method(mouseDown:))]
+        fn down(&self,event:&NSEvent) {mouse_down(self.ivars().index,event);}
+        #[unsafe(method(mouseDragged:))]
+        fn drag(&self,event:&NSEvent) {mouse_drag(self.ivars().index,event);}
+        #[unsafe(method(mouseUp:))]
+        fn up(&self,event:&NSEvent) {mouse_up(self.ivars().index,event);}
+        #[unsafe(method(mouseMoved:))]
+        fn moved(&self,event:&NSEvent) {mouse_move(self.ivars().index,event);}
+        #[unsafe(method(mouseEntered:))]
+        fn entered(&self,event:&NSEvent) {mouse_move(self.ivars().index,event);}
+        #[unsafe(method(mouseExited:))]
+        fn exited(&self,event:&NSEvent) {mouse_move(self.ivars().index,event);}
+        #[unsafe(method(cursorUpdate:))]
+        fn cursor_update(&self,event:&NSEvent) {mouse_move(self.ivars().index,event);}
+        #[unsafe(method(resetCursorRects))]
+        fn cursors(&self) {self.addCursorRect_cursor(self.bounds(),&NSCursor::openHandCursor());}
+    }
+);
+
 struct ActionButtonIvars {
     hovered: Cell<bool>,
 }
@@ -324,6 +369,14 @@ define_class!(
     #[ivars=ActionButtonIvars]
     struct ActionButton;
     impl ActionButton {
+        #[unsafe(method(mouseDown:))]
+        fn down(&self,event:&NSEvent) {
+            let _keep_alive=self.retain();
+            if (401..=404).contains(&self.tag()) {
+                if let Some(index)=button_session(self) {track_mode_button(self,index,event);return;}
+            }
+            unsafe {let _: ()=msg_send![super(self),mouseDown:event];}
+        }
         #[unsafe(method(drawRect:))]
         fn paint(&self,rect:NSRect) {
             if !appearance::draw_button(self,self.ivars().hovered.get()) {
@@ -538,15 +591,24 @@ fn set_caption(button: &NSButton, title: &str, color: Color, size: f64) {
 }
 fn mode_layout(s: &Session) -> (Rect, [Rect; 4]) {
     let visible = s.view.visibleRect();
-    let widths = CaptureMode::ALL.map(|mode| (ui_text_width(mode.title(), 16.0) + 28.0).max(96.0));
-    let width = widths.iter().sum::<f64>() + 16.0;
-    let bar = Rect::new(
-        visible.origin.x + (visible.size.width - width) / 2.0,
-        visible.origin.y + 18.0,
-        width,
-        46.0,
+    let mut widths =
+        CaptureMode::ALL.map(|mode| (ui_text_width(mode.title(), 16.0) + 28.0).max(96.0));
+    let requested = widths.iter().sum::<f64>() + 56.0;
+    let bar = mode_menu_rect(
+        Rect::new(
+            visible.origin.x,
+            visible.origin.y,
+            visible.size.width,
+            visible.size.height,
+        ),
+        requested,
+        s.mode_override,
     );
-    let mut x = bar.x + 8.0;
+    let scale = ((bar.w - 56.0) / widths.iter().sum::<f64>()).min(1.0);
+    for width in &mut widths {
+        *width *= scale;
+    }
+    let mut x = bar.x + 48.0;
     let tabs = std::array::from_fn(|i| {
         let r = Rect::new(x, bar.y + 3.0, widths[i], 40.0);
         x += widths[i];
@@ -555,14 +617,15 @@ fn mode_layout(s: &Session) -> (Rect, [Rect; 4]) {
     (bar, tabs)
 }
 fn controls(s: &Session) -> Vec<(isize, Rect, String)> {
-    s.buttons
+    let mut controls = s
+        .buttons
         .iter()
         .chain(s.params.iter())
         .chain(s.mode_buttons.iter())
         .chain(s.scroll_actions.iter())
         .filter(|b| !b.isHidden())
         .map(|b| {
-            let r = b.frame();
+            let r = b.convertRect_toView(b.bounds(), Some(&s.view));
             (
                 b.tag(),
                 Rect::new(r.origin.x, r.origin.y, r.size.width, r.size.height),
@@ -571,7 +634,19 @@ fn controls(s: &Session) -> Vec<(isize, Rect, String)> {
                     .unwrap_or_else(|| b.title().to_string()),
             )
         })
-        .collect()
+        .collect::<Vec<_>>();
+    if s.mode_buttons
+        .first()
+        .is_some_and(|button| !button.isHidden())
+    {
+        let menu = mode_layout(s).0;
+        controls.push((
+            405,
+            Rect::new(menu.x + 4.0, menu.y + 4.0, 40.0, menu.h - 8.0),
+            tr("拖动模式菜单"),
+        ));
+    }
+    controls
 }
 thread_local! {static DIAGONALS:std::cell::OnceCell<(Retained<NSCursor>,Retained<NSCursor>)>=const{std::cell::OnceCell::new()};}
 fn native_cursor(intent: CursorIntent) -> Retained<NSCursor> {
@@ -776,13 +851,13 @@ fn show_home() {
 fn initialize(delegate: &Delegate) {
     let delegate = delegate.retain();
     let application = NSApplication::sharedApplication(mtm());
-    if let Some(path) = NSBundle::mainBundle()
+    let icon_path = NSBundle::mainBundle()
         .pathForResource_ofType(Some(ns_string!("AppIcon")), Some(ns_string!("png")))
-    {
-        if let Some(icon) = NSImage::initWithContentsOfFile(NSImage::alloc(), &path) {
-            unsafe {
-                application.setApplicationIconImage(Some(&icon));
-            }
+        .unwrap_or_else(|| ns_string!("assets/app-icon.png").retain());
+    let brand_icon = NSImage::initWithContentsOfFile(NSImage::alloc(), &icon_path);
+    if let Some(icon) = &brand_icon {
+        unsafe {
+            application.setApplicationIconImage(Some(icon));
         }
     }
     let window_check = std::env::args().any(|s| s == "--window-check");
@@ -864,6 +939,10 @@ fn initialize(delegate: &Delegate) {
         )
     };
     version.setEnabled(false);
+    if let Some(icon) = NSImage::initWithContentsOfFile(NSImage::alloc(), &icon_path) {
+        icon.setSize(NSSize::new(28.0, 28.0));
+        version.setImage(Some(&icon));
+    }
     menu.addItem(&version);
     menu.addItem(&NSMenuItem::separatorItem(mtm()));
     for (title, tag) in [
@@ -919,9 +998,10 @@ fn initialize(delegate: &Delegate) {
         b.setImagePosition(NSCellImagePosition::ImageOnly);
         let brand = NSBundle::mainBundle()
             .pathForResource_ofType(Some(ns_string!("MenuIcon")), Some(ns_string!("png")))
-            .and_then(|path| NSImage::initWithContentsOfFile(NSImage::alloc(), &path));
+            .and_then(|path| NSImage::initWithContentsOfFile(NSImage::alloc(), &path))
+            .or_else(|| NSImage::initWithContentsOfFile(NSImage::alloc(), &icon_path));
         if let Some(image) = brand {
-            image.setTemplate(true);
+            image.setTemplate(false);
             image.setSize(NSSize::new(20.0, 20.0));
             b.setImage(Some(&image));
         } else {
@@ -1013,6 +1093,7 @@ fn initialize(delegate: &Delegate) {
         *a.borrow_mut() = Some(App {
             delegate: delegate.clone(),
             home: home.clone(),
+            brand_icon,
             home_status,
             _status_item: status_item,
             sessions: vec![],
@@ -1339,10 +1420,14 @@ fn create_session(screen: Screen, pixels: RgbaImage, demo: bool, windows: Vec<Re
     }
     let delegate = state(|a| a.delegate.clone());
     window.setDelegate(Some(ProtocolObject::from_ref(&*delegate)));
+    let allocated = ModeMenuView::alloc(mtm()).set_ivars(CanvasIvars { index });
+    let mode_view: Retained<ModeMenuView> =
+        unsafe { msg_send![super(allocated),initWithFrame:NSRect::ZERO] };
+    track_pointer(&mode_view);
     let mut mode_buttons = vec![];
     for mode in CaptureMode::ALL {
         let b = button(mode.title(), None, mode.tag(), &delegate);
-        view.addSubview(&b);
+        mode_view.addSubview(&b);
         mode_buttons.push(b);
     }
     let mut scroll_actions = vec![];
@@ -1398,6 +1483,7 @@ fn create_session(screen: Screen, pixels: RgbaImage, demo: bool, windows: Vec<Re
         view.addSubview(&b);
         params.push(b);
     }
+    view.addSubview(&mode_view);
     state(|a| {
         a.sessions.push(Session {
             screen,
@@ -1412,6 +1498,8 @@ fn create_session(screen: Screen, pixels: RgbaImage, demo: bool, windows: Vec<Re
             text_input: None,
             bar_override: None,
             bar_drag: None,
+            mode_override: None,
+            mode_drag: None,
             cursor: Point::new(size.width / 2.0, size.height / 2.0),
             demo,
             last_visible: NSRect::ZERO,
@@ -1419,6 +1507,7 @@ fn create_session(screen: Screen, pixels: RgbaImage, demo: bool, windows: Vec<Re
             hover: None,
             pressed_hover: None,
             mode_buttons,
+            mode_view,
             scroll_actions,
             hovered: None,
         });
@@ -1541,9 +1630,18 @@ fn refresh(index: usize) {
             && a.scroll.is_none()
             && a.mode == CaptureMode::Screenshot
             && a.recording.is_none();
-        let (_, tabs) = mode_layout(s);
+        let (hud, tabs) = mode_layout(s);
+        s.mode_view.setFrame(nr(hud));
+        s.mode_view
+            .setHidden(a.scroll.is_some() || a.recording.is_some());
+        s.mode_view.setNeedsDisplay(true);
         for (i, b) in s.mode_buttons.iter().enumerate() {
-            b.setFrame(nr(tabs[i]));
+            b.setFrame(nr(Rect::new(
+                tabs[i].x - hud.x,
+                tabs[i].y - hud.y,
+                tabs[i].w,
+                tabs[i].h,
+            )));
             b.setState(if a.mode == CaptureMode::ALL[i] { 1 } else { 0 });
             b.setHidden(a.scroll.is_some() || a.recording.is_some());
             set_caption(
@@ -1865,8 +1963,6 @@ fn draw_canvas(index: usize) {
             }
         }
         if !scrolling && !recording {
-            let (hud, _) = mode_layout(s);
-            appearance::mode_shell(hud);
             draw_tooltip(s);
         }
     });
@@ -1915,6 +2011,76 @@ fn event_point(index: usize, event: &NSEvent) -> Point {
         Point::new(p.x, p.y)
     })
 }
+fn track_mode_button(button: &NSButton, index: usize, event: &NSEvent) {
+    let app = NSApplication::sharedApplication(mtm());
+    let start = event_point(index, event);
+    let origin = state(|a| {
+        a.active = index;
+        let menu = mode_layout(&a.sessions[index]).0;
+        Point::new(menu.x, menu.y)
+    });
+    let mut dragged = false;
+    if let Some(cell) = button.cell() {
+        cell.setHighlighted(true);
+    }
+    NSView::setNeedsDisplay(button, true);
+    let mask = NSEventMask::LeftMouseDragged | NSEventMask::LeftMouseUp | NSEventMask::KeyDown;
+    loop {
+        let event = app.nextEventMatchingMask_untilDate_inMode_dequeue(
+            mask,
+            Some(&NSDate::dateWithTimeIntervalSinceNow(0.1)),
+            unsafe { NSEventTrackingRunLoopMode },
+            true,
+        );
+        if state(|a| index >= a.sessions.len()) {
+            break;
+        }
+        let Some(event) = event else {
+            continue;
+        };
+        if event.r#type() == NSEventType::KeyDown {
+            if event.keyCode() == 53 {
+                cancel_capture();
+                break;
+            }
+            continue;
+        }
+        let point = event_point(index, &event);
+        if event.r#type() == NSEventType::LeftMouseDragged {
+            if !dragged && point.distance(start) >= 4.0 {
+                dragged = true;
+                state(|a| a.sessions[index].mode_drag = Some((start, origin)));
+            }
+            if dragged {
+                mouse_drag(index, &event);
+            }
+        } else if event.r#type() == NSEventType::LeftMouseUp {
+            if dragged {
+                state(|a| a.sessions[index].mode_drag = None);
+                refresh(index);
+                NSCursor::openHandCursor().set();
+            } else {
+                let local = button.convertPoint_fromView(event.locationInWindow(), None);
+                let bounds = button.bounds();
+                if local.x >= 0.0
+                    && local.y >= 0.0
+                    && local.x <= bounds.size.width
+                    && local.y <= bounds.size.height
+                {
+                    unsafe {
+                        let _: () = msg_send![button,performClick:Option::<&AnyObject>::None];
+                    }
+                }
+            }
+            break;
+        }
+    }
+    if let Some(cell) = button.cell() {
+        cell.setHighlighted(false);
+    }
+    NSView::setNeedsDisplay(button, true);
+}
+
 fn mouse_down(index: usize, event: &NSEvent) {
     if state(|a| index >= a.sessions.len()) {
         return;
@@ -1922,6 +2088,23 @@ fn mouse_down(index: usize, event: &NSEvent) {
     state(|a| a.active = index);
     commit_text(index);
     let p = event_point(index, event);
+    if state(|a| {
+        let s = &mut a.sessions[index];
+        let menu = mode_layout(s).0;
+        if s.mode_buttons
+            .first()
+            .is_some_and(|button| !button.isHidden())
+            && menu.contains(p)
+        {
+            s.mode_drag = Some((p, Point::new(menu.x, menu.y)));
+            true
+        } else {
+            false
+        }
+    }) {
+        NSCursor::closedHandCursor().set();
+        return;
+    }
     if event.clickCount() == 2 {
         let existing = state(|a| {
             a.sessions[index]
@@ -1973,7 +2156,12 @@ fn mouse_drag(index: usize, event: &NSEvent) {
     let p = event_point(index, event);
     state(|a| {
         let s = &mut a.sessions[index];
-        if let Some((start, origin)) = s.bar_drag {
+        if let Some((start, origin)) = s.mode_drag {
+            s.mode_override = Some(Point::new(
+                origin.x + p.x - start.x,
+                origin.y + p.y - start.y,
+            ));
+        } else if let Some((start, origin)) = s.bar_drag {
             s.bar_override = Some(Point::new(
                 (origin.x + p.x - start.x).clamp(
                     4.0,
@@ -1989,7 +2177,7 @@ fn mouse_drag(index: usize, event: &NSEvent) {
         let s = &a.sessions[index];
         if let Some(h) = s.editor.drag_resize_handle() {
             resize_cursor(h)
-        } else if s.bar_drag.is_some() || s.editor.drag_moves_item() {
+        } else if s.mode_drag.is_some() || s.bar_drag.is_some() || s.editor.drag_moves_item() {
             CursorIntent::ClosedHand
         } else {
             CursorIntent::Crosshair
@@ -1999,6 +2187,15 @@ fn mouse_drag(index: usize, event: &NSEvent) {
     refresh(index);
 }
 fn mouse_up(index: usize, _event: &NSEvent) {
+    if state(|a| {
+        a.sessions
+            .get_mut(index)
+            .is_some_and(|s| s.mode_drag.take().is_some())
+    }) {
+        refresh(index);
+        NSCursor::openHandCursor().set();
+        return;
+    }
     finish_selection(index);
 }
 fn finish_selection(index: usize) {
@@ -2045,6 +2242,15 @@ fn mouse_move(index: usize, event: &NSEvent) {
         if s.editor.selection.is_none() {
             s.hover = s.windows.iter().copied().find(|r| r.contains(p));
             s.view.setNeedsDisplay(true);
+        }
+        if s.mode_drag.is_some() {
+            return CursorIntent::ClosedHand;
+        }
+        if buttons
+            .iter()
+            .any(|(tag, rect, _)| *tag == 405 && rect.contains(p))
+        {
+            return CursorIntent::OpenHand;
         }
         cursor_at(
             &s.editor,
@@ -3608,6 +3814,9 @@ fn verify_live_status_item() -> Result<(), String> {
     }
     if !window.isVisible() {
         return Err("Status item window is not visible".into());
+    }
+    if button.image().is_some_and(|image| image.isTemplate()) || state(|a| a.brand_icon.is_none()) {
+        return Err("Status item did not load the color viewfinder artwork".into());
     }
     let directory = PathBuf::from("target/menubar-check");
     std::fs::create_dir_all(&directory).map_err(|e| e.to_string())?;

@@ -14,6 +14,8 @@ A native macOS capture app built with Rust and AppKit. One shortcut for screensh
 
 macOS 14+ · Apple Silicon · MIT · `Command+Shift+A`
 
+菜单栏 / 選單列 / Menu bar: ![flytoSnap menu bar icon](docs/images/menu-bar-icon.png)
+
 ## 十种语言 / 十種語言 / Ten languages
 
 Choose a language above for a guide with matching interface screenshots. Update dialogs follow the language selected in Settings.

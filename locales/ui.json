@@ -2363,5 +2363,16 @@
     "pt": "Licença MIT",
     "de": "MIT-Lizenz",
     "ko": "MIT 라이선스"
+  },
+  "拖动模式菜单": {
+    "zh-TW": "拖曳模式選單",
+    "en": "Drag mode menu",
+    "ja": "モードメニューを移動",
+    "ru": "Перетащить меню режимов",
+    "fr": "Déplacer le menu des modes",
+    "es": "Mover el menú de modos",
+    "pt": "Mover o menu de modos",
+    "de": "Modusmenü verschieben",
+    "ko": "모드 메뉴 이동"
   }
 }

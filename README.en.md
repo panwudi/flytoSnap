@@ -14,7 +14,7 @@ Requires macOS 14+. The interface supports Simplified Chinese, Traditional Chine
 
 ## Features
 
-- Capture: Window detection, freeform region selection, magnifier, and eight resize handles. The area outside the selection dims; the cursor changes over buttons, edges, corners, and text.
+- Capture: Drag the top mode menu by its handle or any mode button; it stays within the screen. Window detection, freeform region selection, magnifier, and eight resize handles. The area outside the selection dims; the cursor changes over buttons, edges, corners, and text.
 - Annotate: Rectangles, ellipses, arrows, pen, highlight, brush and rectangle mosaic, text, callouts, and watermark. Undo, redo, and edit existing objects.
 - Pin: Floating images with drag, zoom, opacity, lock, copy, and save.
 - Scrolling capture: Select a region, click Start Scrolling Capture, then scroll manually or automatically. Compact controls and a side preview stay visible. Supports bidirectional stitching, deduplication, edit, save, and copy.

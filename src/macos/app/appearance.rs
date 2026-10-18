@@ -205,8 +205,13 @@ pub(super) fn draw_button(button: &NSButton, hovered: bool) -> bool {
                 1.0,
             );
         }
-    } else if mode && hovered {
-        render::rounded(rect, 6.0, Color(1.0, 1.0, 1.0), 0.10);
+    } else if mode && (hovered || pressed) {
+        render::rounded(
+            rect,
+            6.0,
+            Color(1.0, 1.0, 1.0),
+            if pressed { 0.2 } else { 0.10 },
+        );
     }
     if has_image {
         return false;

@@ -1,5 +1,27 @@
 use crate::model::{Editor, Point, Rect, Tool};
 
+pub fn mode_menu_rect(bounds: Rect, width: f64, position: Option<Point>) -> Rect {
+    let margin = 8.0_f64.min(bounds.w / 4.0).min(bounds.h / 4.0);
+    let width = width.min(bounds.w - margin * 2.0).max(1.0);
+    let height = 46.0_f64.min(bounds.h - margin * 2.0).max(1.0);
+    let position = position.unwrap_or(Point::new(
+        bounds.x + (bounds.w - width) / 2.0,
+        bounds.y + 18.0,
+    ));
+    Rect::new(
+        position.x.clamp(
+            bounds.x + margin,
+            (bounds.x + bounds.w - width - margin).max(bounds.x + margin),
+        ),
+        position.y.clamp(
+            bounds.y + margin,
+            (bounds.y + bounds.h - height - margin).max(bounds.y + margin),
+        ),
+        width,
+        height,
+    )
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
 pub enum CaptureMode {
     #[default]
@@ -175,6 +197,27 @@ pub fn scroll_panel_rects(bounds: Rect, selection: Rect) -> (Rect, Rect) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn mode_menu_stays_inside_viewport_after_drag_resize_and_locale_changes() {
+        for bounds in [
+            Rect::new(0.0, 0.0, 1440.0, 900.0),
+            Rect::new(300.0, 200.0, 640.0, 400.0),
+        ] {
+            for width in [440.0, 820.0] {
+                for position in [
+                    None,
+                    Some(Point::new(-5000.0, -5000.0)),
+                    Some(Point::new(9000.0, 9000.0)),
+                ] {
+                    let menu = mode_menu_rect(bounds, width, position);
+                    assert!(menu.x >= bounds.x + 8.0 && menu.y >= bounds.y + 8.0);
+                    assert!(menu.x + menu.w <= bounds.x + bounds.w - 8.0);
+                    assert!(menu.y + menu.h <= bounds.y + bounds.h - 8.0);
+                }
+            }
+        }
+    }
+
     #[test]
     fn scroll_controls_stay_on_screen_for_edge_and_fullscreen_regions() {
         let screen = Rect::new(0.0, 0.0, 1440.0, 900.0);
