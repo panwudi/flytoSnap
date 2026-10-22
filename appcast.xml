@@ -4,46 +4,46 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
     <channel>
         <title>flytoSnap</title>
         <item>
-            <title>0.5.1</title>
-            <pubDate>Sun, 18 Oct 2026 14:57:56 -0700</pubDate>
-            <link>https://github.com/panwudi/flytoSnap/releases/tag/v0.5.1</link>
-            <sparkle:version>13</sparkle:version>
-            <sparkle:shortVersionString>0.5.1</sparkle:shortVersionString>
+            <title>0.5.2</title>
+            <pubDate>Thu, 22 Oct 2026 06:46:26 -0700</pubDate>
+            <link>https://github.com/panwudi/flytoSnap/releases/tag/v0.5.2</link>
+            <sparkle:version>14</sparkle:version>
+            <sparkle:shortVersionString>0.5.2</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
             <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[# flytoSnap 0.5.1
+            <description sparkle:format="markdown"><![CDATA[# flytoSnap 0.5.2
 
 ## 简体中文
 
-- 状态栏换用彩色 B2 取景器图标, 与应用图标, 设置和关于页面保持一致. 菜单标题与截图顶部菜单也显示同一图标.
-- 顶部模式菜单可以拖动: 拖动图标旁的手柄, 或按住任意模式按钮移动. 轻点按钮仍正常切换模式.
-- 菜单拖动时保持选框, 切换模式后保持位置, 并限制在屏幕范围内. 独立的菜单视图避免与标注工具栏重叠时被遮挡.
-- 拖动手柄显示手形光标, 支持拖动过程中按 Esc 完整取消截图.
-- 新增原生拖动, 点击, 重叠层级和取消回归检查, 更新十种语言的实际界面截图.
+- 修复滚动截图只拼接一次就停止的问题. 选区内的固定页头, 工具栏和底部输入框不再打断拼接, 结果中只保留一份.
+- 滚动过快丢失重叠时, 往回滚动一点即可在已拼接内容中重新定位并继续, 不再一直提示未找到重叠内容.
+- 列表, 表格等重复内容在无法确定位置时会提示, 不再拼到错误位置.
+- 滚动截图只采集选区, 采集间隔缩短, 拼接计算更快, 手动快速滚动更不容易丢失.
+- 自动滚动的步长按实际滚动区域计算.
 - 需要 Apple Silicon 和 macOS 14+. 使用 Developer ID 和 Ed25519 更新签名, 尚未通过 Apple 公证.
 
 ## 繁體中文
 
-- 選單列改用彩色 B2 取景器圖示, 與應用程式圖示, 設定和關於頁面一致. 選單標題與截圖頂部選單也顯示相同圖示.
-- 頂部模式選單可透過圖示旁的拖曳區域或任意模式按鈕移動. 輕點仍正常切換模式.
-- 拖曳時保留選取區域, 切換模式後保留位置, 並限制在螢幕範圍內. 獨立選單視圖避免與標註工具列重疊時被遮住.
-- 拖曳區域顯示手形游標, 拖曳過程中可按 Esc 完整取消截圖.
-- 新增原生互動回歸檢查, 更新十種語言的介面截圖.
+- 修正捲動截圖只拼接一次就停止的問題. 選取區域內的固定頁首, 工具列和底部輸入框不再中斷拼接, 結果中只保留一份.
+- 捲動過快遺失重疊時, 往回捲動一點即可在已拼接內容中重新定位並繼續.
+- 清單, 表格等重複內容在無法確定位置時會提示, 不再拼到錯誤位置.
+- 捲動截圖只擷取選取區域, 擷取間隔縮短, 拼接計算更快.
+- 自動捲動的步長依實際捲動區域計算.
 - 需要 Apple Silicon 與 macOS 14+. 使用 Developer ID 與 Ed25519 更新簽章, 尚未通過 Apple 公證.
 
 ## English
 
-- Uses the color B2 viewfinder in the menu bar, matching the application icon, Settings, and About. The menu heading and capture mode menu show the same artwork.
-- Makes the top mode menu draggable from its handle or any mode button. A click still switches modes normally.
-- Preserves the selection and menu position across mode changes, constrains the menu to the screen, and keeps it above overlapping annotation controls.
-- Adds hand cursors for dragging and supports Escape cancellation while tracking a drag.
-- Adds native drag, click, overlap, and cancellation regression checks, and refreshes screenshots in all ten languages.
+- Fixes scrolling capture stopping after the first stitch. Sticky headers, toolbars, and bottom input bars inside the selection no longer break stitching and appear once in the result.
+- After scrolling too fast, scrolling back a little relocates the view in the stitched content and resumes the capture.
+- Repeated content such as lists and tables is rejected with a prompt when its position is ambiguous, instead of being stitched in the wrong place.
+- Scrolling capture now captures only the selection, samples more often, and stitches faster.
+- Automatic scrolling steps are sized to the moving region.
 - Requires Apple Silicon and macOS 14+. Developer ID signed with Ed25519 update signatures; not yet Apple notarized.
 ]]></description>
-            <enclosure url="https://github.com/panwudi/flytoSnap/releases/download/v0.5.1/flytoSnap-0.5.1-mac-arm64.zip" length="5145854" type="application/octet-stream" sparkle:edSignature="NpZoJBnz1WuXsZ+Hmlp80p1HwAgzys3kVvNHDXAx9Cf9wrfKNfeXGm/Cel1sIkLlZo3l+9shFXov1EaHU65ZAw=="></enclosure>
+            <enclosure url="https://github.com/panwudi/flytoSnap/releases/download/v0.5.2/flytoSnap-0.5.2-mac-arm64.zip" length="5148449" type="application/octet-stream" sparkle:edSignature="Ff/e1zm9ShEoL7T9T9eImcvamU9Lqo+3C6ZhgNlqjz2WyJ81Dv162aESGszr1dvWG5eyu8p+kQ4/qoC8p5dbCA=="></enclosure>
         </item>
     </channel>
 </rss><!-- sparkle-signatures:
-edSignature: 8sB/5dkOseu4HcwRiGiOhxytnwHiUTwhYy2EAPsg1n6YNUn3J7c/Noko+MTE+FJLnnu5RZ2AKABZJ8P0VBPVAQ==
-length: 3521
+edSignature: yAIG5fUZSWr4Stv3oIVckSYWWFjNX3CbJw/d4sy9u0bEgb1wG7GOuJGhuokNokuC5qGtRyWuv78Jswf82wrKBg==
+length: 3333
 -->
