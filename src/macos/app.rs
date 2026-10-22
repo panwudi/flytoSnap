@@ -1314,6 +1314,7 @@ fn start_capture(prefer_scroll: bool) {
             id: s.id,
             width: (s.frame.size.width * s.scale).round() as usize,
             height: (s.frame.size.height * s.scale).round() as usize,
+            source: None,
         })
         .collect::<Vec<_>>();
     if requests.is_empty() {
@@ -3512,7 +3513,7 @@ fn tick() {
                 .setStringValue(&ns_ui("屏幕捕获超时, 自动滚动已停止"));
             scroll.auto_button.setTitle(&ns_ui("自动滚动"));
         }
-        if scroll.pending || scroll.last.elapsed() < Duration::from_millis(450) {
+        if scroll.pending || scroll.last.elapsed() < Duration::from_millis(220) {
             return None;
         }
         let session = &a.sessions[scroll.screen_index];
@@ -3530,7 +3531,8 @@ fn tick() {
                 let y = main - session.screen.frame.origin.y - session.screen.frame.size.height
                     + scroll.region.y
                     + scroll.region.h / 2.0;
-                capture::scroll_at(x, y, -(scroll.region.h * 0.35) as i32);
+                let moving = scroll.stitcher.moving_height() as f64 / session.screen.scale;
+                capture::scroll_at(x, y, -(moving * 0.35).max(1.0) as i32);
                 scroll.auto_step = Some(Instant::now());
                 return None;
             }
@@ -3539,11 +3541,21 @@ fn tick() {
         scroll.pending = true;
         scroll.last = Instant::now();
         a.generation += 1;
+        // Snap the source to whole pixels so every frame lines up with the first crop.
+        let scale = session.screen.scale;
+        let (width, height) = scroll.stitcher.frame_size();
+        let source = Rect::new(
+            (scroll.region.x * scale).round() / scale,
+            (scroll.region.y * scale).round() / scale,
+            width as f64 / scale,
+            height as f64 / scale,
+        );
         Some((
             ScreenRequest {
                 id: session.screen.id,
-                width: session.pixels.width() as usize,
-                height: session.pixels.height() as usize,
+                width: width as usize,
+                height: height as usize,
+                source: Some(source),
             },
             a.generation,
             a.tx.clone(),
@@ -3579,18 +3591,11 @@ fn handle_capture(message: CaptureMessage) {
         let result = state(|a| {
             let scroll = a.scroll.as_mut().unwrap();
             scroll.pending = false;
-            let session = &a.sessions[scroll.screen_index];
             match message.pixels {
-                Ok(pixels) => {
-                    let scale = session.screen.scale;
-                    let x = (scroll.region.x * scale).round() as u32;
-                    let y = (scroll.region.y * scale).round() as u32;
-                    let w = (scroll.region.w * scale).round() as u32;
-                    let h = (scroll.region.h * scale).round() as u32;
-                    if x + w > pixels.width() || y + h > pixels.height() {
+                Ok(frame) => {
+                    if frame.dimensions() != scroll.stitcher.frame_size() {
                         return Err("显示器尺寸发生变化, 请重新截图".into());
                     }
-                    let frame = image::imageops::crop_imm(&pixels, x, y, w, h).to_image();
                     let result = scroll.stitcher.push(frame);
                     if result == StitchResult::Duplicate {
                         scroll.unchanged = scroll.unchanged.saturating_add(1);

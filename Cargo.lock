@@ -145,7 +145,7 @@ dependencies = [
 
 [[package]]
 name = "flytosnap"
-version = "0.5.1"
+version = "0.5.2"
 dependencies = [
  "block2",
  "dispatch2",

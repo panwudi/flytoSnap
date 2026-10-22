@@ -18,6 +18,8 @@ pub struct ScreenRequest {
     pub id: u32,
     pub width: usize,
     pub height: usize,
+    // Display-local area in points. Capturing only the scrolling region keeps each frame cheap.
+    pub source: Option<Rect>,
 }
 
 pub struct CaptureMessage {
@@ -76,6 +78,13 @@ pub fn capture(
                     let config = SCStreamConfiguration::new();
                     config.setWidth(screen.width);
                     config.setHeight(screen.height);
+                    if let Some(r) = screen.source {
+                        use objc2_core_foundation::{CGPoint, CGRect, CGSize};
+                        config.setSourceRect(CGRect::new(
+                            CGPoint::new(r.x, r.y),
+                            CGSize::new(r.w, r.h),
+                        ));
+                    }
                     config.setShowsCursor(false);
                     config.setColorSpaceName(objc2_core_graphics::kCGColorSpaceSRGB);
                     let tx = tx.clone();
